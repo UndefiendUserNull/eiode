@@ -9,12 +9,18 @@ height = 3.0
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_uvnfx")
 _sensitivity = 0.2
+_maxVelocityAir = 0.5
+_maxVelocityGround = 10.0
+_jumpForce = 0.0
+_maxAcceleration = 50.0
+_gravity = 0.5
+_stopSpeed = 0.5
+_friction = 5.0
 
 [node name="Head" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.50541, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera" type="Camera3D" parent="Head"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 fov = 90.0
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
