@@ -1,9 +1,14 @@
 namespace EIODE.Utils;
-public readonly struct InputHash
+public static class InputHash
 {
-    public static readonly string forward = "forward";
-    public static readonly string left = "left";
-    public static readonly string right = "right";
-    public static readonly string backward = "backward";
-    public static readonly string jump = "jump";
+    // Main
+    public const string FORWARD = "forward";
+    public const string LEFT = "left";
+    public const string RIGHT = "right";
+    public const string BACKWARD = "backward";
+    public const string JUMP = "jump";
+
+    // Keys
+    public const string K_ESC = "K_ESC";
+    public const string K_R = "K_R";
 }

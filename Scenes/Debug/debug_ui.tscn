@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cr3i0n8335um7"]
+
+[ext_resource type="Script" uid="uid://dpalhqc8vig0c" path="res://Scenes/Debug/DebugUi.cs" id="1_skkrr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v6wy8"]
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Debug_UI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_skkrr")
+
+[node name="0" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = " ssssssss : 123213123"
+label_settings = SubResource("LabelSettings_v6wy8")
