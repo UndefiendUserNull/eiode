@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c20xv1lcvoy48"]
+[gd_scene load_steps=11 format=3 uid="uid://c20xv1lcvoy48"]
 
 [ext_resource type="PackedScene" uid="uid://dqk8i0f08x0q2" path="res://Scenes/Player/player.tscn" id="1_v6wy8"]
+[ext_resource type="PackedScene" uid="uid://cr3i0n8335um7" path="res://Scenes/Debug/debug_ui.tscn" id="2_6pun2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v6wy8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -138,4 +139,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.27983, 0)
 _maxVelocityAir = 2.5
 _jumpModifier = 2.8
 _stopSpeed = 0.7
-_coyoteTime = 0.25
+_jumpBufferingTime = 0.15
+_coyoteTime = 0.18
+
+[node name="Debug_UI" parent="." node_paths=PackedStringArray("_player") instance=ExtResource("2_6pun2")]
+_player = NodePath("../Player")

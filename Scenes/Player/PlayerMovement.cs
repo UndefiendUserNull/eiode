@@ -16,13 +16,21 @@ public partial class PlayerMovement : CharacterBody3D
     [Export] private float _gravity = 15.34f;
     [Export] private float _stopSpeed = 1.5f;
     [Export] private float _friction = 4;
+    [Export] private float _jumpBufferingTime = 0.1f;
     [Export] private float _coyoteTime = 0.15f;
+
+    #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
     private const float MIN_PITCH = -80f;
     private const float MAX_PITCH = 90f;
+    #endregion
 
-    private float _timeInAir = 0f;
-    // Set in Init
+    #region Timers
+    public float _timeInAir { get; private set; } = 0f;
+    // When the player hits the jump button, when not on floor, this timer starts
+    public float _timeSinceLastJumpInput { get; private set; } = 0f;
+    #endregion
+
     private float _jumpHeight = 0.0f;
     private Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
@@ -63,27 +71,44 @@ public partial class PlayerMovement : CharacterBody3D
         if (Input.IsActionPressed(InputHash.LEFT)) _direction -= Transform.Basis.X;
         else if (Input.IsActionPressed(InputHash.RIGHT)) _direction += Transform.Basis.X;
 
-        _wantToJump = Input.IsActionJustPressed(InputHash.JUMP);
+        if (Input.IsActionJustPressed(InputHash.JUMP))
+        {
+            _wantToJump = true;
+            _timeSinceLastJumpInput = 0.0f;
+        }
     }
     private void Movement(double delta)
     {
         Vector3 desiredDirection = _direction.Normalized();
         Velocity = UpdateVelocityGround(desiredDirection, delta);
+        bool onFloor = IsOnFloor();
 
-        if (IsOnFloor()) _timeInAir = 0.0f;
+        if (_wantToJump)
+            _timeSinceLastJumpInput += (float)delta;
 
-        if (_wantToJump && (IsOnFloor() || (_timeInAir < _coyoteTime)))
+        // Prevents the _timeSinceLastJumpInput to keep increasing even when player lands
+        if (_timeSinceLastJumpInput > _jumpBufferingTime * 2 && onFloor)
+            _timeSinceLastJumpInput = _jumpBufferingTime + 1;
+
+        if (onFloor)
+            _timeInAir = 0.0f;
+        else
         {
-            Velocity = new Vector3(Velocity.X, _jumpHeight, Velocity.Z);
-            Velocity = UpdateVelocityGround(desiredDirection, delta);
-            _wantToJump = false;
-        }
-        if (!IsOnFloor())
-        {
+
             _timeInAir += (float)delta;
             Velocity -= new Vector3(0, _gravity * (float)delta, 0);
             Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
+
+        if (_wantToJump && ((onFloor && _timeSinceLastJumpInput < _jumpBufferingTime) || (!onFloor && _timeInAir < _coyoteTime)))
+        {
+            Vector3 horizontalVelocity = UpdateVelocityGround(desiredDirection, delta);
+            Velocity = new Vector3(horizontalVelocity.X, _jumpHeight, horizontalVelocity.Z);
+            _wantToJump = false;
+        }
+
+        Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
+
         MoveAndSlide();
     }
     private Vector3 Accelerate(Vector3 direction, float maxVelocity, double delta)

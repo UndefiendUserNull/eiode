@@ -9,7 +9,7 @@ height = 3.0
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_uvnfx")
 _sensitivity = 0.2
-_maxVelocityAir = 0.0
+_maxVelocityAir = 0.5
 _maxVelocityGround = 500.0
 _jumpModifier = 4.5
 _maxAcceleration = 50.0
@@ -25,3 +25,4 @@ fov = 120.0
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tugb3")
+debug_color = Color(0.885607, 0.33224, 0, 1)
