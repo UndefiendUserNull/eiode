@@ -135,3 +135,7 @@ shape = SubResource("ConcavePolygonShape3D_434w7")
 
 [node name="Player" parent="." instance=ExtResource("1_v6wy8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.27983, 0)
+_maxVelocityAir = 2.5
+_jumpModifier = 2.8
+_stopSpeed = 0.7
+_coyoteTime = 0.25
