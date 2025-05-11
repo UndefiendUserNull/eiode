@@ -9,7 +9,7 @@ public partial class DebugUi : Control
     [Export] private PlayerMovement _player;
     private PlayerMovement _playerMovement;
     private Label _label;
-    private StringBuilder _sb = new();
+    private readonly StringBuilder _sb = new();
 
     public override void _Ready()
     {
