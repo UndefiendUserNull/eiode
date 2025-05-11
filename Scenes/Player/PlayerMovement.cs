@@ -69,7 +69,6 @@ public partial class PlayerMovement : CharacterBody3D
     private void Movement(double delta)
     {
         Vector3 desiredDirection = _direction.Normalized();
-        Velocity = UpdateVelocityGround(desiredDirection, delta);
         bool onFloor = IsOnFloor();
 
         if (_wantToJump)
