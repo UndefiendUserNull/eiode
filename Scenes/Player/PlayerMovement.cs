@@ -1,3 +1,4 @@
+using EIODE.Resources.Src;
 using EIODE.Utils;
 using Godot;
 
@@ -5,19 +6,14 @@ namespace EIODE.Scenes.Player;
 
 public partial class PlayerMovement : CharacterBody3D
 {
-    [Export] private float _sensitivity = 0.05f;
-    [Export] private float _maxVelocityAir = 0.6f;
-    [Export] private float _maxVelocityGround = 6.0f;
-    // Used in Init
-    [Export] private float _jumpModifier = 0.85f;
-    // Value gets multiplied by maxVelocityGround on Init
-    [Export] private float _maxAcceleration = 10;
-    // Used in Init
-    [Export] private float _gravity = 15.34f;
-    [Export] private float _stopSpeed = 1.5f;
-    [Export] private float _friction = 4;
-    [Export] private float _jumpBufferingTime = 0.1f;
-    [Export] private float _coyoteTime = 0.15f;
+    [Export] private PlayerMovementSettings _res_playerSettings;
+
+    private PlayerMovementSettings _s => _res_playerSettings;
+
+    private float _jumpHeight = 0.0f;
+    private Vector3 _direction = Vector3.Zero;
+    private bool _wantToJump = false;
+    private Node3D _head = null;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -27,25 +23,17 @@ public partial class PlayerMovement : CharacterBody3D
 
     #region Timers
     public float _timeInAir { get; private set; } = 0f;
-    // When the player hits the jump button, when not on floor, this timer starts
     public float _timeSinceLastJumpInput { get; private set; } = 0f;
     #endregion
 
-    private float _jumpHeight = 0.0f;
-    private Vector3 _direction = Vector3.Zero;
-    private bool _wantToJump = false;
-    private Node3D _head = null;
-    public override void _Ready()
-    {
-        Init();
-    }
+    public override void _Ready() => Init();
+
+    public override void _EnterTree() => Validation();
 
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseMotion motion && Input.MouseMode == Input.MouseModeEnum.Captured)
-        {
             CameraRotation(motion);
-        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -53,11 +41,11 @@ public partial class PlayerMovement : CharacterBody3D
         MainInput();
         Movement(delta);
     }
+
     private void Init()
     {
         _head = GetChild<Node3D>(0);
-        Validation();
-        _jumpHeight = Mathf.Sqrt(2 * _gravity * _jumpModifier);
+        _jumpHeight = Mathf.Sqrt(2 * _s._gravity * _s._jumpModifier);
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -77,6 +65,7 @@ public partial class PlayerMovement : CharacterBody3D
             _timeSinceLastJumpInput = 0.0f;
         }
     }
+
     private void Movement(double delta)
     {
         Vector3 desiredDirection = _direction.Normalized();
@@ -86,35 +75,31 @@ public partial class PlayerMovement : CharacterBody3D
         if (_wantToJump)
             _timeSinceLastJumpInput += (float)delta;
 
-        // Prevents the _timeSinceLastJumpInput to keep increasing even when player lands
-        if (_timeSinceLastJumpInput > _jumpBufferingTime * 2 && onFloor)
-            _timeSinceLastJumpInput = _jumpBufferingTime + 1;
+        if (_timeSinceLastJumpInput > _s._jumpBufferingTime * 2 && onFloor)
+            _timeSinceLastJumpInput = _s._jumpBufferingTime + 1;
 
         if (onFloor)
             _timeInAir = 0.0f;
         else
         {
-
             _timeInAir += (float)delta;
-            Velocity -= new Vector3(0, _gravity * (float)delta, 0);
+            Velocity -= new Vector3(0, _s._gravity * (float)delta, 0);
             Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
 
-        if (_wantToJump && ((onFloor && _timeSinceLastJumpInput < _jumpBufferingTime) || (!onFloor && _timeInAir < _coyoteTime)))
+        if (_wantToJump && CanJump())
         {
-            Vector3 horizontalVelocity = UpdateVelocityGround(desiredDirection, delta);
-            Velocity = new Vector3(horizontalVelocity.X, _jumpHeight, horizontalVelocity.Z);
-            _wantToJump = false;
+            Jump(desiredDirection, delta);
         }
 
         Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
-
         MoveAndSlide();
     }
+
     private Vector3 Accelerate(Vector3 direction, float maxVelocity, double delta)
     {
         float currentSpeed = Velocity.Dot(direction);
-        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, _maxAcceleration * (float)delta);
+        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, _s._maxAcceleration * (float)delta);
         return Velocity + increasingSpeed * direction;
     }
 
@@ -123,33 +108,51 @@ public partial class PlayerMovement : CharacterBody3D
         float speed = Velocity.Length();
         if (speed != 0)
         {
-            float control = Mathf.Max(_stopSpeed, speed);
-            float drop = (control * _friction * (float)delta);
+            float control = Mathf.Max(_s._stopSpeed, speed);
+            float drop = (control * _s._friction * (float)delta);
             Velocity *= Mathf.Max(speed - drop, 0) / speed;
         }
-        return Accelerate(direction, _maxVelocityGround, delta);
+        return Accelerate(direction, _s._maxVelocityGround, delta);
     }
 
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
-        return Accelerate(direction, _maxVelocityAir, delta);
+        return Accelerate(direction, _s._maxVelocityAir, delta);
+    }
+
+    private void Jump(Vector3 desiredDirection, double delta)
+    {
+        Vector3 horizontalVelocity = UpdateVelocityGround(desiredDirection, delta);
+        Velocity = new Vector3(horizontalVelocity.X, _jumpHeight, horizontalVelocity.Z);
+        _wantToJump = false;
+    }
+
+    private bool CanJump()
+    {
+        return (IsOnFloor() && (_timeSinceLastJumpInput < _s._jumpBufferingTime)) ||
+               (!IsOnFloor() && (_timeInAir < _s._coyoteTime));
     }
 
     private void CameraRotation(InputEventMouseMotion e)
     {
-        RotateY(Mathf.DegToRad(-e.Relative.X * _sensitivity));
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * _sensitivity));
+        RotateY(Mathf.DegToRad(-e.Relative.X * _s._sensitivity));
+        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * _s._sensitivity));
 
         _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
     }
 
-    /// <summary>
-    /// Makes sure the Scene setup is correct
-    /// </summary>
     private void Validation()
     {
-        if (_head.GetChildOrNull<Camera3D>(0) == null) { GD.PushError("The first child of the player doesn't have Camera3D as a first child"); }
-        if (_head.Position.Y != DEFAULT_HEAD_Y_POSITION) { GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}"); }
-    }
+        if (_s == null)
+        {
+            GD.PushError("PlayerMovementSettings resource not assigned.");
+            return;
+        }
 
+        if (GetChild(0).GetChildOrNull<Camera3D>(0) == null)
+            GD.PushError("The first child of the player doesn't have Camera3D as a first child");
+
+        if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION))
+            GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
+    }
 }
