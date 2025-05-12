@@ -8,12 +8,12 @@ public partial class PlayerMovement : CharacterBody3D
 {
     [Export] private PlayerMovementSettings _res_playerSettings;
 
-    private PlayerMovementSettings _s => _res_playerSettings;
-
+    private PlayerMovementSettings S => _res_playerSettings;
     private float _jumpHeight = 0.0f;
     private Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
     private Node3D _head = null;
+    public Head _headSrc = null;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -45,7 +45,8 @@ public partial class PlayerMovement : CharacterBody3D
     private void Init()
     {
         _head = GetChild<Node3D>(0);
-        _jumpHeight = Mathf.Sqrt(2 * _s._gravity * _s._jumpModifier);
+        _headSrc = _head as Head;
+        _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -74,15 +75,15 @@ public partial class PlayerMovement : CharacterBody3D
         if (_wantToJump)
             _timeSinceLastJumpInput += (float)delta;
 
-        if (_timeSinceLastJumpInput > _s._jumpBufferingTime * 2 && onFloor)
-            _timeSinceLastJumpInput = _s._jumpBufferingTime + 1;
+        if (_timeSinceLastJumpInput > S._jumpBufferingTime * 2 && onFloor)
+            _timeSinceLastJumpInput = S._jumpBufferingTime + 1;
 
         if (onFloor)
             _timeInAir = 0.0f;
         else
         {
             _timeInAir += (float)delta;
-            Velocity -= new Vector3(0, _s._gravity * (float)delta, 0);
+            Velocity -= new Vector3(0, S._gravity * (float)delta, 0);
             Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
 
@@ -98,7 +99,7 @@ public partial class PlayerMovement : CharacterBody3D
     private Vector3 Accelerate(Vector3 direction, float maxVelocity, double delta)
     {
         float currentSpeed = Velocity.Dot(direction);
-        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, _s._maxAcceleration * (float)delta);
+        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, S._maxAcceleration * (float)delta);
         return Velocity + increasingSpeed * direction;
     }
 
@@ -107,16 +108,16 @@ public partial class PlayerMovement : CharacterBody3D
         float speed = Velocity.Length();
         if (speed != 0)
         {
-            float control = Mathf.Max(_s._stopSpeed, speed);
-            float drop = (control * _s._friction * (float)delta);
+            float control = Mathf.Max(S._stopSpeed, speed);
+            float drop = (control * S._friction * (float)delta);
             Velocity *= Mathf.Max(speed - drop, 0) / speed;
         }
-        return Accelerate(direction, _s._maxVelocityGround, delta);
+        return Accelerate(direction, S._maxVelocityGround, delta);
     }
 
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
-        return Accelerate(direction, _s._maxVelocityAir, delta);
+        return Accelerate(direction, S._maxVelocityAir, delta);
     }
 
     private void Jump(Vector3 desiredDirection, double delta)
@@ -128,21 +129,21 @@ public partial class PlayerMovement : CharacterBody3D
 
     private bool CanJump()
     {
-        return (IsOnFloor() && (_timeSinceLastJumpInput < _s._jumpBufferingTime)) ||
-               (!IsOnFloor() && (_timeInAir < _s._coyoteTime));
+        return (IsOnFloor() && (_timeSinceLastJumpInput < S._jumpBufferingTime)) ||
+               (!IsOnFloor() && (_timeInAir < S._coyoteTime));
     }
 
     private void CameraRotation(InputEventMouseMotion e)
     {
-        RotateY(Mathf.DegToRad(-e.Relative.X * _s._sensitivity));
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * _s._sensitivity));
+        RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
+        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
 
         _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
     }
 
     private void Validation()
     {
-        if (_s == null)
+        if (S == null)
         {
             GD.PushError("PlayerMovementSettings resource not assigned.");
             return;

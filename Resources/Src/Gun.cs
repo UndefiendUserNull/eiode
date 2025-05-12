@@ -1,0 +1,15 @@
+using Godot;
+
+namespace EIODE.Resources.Src;
+[GlobalClass]
+public partial class Gun : Resource
+{
+    [Export] public float damagePerBullet = 10f;
+    [Export] public float fireRate = 0.5f;
+    [Export] public int maxAmmo = 100;
+    [Export] public int magazineSize = 25;
+    // In seconds
+    [Export] public float reloadTime = 2f;
+    [Export] public bool auto = false;
+    public Gun() { }
+}
