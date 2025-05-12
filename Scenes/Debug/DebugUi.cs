@@ -14,7 +14,6 @@ public partial class DebugUi : Control
     public override void _Ready()
     {
         _label = GetChild<Label>(0);
-        //_playerMovement = _player.GetScript().As<PlayerMovement>();
     }
 
     public override void _Process(double delta)
@@ -23,6 +22,13 @@ public partial class DebugUi : Control
         _sb.Append($"Delta : {delta}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
+        _sb.Append($"Shooting Time : {_player._headSrc._shootingTime}\n");
+        _sb.Append($"Current Fire Rate : {_player._headSrc.G.fireRate}\n");
+        _sb.Append($"Current Ammo : {_player._headSrc._reloading}\n");
+        _sb.Append($"Magazine Size : {_player._headSrc.G.magazineSize}\n");
+        _sb.Append($"Magazine Empty : {_player._headSrc._magazineEmpty}\n");
+        _sb.Append($"Current Ammo : {_player._headSrc._currentAmmo}\n");
+        _sb.Append($"Reloading Timer : {_player._headSrc._reloadingTimer}\n");
         _label.Text = _sb.ToString();
     }
 }

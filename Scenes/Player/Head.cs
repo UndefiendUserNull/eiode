@@ -1,0 +1,78 @@
+using EIODE.Resources.Src;
+using EIODE.Utils;
+using Godot;
+
+namespace EIODE.Scenes.Player;
+public partial class Head : Node3D
+{
+    [Export] public float ShootingRayLength { get; set; } = -1000;
+    [Export] private Gun _currentGunSettings = null;
+
+    private bool _shooting = false;
+    public bool _reloading = false;
+    // used in special cases
+    private bool _magazineFull = false;
+    public bool _magazineEmpty = false;
+    public float _shootingTime = 0.0f;
+    public int _currentAmmo = 0;
+    public float _reloadingTimer = 0f;
+    private RayCast3D _shootingRay = null;
+    public Gun G => _currentGunSettings;
+
+    public override void _Ready()
+    {
+        if (_currentGunSettings == null) GD.PushError("No gun settings was given to player");
+        _shootingRay = GetChild<RayCast3D>(1);
+        _shootingRay.TargetPosition = new Vector3(0, 0, ShootingRayLength);
+        _shootingRay.Enabled = false;
+        _currentAmmo = G.magazineSize;
+    }
+
+    public override void _Process(double delta)
+    {
+        HandleShooting(delta);
+    }
+
+
+    private void HandleShooting(double delta)
+    {
+        if (!_shooting && _shootingTime <= G.fireRate)
+        {
+            _shootingTime += (float)delta;
+        }
+
+        _shooting = (G.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
+
+        _magazineEmpty = _currentAmmo <= 0;
+        _magazineFull = _currentAmmo == G.magazineSize;
+
+        if (Input.IsActionJustPressed(InputHash.REALOAD) && !_reloading && !_magazineFull)
+            _reloading = true;
+
+        if (_reloading)
+        {
+            _reloadingTimer += (float)delta;
+            if (_reloadingTimer >= G.reloadTime)
+            {
+                _reloading = false;
+                _currentAmmo = G.magazineSize;
+                _reloadingTimer = 0f;
+            }
+        }
+
+        if (_shooting)
+        {
+            _shootingRay.Enabled = true;
+            _shootingTime = 0;
+            _currentAmmo--;
+        }
+        else
+        {
+            _shootingRay.Enabled = false;
+        }
+    }
+    private bool CanShoot()
+    {
+        return !_reloading && _shootingTime >= G.fireRate && !_magazineEmpty;
+    }
+}

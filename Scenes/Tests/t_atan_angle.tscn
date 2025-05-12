@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://61cvxvhv8p1h"]
+
+[ext_resource type="Script" uid="uid://dm0knika08udl" path="res://Scenes/Tests/T_ManualRotation.cs" id="1_d2tl1"]
+[ext_resource type="Script" uid="uid://bp6gwepa8n8mw" path="res://Scenes/Tests/T_AngleTest.cs" id="1_mugt5"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jfc0q"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_mugt5"]
+sky_material = SubResource("ProceduralSkyMaterial_jfc0q")
+
+[sub_resource type="Environment" id="Environment_d2tl1"]
+background_mode = 2
+sky = SubResource("Sky_mugt5")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_jfc0q"]
+size = Vector3(1.685, 0.285, 2.03)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_mugt5"]
+data = PackedVector3Array(-0.8425, 0.1425, 1.015, 0.8425, 0.1425, 1.015, -0.8425, -0.1425, 1.015, 0.8425, 0.1425, 1.015, 0.8425, -0.1425, 1.015, -0.8425, -0.1425, 1.015, 0.8425, 0.1425, -1.015, -0.8425, 0.1425, -1.015, 0.8425, -0.1425, -1.015, -0.8425, 0.1425, -1.015, -0.8425, -0.1425, -1.015, 0.8425, -0.1425, -1.015, 0.8425, 0.1425, 1.015, 0.8425, 0.1425, -1.015, 0.8425, -0.1425, 1.015, 0.8425, 0.1425, -1.015, 0.8425, -0.1425, -1.015, 0.8425, -0.1425, 1.015, -0.8425, 0.1425, -1.015, -0.8425, 0.1425, 1.015, -0.8425, -0.1425, -1.015, -0.8425, 0.1425, 1.015, -0.8425, -0.1425, 1.015, -0.8425, -0.1425, -1.015, 0.8425, 0.1425, 1.015, -0.8425, 0.1425, 1.015, 0.8425, 0.1425, -1.015, -0.8425, 0.1425, 1.015, -0.8425, 0.1425, -1.015, 0.8425, 0.1425, -1.015, -0.8425, -0.1425, 1.015, 0.8425, -0.1425, 1.015, -0.8425, -0.1425, -1.015, 0.8425, -0.1425, 1.015, 0.8425, -0.1425, -1.015, -0.8425, -0.1425, -1.015)
+
+[node name="TAtanAngle" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.984808, -0.150384, 0.0868241, 0, 0.5, 0.866025, -0.173648, 0.852869, -0.492404, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d2tl1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jfc0q")
+script = ExtResource("1_d2tl1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_mugt5")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0461012, 1, 2.78497)
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.657, 0)
+script = ExtResource("1_mugt5")

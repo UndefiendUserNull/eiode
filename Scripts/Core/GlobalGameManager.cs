@@ -16,6 +16,6 @@ public partial class GlobalGameManager : Node
             _isMouseShowed = !_isMouseShowed;
             Input.MouseMode = !_isMouseShowed ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
         }
-        if (Input.IsActionJustPressed(InputHash.K_R)) { GetTree().ReloadCurrentScene(); }
+        if (Input.IsActionJustPressed(InputHash.D_RELOAD_SCENE)) { GetTree().ReloadCurrentScene(); }
     }
 }
