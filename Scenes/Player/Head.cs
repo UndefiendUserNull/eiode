@@ -15,6 +15,7 @@ public partial class Head : Node3D
     public bool _magazineEmpty = false;
     public float _shootingTime = 0.0f;
     public int _currentAmmo = 0;
+    public int _currentMaxAmmo = 0;
     public float _reloadingTimer = 0f;
     private RayCast3D _shootingRay = null;
     public Gun G => _currentGunSettings;
@@ -26,6 +27,7 @@ public partial class Head : Node3D
         _shootingRay.TargetPosition = new Vector3(0, 0, ShootingRayLength);
         _shootingRay.Enabled = false;
         _currentAmmo = G.magazineSize;
+        _currentMaxAmmo = G.maxAmmo;
     }
 
     public override void _Process(double delta)
@@ -46,20 +48,23 @@ public partial class Head : Node3D
         _magazineEmpty = _currentAmmo <= 0;
         _magazineFull = _currentAmmo == G.magazineSize;
 
-        if (Input.IsActionJustPressed(InputHash.REALOAD) && !_reloading && !_magazineFull)
+        if (Input.IsActionJustPressed(InputHash.REALOAD) && CanReload())
             _reloading = true;
 
+        // Reload
         if (_reloading)
         {
             _reloadingTimer += (float)delta;
             if (_reloadingTimer >= G.reloadTime)
             {
                 _reloading = false;
-                _currentAmmo = G.magazineSize;
+                int ammoNeeded = G.magazineSize - _currentAmmo;
+                int ammoToTake = Mathf.Min(ammoNeeded, _currentMaxAmmo);
+                _currentAmmo += ammoToTake;
+                _currentMaxAmmo -= ammoToTake;
                 _reloadingTimer = 0f;
             }
         }
-
         if (_shooting)
         {
             _shootingRay.Enabled = true;
@@ -74,5 +79,10 @@ public partial class Head : Node3D
     private bool CanShoot()
     {
         return !_reloading && _shootingTime >= G.fireRate && !_magazineEmpty;
+    }
+
+    private bool CanReload()
+    {
+        return !_reloading && !_magazineFull && _currentMaxAmmo > 0;
     }
 }

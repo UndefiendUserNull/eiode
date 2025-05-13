@@ -5,9 +5,9 @@
 [resource]
 script = ExtResource("1_yxqgf")
 damagePerBullet = 10.0
-fireRate = 0.1
-maxAmmo = 100
-magazineSize = 25
-reloadTime = 2.0
+fireRate = 0.05
+maxAmmo = 30
+magazineSize = 10
+reloadTime = 0.5
 auto = true
 metadata/_custom_type_script = "uid://dcmwybabtxm2k"

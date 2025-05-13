@@ -29,6 +29,7 @@ public partial class DebugUi : Control
         _sb.Append($"Magazine Empty : {_player._headSrc._magazineEmpty}\n");
         _sb.Append($"Current Ammo : {_player._headSrc._currentAmmo}\n");
         _sb.Append($"Reloading Timer : {_player._headSrc._reloadingTimer}\n");
+        _sb.Append($"Current Max Ammo : {_player._headSrc._currentMaxAmmo}\n");
         _label.Text = _sb.ToString();
     }
 }
