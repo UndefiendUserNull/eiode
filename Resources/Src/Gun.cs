@@ -11,5 +11,6 @@ public partial class Gun : Resource
     // In seconds
     [Export] public float reloadTime = 2f;
     [Export] public bool auto = false;
+    [Export] public PackedScene lineTracer = null;
     public Gun() { }
 }

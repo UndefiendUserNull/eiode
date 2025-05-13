@@ -18,6 +18,7 @@ public partial class Head : Node3D
     public int _currentMaxAmmo = 0;
     public float _reloadingTimer = 0f;
     private RayCast3D _shootingRay = null;
+    private Node3D _parent = null;
     public Gun G => _currentGunSettings;
 
     public override void _Ready()
@@ -28,6 +29,7 @@ public partial class Head : Node3D
         _shootingRay.Enabled = false;
         _currentAmmo = G.magazineSize;
         _currentMaxAmmo = G.maxAmmo;
+        _parent = GetParent<Node3D>();
     }
 
     public override void _Process(double delta)
@@ -68,6 +70,12 @@ public partial class Head : Node3D
         if (_shooting)
         {
             _shootingRay.Enabled = true;
+            var line = G.lineTracer.Instantiate<Node3D>();
+            AddChild(line);
+            line.Rotation = new Vector3(Rotation.X, _parent.Rotation.Y, 0);
+            line.Position = new Vector3(_parent.Position.X, _parent.Position.Y + 1.5f, _parent.Position.Z);
+            RemoveChild(line);
+            GetTree().Root.AddChild(line);
             _shootingTime = 0;
             _currentAmmo--;
         }

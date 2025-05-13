@@ -1,0 +1,1 @@
+Get discord sdk dlls from `https://github.com/vaporvee/discord-rpc-godot`
