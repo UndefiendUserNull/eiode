@@ -4,3 +4,4 @@
 /.vs/
 /Output/
 *.exe
+/addons/discord-rpc-gd/bin/windows
