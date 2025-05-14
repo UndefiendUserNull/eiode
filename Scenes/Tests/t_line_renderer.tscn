@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://ckfjb3htq2ujx"]
+[gd_scene load_steps=5 format=3 uid="uid://ckfjb3htq2ujx"]
 
+[ext_resource type="Script" uid="uid://bok1nfegjnom" path="res://Scenes/Tests/t_line_renderer.gd" id="1_5qdsl"]
 [ext_resource type="Script" uid="uid://b0rnd4ql00g76" path="res://addons/LineRenderer/line_renderer.gd" id="1_mnsbq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mnsbq"]
@@ -8,6 +9,7 @@ albedo_color = Color(1, 0.227451, 0.129412, 1)
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_mnsbq"]
 
 [node name="line_tets" type="Node3D"]
+script = ExtResource("1_5qdsl")
 
 [node name="line" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_mnsbq")
@@ -23,5 +25,9 @@ end_thickness = 0.09
 use_global_coords = false
 metadata/_custom_type_script = "uid://b0rnd4ql00g76"
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.103, 0, 0)
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
