@@ -1,6 +1,7 @@
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using Godot;
+using System.Threading.Tasks;
 
 namespace EIODE.Scenes.Player;
 public partial class Head : Node3D
@@ -34,11 +35,11 @@ public partial class Head : Node3D
 
     public override void _Process(double delta)
     {
-        HandleShooting(delta);
+        HandleShootingAsync(delta);
     }
 
 
-    private void HandleShooting(double delta)
+    private void HandleShootingAsync(double delta)
     {
         if (!_shooting && _shootingTime <= G.fireRate)
         {
@@ -71,16 +72,11 @@ public partial class Head : Node3D
         {
             _shootingRay.Enabled = true;
             var line = G.lineTracer.Instantiate<Node3D>();
-            AddChild(line);
             line.Rotation = new Vector3(Rotation.X, _parent.Rotation.Y, 0);
             line.Position = new Vector3(_parent.Position.X, _parent.Position.Y + 1.5f, _parent.Position.Z);
-            RemoveChild(line);
             GetTree().Root.AddChild(line);
             _shootingTime = 0;
             _currentAmmo--;
-        }
-        else
-        {
             _shootingRay.Enabled = false;
         }
     }

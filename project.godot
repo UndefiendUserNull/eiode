@@ -18,8 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalGameManager="*res://Scripts/Core/GlobalGameManager.cs"
-Discord="*res://Scripts/Core/discord.gd"
-DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
+Discord="res://Scripts/Core/discord.gd"
+DiscordRPCLoader="res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 
 [display]
 
