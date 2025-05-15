@@ -1,1 +1,11 @@
-Get discord sdk dlls from `https://github.com/vaporvee/discord-rpc-godot`
+# Welcome To EIODE.
+
+---
+
+## Notes :
+
+- Project still under development
+- check "addons.txt" for addons used
+- please read [License](https://github.com/UndefiendUserNull/eiode?tab=License-1-ov-file#license-agreement-for-eiode-software) before doing anything to the project
+- Game is planned to be release on Itch.io and Steam in the future
+  
