@@ -1,4 +1,4 @@
-# Custom License for EIODE
+# License Agreement for EIODE Software
 
 © 2025 EIODE. All rights reserved.
 
