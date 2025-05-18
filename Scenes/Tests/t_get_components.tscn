@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwrbxrug2g4q"]
+
+[ext_resource type="Script" uid="uid://7u3bde2wnrqb" path="res://Scenes/Tests/t_Get.cs" id="1_rkyg3"]
+[ext_resource type="PackedScene" uid="uid://dyhy3u35n0t33" path="res://Components/Health/health_component.tscn" id="2_frln5"]
+
+[node name="t_get_components" type="Node2D" node_paths=PackedStringArray("node")]
+script = ExtResource("1_rkyg3")
+node = NodePath("Node2D")
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="HealthComponent" parent="Node2D" instance=ExtResource("2_frln5")]

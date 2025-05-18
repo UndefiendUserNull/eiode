@@ -19,7 +19,6 @@ config/icon="res://icon.svg"
 
 GlobalGameManager="*res://Scripts/Core/GlobalGameManager.cs"
 Discord="res://Scripts/Core/discord.gd"
-DiscordRPCLoader="res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 
 [display]
 
@@ -33,7 +32,7 @@ project/assembly_name="EIODE"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/LineRenderer/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg")
+enabled=PackedStringArray("res://addons/LineRenderer/plugin.cfg")
 
 [input]
 
@@ -89,6 +88,7 @@ reload={
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Hittable"
 3d_physics/layer_4="Enemy"
+3d_physics/layer_5="Hitbox"
 
 [mono]
 
