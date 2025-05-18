@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bsnu2g6pu10g"]
+
+[ext_resource type="PackedScene" uid="uid://bss5q2p1si1p4" path="res://Components/Hurtbox/hurtbox.tscn" id="1_48dwr"]
+[ext_resource type="PackedScene" uid="uid://dyhy3u35n0t33" path="res://Components/Health/health_component.tscn" id="2_8dq10"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8dq10"]
+radius = 0.628563
+height = 2.75921
+
+[node name="enemy_test" type="Node3D"]
+
+[node name="hurtbox" parent="." instance=ExtResource("1_48dwr")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
+shape = SubResource("CapsuleShape3D_8dq10")
+
+[node name="HealthComponent" parent="hurtbox" instance=ExtResource("2_8dq10")]
