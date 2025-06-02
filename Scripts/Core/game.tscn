@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://0dqa8uw1t4s"]
+
+[ext_resource type="Script" uid="uid://5ste8btvxtmo" path="res://Scripts/Core/Src/Game.cs" id="1_3na2w"]
+[ext_resource type="PackedScene" uid="uid://c20xv1lcvoy48" path="res://Scenes/Levels/world.tscn" id="2_mvhus"]
+
+[node name="Game" type="Node"]
+process_mode = 3
+process_priority = 99
+process_physics_priority = 99
+script = ExtResource("1_3na2w")
+FirstLevelToLoad = ExtResource("2_mvhus")

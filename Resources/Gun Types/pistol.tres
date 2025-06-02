@@ -9,6 +9,7 @@ damagePerBullet = 25.0
 fireRate = 0.5
 maxAmmo = 7
 magazineSize = 70
+HitboxDuration = 0.03
 reloadTime = 2.0
 auto = true
 lineTracer = ExtResource("1_y2v7h")

@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://c3bjl6peay5cr"]
+
+[ext_resource type="Script" uid="uid://do4eykfiskjwt" path="res://Scenes/UI/MainUi.cs" id="1_ikpc8"]
+[ext_resource type="Texture2D" uid="uid://cojq7jjfgr4bo" path="res://Assets/Textures/Crosshair03.png" id="1_mcebo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mcebo"]
+font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Main UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ikpc8")
+
+[node name="ammo" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+offset_right = 53.0
+grow_vertical = 0
+text = "0 / 10"
+label_settings = SubResource("LabelSettings_mcebo")
+
+[node name="Crosshair" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_mcebo")

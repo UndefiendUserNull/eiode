@@ -1,6 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bbr4fyp3ystge"]
-
-[ext_resource type="PackedScene" uid="uid://dqk8i0f08x0q2" path="res://Scenes/Player/player.tscn" id="1_weona"]
+[gd_scene load_steps=14 format=3 uid="uid://bbr4fyp3ystge"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mduok"]
 ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -51,9 +49,6 @@ data = PackedVector3Array(-5, 0.3, 5, 5, 0.3, 5, -5, -0.3, 5, 5, 0.3, 5, 5, -0.3
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_mecwh")
-
-[node name="Player" parent="." instance=ExtResource("1_weona")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 34, 83.7944)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.984808, 0.0295566, 0.171114, 0, 0.985408, -0.170209, -0.173648, -0.167624, -0.970437, 0, 0, 0)

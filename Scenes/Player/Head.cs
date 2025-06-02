@@ -15,8 +15,8 @@ public partial class Head : Node3D
     private bool _magazineFull = false;
     public bool _magazineEmpty = false;
     public float _shootingTime = 0.0f;
-    public int _currentAmmo = 0;
-    public int _currentMaxAmmo = 0;
+    public int CurrentAmmo { get; private set; } = 0;
+    public int CurrentMaxAmmo { get; private set; } = 0;
     public float _reloadingTimer = 0f;
     public bool _hitboxEnabled = false;
     private bool _hitboxTimerEnded = false;
@@ -25,16 +25,18 @@ public partial class Head : Node3D
     private Timer _hitboxTimer = null;
     public Gun G => _currentGunSettings;
 
+    [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
+
     public override void _Ready()
     {
         if (_currentGunSettings == null) GD.PushError("No gun settings was given to player");
         _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
         // There should be only one timer as a child for the "Head" node
-        _hitboxTimer = NodeUtils.GetChildWithNode<Timer>(this);
+        _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
         _hitbox.Damage = G.damagePerBullet;
         _hitbox.Disable();
-        _currentAmmo = G.magazineSize;
-        _currentMaxAmmo = G.maxAmmo;
+        CurrentAmmo = G.magazineSize;
+        CurrentMaxAmmo = G.maxAmmo;
         _parent = GetParent<Node3D>();
     }
 
@@ -59,8 +61,8 @@ public partial class Head : Node3D
             _hitboxEnabled = false;
         }
 
-        _magazineEmpty = _currentAmmo <= 0;
-        _magazineFull = _currentAmmo == G.magazineSize;
+        _magazineEmpty = CurrentAmmo <= 0;
+        _magazineFull = CurrentAmmo == G.magazineSize;
 
         if (Input.IsActionJustPressed(InputHash.REALOAD) && CanReload())
             _reloading = true;
@@ -81,7 +83,8 @@ public partial class Head : Node3D
         _hitbox.Enable();
         _hitboxEnabled = true;
         _shootingTime = 0;
-        _currentAmmo--;
+        CurrentAmmo--;
+        EmitSignal(SignalName.AmmoChanged, CurrentAmmo, CurrentMaxAmmo);
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
         _shooting = false;
     }
@@ -91,11 +94,12 @@ public partial class Head : Node3D
         if (_reloadingTimer >= G.reloadTime)
         {
             _reloading = false;
-            int ammoNeeded = G.magazineSize - _currentAmmo;
-            int ammoToTake = Mathf.Min(ammoNeeded, _currentMaxAmmo);
-            _currentAmmo += ammoToTake;
-            _currentMaxAmmo -= ammoToTake;
+            int ammoNeeded = G.magazineSize - CurrentAmmo;
+            int ammoToTake = Mathf.Min(ammoNeeded, CurrentMaxAmmo);
+            CurrentAmmo += ammoToTake;
+            CurrentMaxAmmo -= ammoToTake;
             _reloadingTimer = 0f;
+            EmitSignal(SignalName.AmmoChanged, CurrentAmmo, CurrentMaxAmmo);
         }
     }
     private void CreateLineTracer()
@@ -112,7 +116,7 @@ public partial class Head : Node3D
 
     private bool CanReload()
     {
-        return !_reloading && !_magazineFull && _currentMaxAmmo > 0;
+        return !_reloading && !_magazineFull && CurrentMaxAmmo > 0;
     }
     private bool GetShootingPressed()
     {

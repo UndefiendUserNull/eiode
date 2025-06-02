@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dqk8i0f08x0q2"]
+[gd_scene load_steps=10 format=3 uid="uid://dqk8i0f08x0q2"]
 
 [ext_resource type="Script" uid="uid://vwwqwf56640l" path="res://Scenes/Player/PlayerMovement.cs" id="1_uvnfx"]
 [ext_resource type="Resource" uid="uid://dql1va6oatqi6" path="res://Resources/MainPlayerMovementSettings.tres" id="2_a3d8c"]
@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://bmvfi8gxn32oj" path="res://Resources/Gun Types/pistol.tres" id="4_htcer"]
 [ext_resource type="PackedScene" uid="uid://baxvfvns3bm61" path="res://Components/Hitbox/hitbox.tscn" id="5_dd0ac"]
 [ext_resource type="PackedScene" uid="uid://ckfjb3htq2ujx" path="res://Scenes/Tests/t_line_renderer.tscn" id="5_htcer"]
+[ext_resource type="PackedScene" uid="uid://c3bjl6peay5cr" path="res://Scenes/UI/main_ui.tscn" id="7_0u5uq"]
 
 [sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_0u5uq"]
 length = 1000.0
@@ -46,3 +47,5 @@ debug_color = Color(0.254902, 0.635294, 0, 0.0941176)
 [node name="line_tets" parent="." instance=ExtResource("5_htcer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
 visible = false
+
+[node name="Main UI" parent="." instance=ExtResource("7_0u5uq")]

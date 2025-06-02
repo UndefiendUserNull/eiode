@@ -13,7 +13,7 @@ public partial class PlayerMovement : CharacterBody3D
     private Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
     private Node3D _head = null;
-    public Head _headSrc = null;
+    private Head _headSrc = null;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -26,9 +26,7 @@ public partial class PlayerMovement : CharacterBody3D
     public float _timeSinceLastJumpInput { get; private set; } = 0f;
     #endregion
 
-    public override void _Ready() => Init();
-
-    public override void _EnterTree() => Validation();
+    public override void _EnterTree() => Init();
 
     public override void _Input(InputEvent @event)
     {
@@ -44,6 +42,9 @@ public partial class PlayerMovement : CharacterBody3D
 
     private void Init()
     {
+        Validation();
+        // Should be unlocked from outside
+        Lock();
         _head = GetChild<Node3D>(0);
         _headSrc = _head as Head;
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
@@ -139,6 +140,24 @@ public partial class PlayerMovement : CharacterBody3D
         _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
 
         _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
+    }
+    public void Lock()
+    {
+        ProcessMode = ProcessModeEnum.Disabled;
+    }
+
+    public void Unlock()
+    {
+        ProcessMode = ProcessModeEnum.Inherit;
+    }
+    public Head GetHead()
+    {
+        if (_headSrc != null) return _headSrc;
+        else
+        {
+            GD.PushError("Head in player is null");
+            return null;
+        }
     }
 
     private void Validation()
