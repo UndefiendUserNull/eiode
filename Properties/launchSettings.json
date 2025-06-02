@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "EIODE": {
+      "commandName": "Project"
+    },
+    "Launch": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Godot\\4.4.1-mono\\godot.exe",
+      "commandLineArgs": "--path . --verbose",
+      "workingDirectory": ".",
+      "nativeDebugging": true
+    }
+  }
+}

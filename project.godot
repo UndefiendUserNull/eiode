@@ -11,14 +11,15 @@ config_version=5
 [application]
 
 config/name="EIODE"
-run/main_scene="uid://c20xv1lcvoy48"
+run/main_scene="uid://chotnciutfrv"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GlobalGameManager="*res://Scripts/Core/GlobalGameManager.cs"
-Discord="res://Scripts/Core/discord.gd"
+Discord="res://Scripts/Core/Src/discord.gd"
+Game="*res://Scripts/Core/game.tscn"
+LevelLoader="*res://Scripts/Core/level_loader.tscn"
 
 [display]
 

@@ -1,0 +1,10 @@
+Game Starts:
+  1- Godot loads Main Scene "res://Scripts/Core/starter.tscn"
+  2- Autoloads "Game, LevelLoader"
+  3- Game "_Ready" loads then spawns the player in the root "Check SpawnPlayer()"
+  4- Game calls level loader and loads the first level "Check LoadFirstLevel()" and reparents the player to that first level
+  5- Done :D "Hopefully no errors"
+
+Notes :
+  1- Any level MUSN'T include any player scene inside of it, the LevelLoader handels that
+  2- Before making any level changing make sure to NOT CHANGE THE LEVEL MORE THAN ONE TIME, use a flag or something idk

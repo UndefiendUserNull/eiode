@@ -1,14 +1,15 @@
+using EIODE.Scenes.Player;
 using Godot;
 
 namespace EIODE.Utils;
 
 public static class NodeUtils
 {
-    public static T GetChildWithNode<T>(Node parent) where T : Node
+    public static T GetChildWithNodeType<T>(Node parent) where T : Node
     {
         if (parent == null)
         {
-            GD.PrintErr("Null " + nameof(parent));
+            GD.PushError("Null " + nameof(parent));
         }
 
         foreach (Node child in parent.GetChildren())
@@ -18,13 +19,30 @@ public static class NodeUtils
                 return foundChild;
             }
 
-            var recursiveResult = GetChildWithNode<T>(child);
+            var recursiveResult = GetChildWithNodeType<T>(child);
             if (recursiveResult != null)
             {
                 return recursiveResult;
             }
         }
         return default;
+    }
+
+    public static Node3D GetPlayerFromRoot(Node root)
+    {
+        foreach (var child in root.GetChildren())
+        {
+            if (child is PlayerMovement playerFound)
+                return playerFound;
+
+            if (child.GetChildCount() > 0)
+            {
+                var foundInChildren = GetPlayerFromRoot(child);
+                if (foundInChildren != null)
+                    return foundInChildren;
+            }
+        }
+        return null; // Player not found
     }
 }
 
