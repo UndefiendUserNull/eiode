@@ -1,0 +1,2 @@
+https://github.com/vaporvee/discord-rpc-godot/releases/download/1.3.1/ADDON-Discord-RPC-Godot.zip
+https://github.com/blackears/cyclopsLevelBuilder/releases/download/v1.0.4/cyclops_level_builder_1_0_4.zip

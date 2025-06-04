@@ -169,3 +169,5 @@ shape = SubResource("BoxShape3D_434w7")
 [node name="hint idk" type="Label3D" parent="Change level test"]
 transform = Transform3D(2.25376, 0, 0, 0, 1, 0, -7.10543e-15, 0, 1, 0, 0.682168, 0)
 text = "Enter"
+
+[node name="Objectives" type="Node" parent="."]

@@ -6,3 +6,5 @@
 /addons/
 ref.txt
 Assets/
+addons_downloader/Lib/
+addons_downloader/Scripts/
