@@ -14,6 +14,7 @@ public partial class PlayerMovement : CharacterBody3D
     private bool _wantToJump = false;
     private Node3D _head = null;
     private Head _headSrc = null;
+    private RayCast3D _feet = null; // :D
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -45,6 +46,8 @@ public partial class PlayerMovement : CharacterBody3D
         Validation();
         // Should be unlocked from outside
         Lock();
+        _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
+        if (!_feet.Name.ToString().Equals("feet", System.StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
         _head = GetChild<Node3D>(0);
         _headSrc = _head as Head;
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
@@ -94,6 +97,7 @@ public partial class PlayerMovement : CharacterBody3D
         }
 
         Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
+        if (onFloor) Velocity = AdjustedVelocityToSlope(Velocity);
         MoveAndSlide();
     }
 
@@ -121,6 +125,16 @@ public partial class PlayerMovement : CharacterBody3D
         return Accelerate(direction, S._maxVelocityAir, delta);
     }
 
+    private Vector3 AdjustedVelocityToSlope(Vector3 velocity)
+    {
+        if (_feet.CollideWithBodies)
+        {
+            Quaternion slopeRotation = new(Vector3.Up, _feet.GetCollisionNormal());
+            Vector3 adjustedVelocity = slopeRotation.Normalized() * velocity;
+            if (adjustedVelocity.Y < 0) return adjustedVelocity;
+        }
+        return velocity;
+    }
     private void Jump(Vector3 desiredDirection, double delta)
     {
         Vector3 horizontalVelocity = UpdateVelocityGround(desiredDirection, delta);
