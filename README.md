@@ -8,7 +8,7 @@ Hi :)
 
 2. Download python "required to download addons"
 
-3. Follow [How To Download Addons](Docs\How To Download Addons.md)
+3. Follow [How To Download Addons](https://github.com/UndefiendUserNull/eiode/blob/master/Docs/How%20To%20Download%20Addons.md)
 
 <!-- 4. Get The Assets from links provided -->
 
