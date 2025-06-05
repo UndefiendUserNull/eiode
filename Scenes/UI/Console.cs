@@ -6,14 +6,30 @@ using EIODE.Scripts.Core;
 namespace EIODE.Scenes.UI;
 public partial class Console : Control
 {
-    private TextEdit _input = null;
+    private LineEdit _input = null;
     private bool _isShown = false;
     private Game _game;
     public override void _Ready()
     {
-        _input = GetChild<TextEdit>(0);
+        _input = GetChild<LineEdit>(0);
         _input.Hide();
         _game = Game.GetGame(this);
+        _input.TextSubmitted += Input_TextSubmitted;
+
+    }
+
+    private void Input_TextSubmitted(string newText)
+    {
+        if (_isShown)
+        {
+            string command = _input.Text.Trim('\n');
+            if (!string.IsNullOrEmpty(command))
+            {
+                GD.Print($"Executing: {command}");
+                ConsoleCommandSystem.ExecuteCommand(command);
+            }
+            _input.Clear();
+        }
     }
 
     public override void _Process(double delta)
@@ -31,25 +47,10 @@ public partial class Console : Control
             else
             {
                 HideConsole();
-                _input.Text = string.Empty;
-            }
-        }
-
-        if (_isShown)
-        {
-            if (Input.IsActionJustPressed(InputHash.K_ENTER))
-            {
-                string command = _input.Text.Trim();
-                if (!string.IsNullOrEmpty(command))
-                {
-                    GD.Print($"Executing: {command}");
-                    ConsoleCommandSystem.ExecuteCommand(command);
-                }
-                _input.Text = string.Empty;
-                _input.GrabFocus();
             }
         }
     }
+
     private void ShowConsole()
     {
         _input.Show();

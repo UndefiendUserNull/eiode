@@ -24,6 +24,7 @@ public partial class DebugUi : Control
         _playerHead ??= _player.GetHead();
         _sb.Clear();
         _sb.Append($"FPS : {Engine.GetFramesPerSecond()}\n");
+        _sb.Append($"Player Position : {_player.Position}\n");
         _sb.Append($"Delta : {delta}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");

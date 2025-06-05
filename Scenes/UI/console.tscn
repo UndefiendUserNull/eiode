@@ -11,13 +11,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8ecer")
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -35.0
+offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 placeholder_text = "Command"
+keep_editing_on_text_submit = true
+emoji_menu_enabled = false
+clear_button_enabled = true
+select_all_on_focus = true
+caret_blink = true
