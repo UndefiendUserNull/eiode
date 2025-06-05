@@ -1,3 +1,4 @@
+using EIODE.Core.Console;
 using Godot;
 using System.IO;
 
@@ -8,9 +9,13 @@ public partial class LevelLoader : Node
     public static LevelLoader Instance { get; private set; }
     public Node CurrentLevel { get; set; } = null;
     private const string LEVELS_PATH = "res://Scenes/Levels/";
+    private DevConsole _console;
     public override void _EnterTree()
     {
+        ConsoleCommandSystem.RegisterInstance(this);
+
         Instance = this;
+        _console = Game.GetGame(this).Console;
     }
     public static PackedScene LoadLevel(string path)
     {
@@ -27,12 +32,11 @@ public partial class LevelLoader : Node
     }
     public void ChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        GD.Print($"Changing Level to {newLevel}");
+        Game.GetGame(this).Console.Log($"Changing Level to {newLevel}");
         CallDeferred(MethodName.DeferredChangeLevel, newLevel, freeCurrentLevel, movePlayer);
     }
     private void DeferredChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        // TODO: Levels in the future should have their own class
         if (freeCurrentLevel) CurrentLevel.QueueFree();
         CurrentLevel = newLevel.Instantiate();
         GetTree().Root.AddChild(CurrentLevel);
@@ -43,28 +47,41 @@ public partial class LevelLoader : Node
             var player = Game.GetGame(this).Player;
             player.Lock();
             player.Reparent(CurrentLevel);
-            // TODO: Also move player global position to the level's starting position, it should be a public Vector3 in the level class
             player.UnLock();
         }
     }
-    public void cc_ChangeLevel(string levelName)
+    [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
+    public void Cc_ChangeLevel(string levelName)
     {
-        var path = Path.Combine(LEVELS_PATH, levelName + ".tscn");
+        string path = string.Empty;
+
+        if (!levelName.EndsWith(".tscn"))
+            path = Path.Combine(LEVELS_PATH, levelName + ".tscn");
+        else
+            path = Path.Combine(LEVELS_PATH, levelName);
+
+        _console.Log(path);
         if (File.Exists(path))
         {
+            _console.Log($"Changing Level to {path} ...");
             PackedScene level = LoadLevel(path);
             ChangeLevel(level);
         }
         else
         {
-            GD.PrintErr("Level was not found");
+            _console.Log($"Level {path} was not found", DevConsole.LogLevel.ERROR);
         }
     }
-    public void cc_ListLevels()
+    [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
+    public static void Cc_ListLevels()
     {
-        foreach (string item in Directory.EnumerateFiles(LEVELS_PATH))
+        string scenesFoundString = "\n";
+        int scenesFoundLength = 0;
+        foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
         {
-            GD.Print(item + '\n');
+            scenesFoundString += $"{item}\n";
+            scenesFoundLength++;
         }
+        Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EIODE.Scripts.Core;
 using Godot;
 
 namespace EIODE.Core.Console;
@@ -30,7 +31,10 @@ public static class ConsoleCommandSystem
         }
         GD.Print($"Console Command System is Ready! {_commands.Count} commands found.");
     }
-
+    public static Dictionary<string, (MethodInfo Method, object Target, string Description, bool IsCheat)> GetCommands()
+    {
+        return _commands;
+    }
     // Register an instance object's methods (non-static)
     public static void RegisterInstance(object instance)
     {
@@ -116,12 +120,5 @@ public static class ConsoleCommandSystem
         return parsedArgs;
     }
 
-    [ConsoleCommand("help", "Helps you :D")]
-    public static void Help()
-    {
-        foreach (var cmd in _commands)
-        {
-            GD.Print($"{cmd.Key}: {cmd.Value.Description}");
-        }
-    }
+
 }

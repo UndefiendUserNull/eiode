@@ -1,8 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://clqrrw0dlrbr2"]
 
-[ext_resource type="Script" uid="uid://ced8kmuaqrfmx" path="res://Scenes/UI/Console.cs" id="1_8ecer"]
+[ext_resource type="Script" uid="uid://cla74cor3vtij" path="res://Scripts/Core/Src/Console/DevConsole.cs" id="1_8ecer"]
 
 [node name="Console" type="Control"]
+top_level = true
+z_index = 1000
+z_as_relative = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +14,33 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8ecer")
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Logger" type="RichTextLabel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.968
+offset_bottom = -0.200073
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+bbcode_enabled = true
+text = "[INFO] : Game Started
+[ERROR] : [color=red]Player Was Not Found[/color]
+[WARNING] : [color=yellow]Head Is Not Named Head"
+fit_content = true
+scroll_following = true
+threaded = true
+selection_enabled = true
+
+[node name="Input" type="LineEdit" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0

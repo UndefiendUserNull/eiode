@@ -53,7 +53,22 @@ public partial class Head : Node3D
         ConsoleCommandSystem.RegisterInstance(this);
     }
 
-
+    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, dpb int)")]
+    public void Set(string type, int amount)
+    {
+        if (type.Equals("cammo", System.StringComparison.CurrentCultureIgnoreCase))
+        {
+            CurrentAmmo = amount;
+        }
+        else if (type.Equals("mammo", System.StringComparison.CurrentCultureIgnoreCase))
+        {
+            CurrentMaxAmmo = amount;
+        }
+        else if (type.Equals("dpb", System.StringComparison.CurrentCultureIgnoreCase))
+        {
+            // CurrentDamagePerBullet = amount;
+        }
+    }
 
     public override void _Process(double delta)
     {

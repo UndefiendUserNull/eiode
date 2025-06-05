@@ -14,16 +14,28 @@ public partial class Game : Node
     private readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 15, 0);
 
     public PlayerMovement Player { get; private set; }
+    public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
     public override void _Ready()
     {
+        SpawnConsole();
         SpawnPlayer();
         LoadFirstLevel();
         HideMouse();
         ConsoleCommandSystem.Initialize();
         ConsoleCommandSystem.RegisterInstance(this);
-        GD.Print("Game _Ready finished");
+        Console.Print("Game _Ready finished");
     }
+
+    private void SpawnConsole()
+    {
+        var consoleScene = ResourceLoader.Load<PackedScene>(ScenesHash.CONSOLE_SCENE);
+        Console = consoleScene.Instantiate<DevConsole>();
+        GetTree().Root.CallDeferred(MethodName.AddChild, Console);
+        Console.Name = "Console";
+        Console.Log("Console ready", DevConsole.LogLevel.INFO);
+    }
+
     private void LoadFirstLevel()
     {
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
@@ -43,7 +55,7 @@ public partial class Game : Node
     // Pass 'this' for the placeHolder, it does nothing
     public static Game GetGame(Node placeHolder)
     {
-        return placeHolder.GetNode<Game>(Location);
+        return placeHolder.GetTree().Root.GetNode<Game>(Location);
     }
 
     public override void _Input(InputEvent @event)
@@ -78,6 +90,7 @@ public partial class Game : Node
         GetTree().Root.CallDeferred(MethodName.AddChild, Player);
         _playerReady = true;
         Player.Name = "Player";
-        GD.Print("Player ready");
+        Console.Print("Player ready");
     }
+
 }

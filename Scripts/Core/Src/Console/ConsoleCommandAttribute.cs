@@ -8,7 +8,7 @@ public class ConsoleCommandAttribute : Attribute
     public string Description { get; }
     public bool IsCheat { get; }
 
-    public ConsoleCommandAttribute(string command, string description, bool isCheat = false)
+    public ConsoleCommandAttribute(string command, string description = "No Desctiption Given.", bool isCheat = false)
     {
         Command = command;
         Description = description;
