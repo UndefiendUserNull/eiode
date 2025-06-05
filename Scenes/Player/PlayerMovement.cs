@@ -160,7 +160,7 @@ public partial class PlayerMovement : CharacterBody3D
         ProcessMode = ProcessModeEnum.Disabled;
     }
 
-    public void Unlock()
+    public void UnLock()
     {
         ProcessMode = ProcessModeEnum.Inherit;
     }

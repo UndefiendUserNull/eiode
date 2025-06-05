@@ -1,4 +1,5 @@
 using EIODE.Scenes.Player;
+using EIODE.Core.Console;
 using EIODE.Utils;
 using Godot;
 
@@ -18,7 +19,8 @@ public partial class Game : Node
     {
         SpawnPlayer();
         LoadFirstLevel();
-        Input.MouseMode = Input.MouseModeEnum.Captured;
+        HideMouse();
+        ConsoleCommandSystem.Initialize();
         GD.Print("Game _Ready finished");
     }
     private void LoadFirstLevel()
@@ -36,15 +38,38 @@ public partial class Game : Node
         }
         return Player;
     }
+
+    // Pass 'this' for the placeHolder, it does nothing
+    public static Game GetGame(Node placeHolder)
+    {
+        return placeHolder.GetNode<Game>(Location);
+    }
+
     public override void _Input(InputEvent @event)
     {
         if (Input.IsActionJustPressed(InputHash.K_ESC))
         {
             _isMouseShowed = !_isMouseShowed;
-            Input.MouseMode = !_isMouseShowed ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
+            if (_isMouseShowed) HideMouse();
+            else ShowMouse();
         }
         if (Input.IsActionJustPressed(InputHash.D_RELOAD_SCENE)) { GetTree().ReloadCurrentScene(); }
     }
+    [ConsoleCommand("ReloadScene", "Reloads Current Scene")]
+    public void ReloadCurrentScene()
+    {
+        GetTree().ReloadCurrentScene();
+    }
+    public static void ShowMouse()
+    {
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+    }
+
+    public static void HideMouse()
+    {
+        Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
     private void SpawnPlayer()
     {
         var playerScene = ResourceLoader.Load<PackedScene>(ScenesHash.PLAYER_SCENE);

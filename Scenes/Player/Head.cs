@@ -1,5 +1,6 @@
 using EIODE.Components;
 using EIODE.Resources.Src;
+using EIODE.Core.Console;
 using EIODE.Utils;
 using Godot;
 
@@ -102,7 +103,9 @@ public partial class Head : Node3D
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
         _shooting = false;
     }
-    private void Reload(double delta)
+
+    [ConsoleCommand("Reload", "Reloads Current Gun")]
+    public void Reload(double delta)
     {
         _reloadingTimer += (float)delta;
         if (_reloadingTimer >= G.reloadTime)

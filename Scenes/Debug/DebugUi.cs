@@ -14,7 +14,7 @@ public partial class DebugUi : Control
 
     public override void _Ready()
     {
-        _player = GetNode<Game>(Game.Location).GetPlayer();
+        _player = Game.GetGame(this).GetPlayer();
         _playerHead = _player.GetHead();
         _label = GetChild<Label>(0);
     }
