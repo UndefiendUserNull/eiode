@@ -17,17 +17,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ikpc8")
 
-[node name="ammo" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -28.0
-offset_right = 53.0
-grow_vertical = 0
-text = "0 / 10"
-label_settings = SubResource("LabelSettings_mcebo")
-
 [node name="Crosshair" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -42,3 +31,22 @@ offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_mcebo")
+
+[node name="V" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 53.0
+grow_vertical = 0
+
+[node name="l_reloading" type="Label" parent="V"]
+layout_mode = 2
+text = "reloading ..."
+label_settings = SubResource("LabelSettings_mcebo")
+
+[node name="l_ammo" type="Label" parent="V"]
+layout_mode = 2
+text = "0 / 10"
+label_settings = SubResource("LabelSettings_mcebo")

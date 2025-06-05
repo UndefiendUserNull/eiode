@@ -1,3 +1,4 @@
+using EIODE.Scripts.Core;
 using Godot;
 
 namespace EIODE.Components;
@@ -60,7 +61,7 @@ public partial class HealthComponent : Node, IComponent
         _dead = true;
         CurrentHealth = 0;
         EmitSignal(SignalName.OnDeath);
-        GD.Print($"{Name} Died");
+        Game.GetGame(this).Console.Print($"{Name} Died");
     }
 
     public HealthComponent(int maxHealth, float critMultiplier, bool canRegenerate = false, float regenerationDelay = 0f, float regenerationRate = 0f)

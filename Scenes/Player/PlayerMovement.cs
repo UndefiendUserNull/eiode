@@ -1,3 +1,4 @@
+using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using Godot;
@@ -52,6 +53,7 @@ public partial class PlayerMovement : CharacterBody3D
         _headSrc = _head as Head;
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
         Input.MouseMode = Input.MouseModeEnum.Captured;
+        ConsoleCommandSystem.RegisterInstance(this);
     }
 
     private void MainInput()
@@ -130,7 +132,7 @@ public partial class PlayerMovement : CharacterBody3D
         if (_feet.CollideWithBodies)
         {
             Quaternion slopeRotation = new(Vector3.Up, _feet.GetCollisionNormal());
-            Vector3 adjustedVelocity = slopeRotation.Normalized() * velocity;
+            Vector3 adjustedVelocity = slopeRotation * velocity;
             if (adjustedVelocity.Y < 0) return adjustedVelocity;
         }
         return velocity;
@@ -160,7 +162,7 @@ public partial class PlayerMovement : CharacterBody3D
         ProcessMode = ProcessModeEnum.Disabled;
     }
 
-    public void Unlock()
+    public void UnLock()
     {
         ProcessMode = ProcessModeEnum.Inherit;
     }
@@ -187,5 +189,10 @@ public partial class PlayerMovement : CharacterBody3D
 
         if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION))
             GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
+    }
+    [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
+    public void MovePosition(float x, float y, float z)
+    {
+        Position = new Vector3(x, y, z);
     }
 }

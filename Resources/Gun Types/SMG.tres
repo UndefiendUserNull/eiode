@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Gun" load_steps=2 format=3 uid="uid://dk7foobtgscip"]
+
+[ext_resource type="Script" uid="uid://dcmwybabtxm2k" path="res://Resources/Src/Gun.cs" id="1_wotj2"]
+
+[resource]
+script = ExtResource("1_wotj2")
+damagePerBullet = 2
+fireRate = 0.05
+maxAmmo = 500
+magazineSize = 100
+HitboxDuration = 0.03
+reloadTime = 1.0
+auto = true
+metadata/_custom_type_script = "uid://dcmwybabtxm2k"
