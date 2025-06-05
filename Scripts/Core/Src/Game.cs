@@ -21,6 +21,7 @@ public partial class Game : Node
         LoadFirstLevel();
         HideMouse();
         ConsoleCommandSystem.Initialize();
+        ConsoleCommandSystem.RegisterInstance(this);
         GD.Print("Game _Ready finished");
     }
     private void LoadFirstLevel()

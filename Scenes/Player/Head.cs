@@ -49,6 +49,8 @@ public partial class Head : Node3D
         _parent = GetParent<Node3D>();
 
         EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+
+        ConsoleCommandSystem.RegisterInstance(this);
     }
 
 
@@ -104,8 +106,7 @@ public partial class Head : Node3D
         _shooting = false;
     }
 
-    [ConsoleCommand("Reload", "Reloads Current Gun")]
-    public void Reload(double delta)
+    private void Reload(double delta)
     {
         _reloadingTimer += (float)delta;
         if (_reloadingTimer >= G.reloadTime)
@@ -119,6 +120,13 @@ public partial class Head : Node3D
             _reloadingTimer = 0f;
             EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
         }
+    }
+    //  This is a dummy test command, useless atm
+    [ConsoleCommand("Reload", "Reloads Current Gun")]
+    public void ForceReload()
+    {
+        // passes big number to delta so reloading timer fills fast
+        Reload(99999);
     }
     private void CreateLineTracer()
     {

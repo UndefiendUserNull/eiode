@@ -22,24 +22,34 @@ public partial class Console : Control
         {
             _isShown = !_isShown;
 
-            if (_isShown) ShowConsole();
-            else HideConsole();
+            if (_isShown)
+            {
+                ShowConsole();
+                _input.Clear();
+                _input.GrabFocus();
+            }
+            else
+            {
+                HideConsole();
+                _input.Text = string.Empty;
+            }
         }
 
         if (_isShown)
         {
             if (Input.IsActionJustPressed(InputHash.K_ENTER))
             {
-                GD.Print("Executing");
-                ConsoleCommandSystem.ExecuteCommand(_input.Text.ToString().Trim());
+                string command = _input.Text.Trim();
+                if (!string.IsNullOrEmpty(command))
+                {
+                    GD.Print($"Executing: {command}");
+                    ConsoleCommandSystem.ExecuteCommand(command);
+                }
+                _input.Text = string.Empty;
+                _input.GrabFocus();
             }
         }
-        else
-        {
-            _input.Text = string.Empty;
-        }
     }
-
     private void ShowConsole()
     {
         _input.Show();
