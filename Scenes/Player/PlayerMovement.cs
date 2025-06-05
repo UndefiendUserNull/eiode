@@ -130,7 +130,7 @@ public partial class PlayerMovement : CharacterBody3D
         if (_feet.CollideWithBodies)
         {
             Quaternion slopeRotation = new(Vector3.Up, _feet.GetCollisionNormal());
-            Vector3 adjustedVelocity = slopeRotation.Normalized() * velocity;
+            Vector3 adjustedVelocity = slopeRotation * velocity;
             if (adjustedVelocity.Y < 0) return adjustedVelocity;
         }
         return velocity;

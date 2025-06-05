@@ -10,7 +10,10 @@ public static class InputHash
     public const string SHOOT = "shoot";
     public const string REALOAD = "reload";
     public const string D_RELOAD_SCENE = "D_reloadScene";
-
+    public const string OPEN_CONSOLE = "open_console";
+    public const string UP = "up";
+    public const string DOWN = "down";
     // Keys
+    public const string K_CTRL = "K_CTRL";
     public const string K_ESC = "K_ESC";
 }

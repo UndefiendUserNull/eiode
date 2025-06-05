@@ -1,4 +1,5 @@
 using Godot;
+using System.IO;
 
 namespace EIODE.Scripts.Core
 {
@@ -6,6 +7,7 @@ namespace EIODE.Scripts.Core
     {
         public static LevelLoader Instance { get; private set; }
         public Node CurrentLevel { get; set; } = null;
+        private const string LEVELS_PATH = "res://Scenes/Levels/";
         public override void _EnterTree()
         {
             Instance = this;
@@ -23,7 +25,6 @@ namespace EIODE.Scripts.Core
                 throw;
             }
         }
-
         public void ChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
         {
             GD.Print($"Changing Level to {newLevel}");
@@ -44,6 +45,26 @@ namespace EIODE.Scripts.Core
                 player.Reparent(CurrentLevel);
                 // TODO: Also move player global position to the level's starting position, it should be a public Vector3 in the level class
                 player.Unlock();
+            }
+        }
+        public void cc_ChangeLevel(string levelName)
+        {
+            var path = Path.Combine(LEVELS_PATH, levelName + ".tscn");
+            if (File.Exists(path))
+            {
+                PackedScene level = LoadLevel(path);
+                ChangeLevel(level);
+            }
+            else
+            {
+                GD.PrintErr("Level was not found");
+            }
+        }
+        public void cc_ListLevels()
+        {
+            foreach (string item in Directory.EnumerateFiles(LEVELS_PATH))
+            {
+                GD.Print(item + '\n');
             }
         }
     }

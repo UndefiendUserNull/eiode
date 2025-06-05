@@ -7,7 +7,7 @@ namespace EIODE.Scenes.Player;
 public partial class Head : Node3D
 {
     [Export] public float ShootingRayLength { get; set; } = -1000;
-    [Export] private Gun _currentGunSettings = null;
+    [Export] private Gun CurrentGunSettings { get; set; } = null;
 
     public bool _shooting = false;
     public bool _reloading = false;
@@ -23,21 +23,31 @@ public partial class Head : Node3D
     private HitboxComponent _hitbox = null;
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
-    public Gun G => _currentGunSettings;
+    public Gun G = null;
 
     [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
-
+    [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
+    [Signal] public delegate void StartedReloadingEventHandler();
+    [Signal] public delegate void EndedReloadingEventHandler();
     public override void _Ready()
     {
-        if (_currentGunSettings == null) GD.PushError("No gun settings was given to player");
+        if (CurrentGunSettings == null) GD.PushError("No gun settings was given to player");
+        else G = CurrentGunSettings;
+
         _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
+
         // There should be only one timer as a child for the "Head" node
         _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
+
         _hitbox.Damage = G.damagePerBullet;
         _hitbox.Disable();
+
         CurrentAmmo = G.magazineSize;
         CurrentMaxAmmo = G.maxAmmo;
+
         _parent = GetParent<Node3D>();
+
+        EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
     }
 
 
@@ -45,6 +55,11 @@ public partial class Head : Node3D
     public override void _Process(double delta)
     {
         HandleShooting(delta);
+        if (G != CurrentGunSettings)
+        {
+            EmitSignalGunSettingsChanged(G, CurrentGunSettings);
+            G = CurrentGunSettings;
+        }
     }
 
 
@@ -54,9 +69,9 @@ public partial class Head : Node3D
         {
             _shootingTime += (float)delta;
         }
+
         if (_hitboxEnabled && _shootingTime >= G.HitboxDuration)
         {
-            GD.Print("SD");
             _hitbox.Disable();
             _hitboxEnabled = false;
         }
@@ -65,16 +80,15 @@ public partial class Head : Node3D
         _magazineFull = CurrentAmmo == G.magazineSize;
 
         if (Input.IsActionJustPressed(InputHash.REALOAD) && CanReload())
+        {
             _reloading = true;
+            EmitSignalStartedReloading();
+        }
 
-        if (_reloading)
-        {
-            Reload(delta);
-        }
-        if (GetShootingPressed())
-        {
-            Shoot();
-        }
+        if (_reloading) Reload(delta);
+
+        if (GetShootingPressed()) Shoot();
+
         if (_hitboxEnabled && _hitboxTimer.TimeLeft <= 0) _hitbox.Disable();
     }
     private void Shoot()
@@ -84,7 +98,7 @@ public partial class Head : Node3D
         _hitboxEnabled = true;
         _shootingTime = 0;
         CurrentAmmo--;
-        EmitSignal(SignalName.AmmoChanged, CurrentAmmo, CurrentMaxAmmo);
+        EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
         _shooting = false;
     }
@@ -93,13 +107,14 @@ public partial class Head : Node3D
         _reloadingTimer += (float)delta;
         if (_reloadingTimer >= G.reloadTime)
         {
+            EmitSignalEndedReloading();
             _reloading = false;
             int ammoNeeded = G.magazineSize - CurrentAmmo;
             int ammoToTake = Mathf.Min(ammoNeeded, CurrentMaxAmmo);
             CurrentAmmo += ammoToTake;
             CurrentMaxAmmo -= ammoToTake;
             _reloadingTimer = 0f;
-            EmitSignal(SignalName.AmmoChanged, CurrentAmmo, CurrentMaxAmmo);
+            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
         }
     }
     private void CreateLineTracer()

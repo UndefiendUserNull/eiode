@@ -28,21 +28,22 @@ public static class NodeUtils
         return default;
     }
 
-    public static Node3D GetPlayerFromRoot(Node root)
+    public static T GetChildWithName<T>(string name, Node parent) where T : Node
     {
-        foreach (var child in root.GetChildren())
+        if (parent == null)
         {
-            if (child is PlayerMovement playerFound)
-                return playerFound;
-
-            if (child.GetChildCount() > 0)
-            {
-                var foundInChildren = GetPlayerFromRoot(child);
-                if (foundInChildren != null)
-                    return foundInChildren;
-            }
+            GD.PushError("Null " + nameof(parent));
         }
-        return null; // Player not found
+
+        foreach (Node child in parent.GetChildren())
+        {
+            if (child.Name == name && child is T childFound)
+            {
+                return childFound;
+            }
+
+        }
+        return default;
     }
 }
 
