@@ -1,2 +1,45 @@
-# Normalize EOL for all files that Git considers text files.
-* text=auto eol=lf
+# Godot-specific files
+*.godot      binary
+*.tres       text
+*.tscn       text
+*.import     binary
+
+# 3D Assets - treat as binary
+*.fbx        binary
+*.glb        binary
+*.gltf       binary
+*.blend      binary
+*.obj        binary
+*.dae        binary
+*.stl        binary
+
+# Audio files - treat as binary
+*.wav        binary
+*.ogg        binary
+*.mp3        binary
+
+# Shaders - treat as text
+*.gdshader   text
+*.shader     text
+
+# Scripts - treat as text
+*.gd         text
+*.cs         text
+
+# Documentation files
+*.md         text
+*.txt        text
+*.rst        text
+
+# Ensure proper line endings
+*.gd         text eol=lf
+*.tscn       text eol=lf
+*.tres       text eol=lf
+*.shader     text eol=lf
+*.gdshader   text eol=lf
+*.cs         text eol=lf
+*.md         text eol=lf
+
+# Platform-specific files should be ignored
+*.import     export-ignore
+*.godot      export-ignore
