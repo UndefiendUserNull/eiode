@@ -18,6 +18,11 @@ public partial class HurtboxComponent : Area3D
         _healthComponent.OnHealthChange += _healthComponent_OnHealthChange;
     }
 
+    public override void _ExitTree()
+    {
+        _healthComponent.OnHealthChange -= _healthComponent_OnHealthChange;
+
+    }
     private void _healthComponent_OnHealthChange(int health)
     {
         GD.Print(health);
