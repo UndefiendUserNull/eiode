@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bijfpj30spjxi"]
+[gd_scene load_steps=37 format=3 uid="uid://bijfpj30spjxi"]
 
 [ext_resource type="Script" uid="uid://bap5p7mtqm2we" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_8ilv8"]
 [ext_resource type="Script" uid="uid://delelx44b81i3" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="2_a3sed"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bbo4pyg71mc2x" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="4_aar4x"]
 [ext_resource type="Script" uid="uid://cpe7fc84mqf8n" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="5_kqtrp"]
 [ext_resource type="PackedScene" uid="uid://cr3i0n8335um7" path="res://Scenes/Debug/debug_ui.tscn" id="6_a3sed"]
+[ext_resource type="PackedScene" uid="uid://bsnu2g6pu10g" path="res://Scenes/Entities/Enemies/enemy_test.tscn" id="7_csla5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8ilv8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -308,3 +309,6 @@ mesh_vector_data = SubResource("Resource_skfc6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63, 6, -36)
 script = ExtResource("1_8ilv8")
 mesh_vector_data = SubResource("Resource_yegh5")
+
+[node name="enemy_test" parent="." instance=ExtResource("7_csla5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5524, 21.3931, -67.2314)

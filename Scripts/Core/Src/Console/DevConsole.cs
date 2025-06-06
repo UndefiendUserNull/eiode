@@ -12,9 +12,9 @@ public partial class DevConsole : Control
     private RichTextLabel _log = null;
     private bool _isShown = false;
     private Game _game = null;
-    private StringBuilder _sb = new();
-    private List<string> _history = [];
-    private int _currentHistoryIndex = -1;
+    private readonly StringBuilder _sb = new();
+    private readonly List<string> _history = [];
+    [Export] private int _currentHistoryIndex = 0;
     public override void _Ready()
     {
         _input = GetChild<LineEdit>(1);
@@ -68,12 +68,22 @@ public partial class DevConsole : Control
         {
             if (Input.IsActionJustPressed(InputHash.UP))
             {
-                if (_currentHistoryIndex <= _history.Count)
+                if (_currentHistoryIndex + 1 < _history.Count)
                     _currentHistoryIndex++;
                 else
                     _currentHistoryIndex = 0;
 
                 _input.Text = _history[_currentHistoryIndex];
+            }
+            if (Input.IsActionJustPressed(InputHash.DOWN))
+            {
+                if (_currentHistoryIndex - 1 > 0)
+                    _currentHistoryIndex--;
+                else
+                    _currentHistoryIndex = _history.Count - 1;
+
+                if (_currentHistoryIndex >= 0)
+                    _input.Text = _history[_currentHistoryIndex];
             }
         }
     }
