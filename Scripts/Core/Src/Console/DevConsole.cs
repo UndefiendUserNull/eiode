@@ -3,6 +3,7 @@ using EIODE.Utils;
 using EIODE.Scripts.Core;
 using System.Text;
 using System;
+using System.Collections.Generic;
 
 namespace EIODE.Core.Console;
 public partial class DevConsole : Control
@@ -12,6 +13,8 @@ public partial class DevConsole : Control
     private bool _isShown = false;
     private Game _game = null;
     private StringBuilder _sb = new();
+    private List<string> _history = [];
+    private int _currentHistoryIndex = -1;
     public override void _Ready()
     {
         _input = GetChild<LineEdit>(1);
@@ -38,6 +41,7 @@ public partial class DevConsole : Control
             {
                 _game.Console.Print($"Executing: {command}");
                 ConsoleCommandSystem.ExecuteCommand(command);
+                _history.Add(command);
             }
             _input.Clear();
         }
@@ -58,6 +62,18 @@ public partial class DevConsole : Control
             else
             {
                 HideConsole();
+            }
+        }
+        if (_isShown)
+        {
+            if (Input.IsActionJustPressed(InputHash.UP))
+            {
+                if (_currentHistoryIndex <= _history.Count)
+                    _currentHistoryIndex++;
+                else
+                    _currentHistoryIndex = 0;
+
+                _input.Text = _history[_currentHistoryIndex];
             }
         }
     }
