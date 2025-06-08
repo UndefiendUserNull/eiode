@@ -17,6 +17,7 @@ public partial class PlayerMovement : CharacterBody3D
     private bool _wantToJump = false;
     private Head _headSrc = null;
     private RayCast3D _feet = null; // :D
+    private Game _game = null;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -57,6 +58,8 @@ public partial class PlayerMovement : CharacterBody3D
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
+
+        _game = Game.GetGame(this);
 
         Validation();
 
@@ -226,8 +229,10 @@ public partial class PlayerMovement : CharacterBody3D
         ray.ForceUpdateTransform();
         ray.ForceRaycastUpdate();
 
+        // Set the position to where the ray hit and move the player away from the hit surface using the radius and the height
+        // so the player doesn't sink inside the hit surface
         if (ray.IsColliding()) GlobalPosition = new Vector3(ray.GetCollisionPoint().X - PLAYER_COLLISION_RADIUS, ray.GetCollisionPoint().Y + PLAYER_COLLISION_HEIGHT / 2, ray.GetCollisionPoint().Z - PLAYER_COLLISION_RADIUS);
-
+        else _game.Console.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
         ray.QueueFree();
     }
 
@@ -240,6 +245,7 @@ public partial class PlayerMovement : CharacterBody3D
                 S._jumpModifier = value;
                 break;
             case "grav":
+                if (value < 0f) _game.Console.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
                 S._gravity = value;
                 break;
             default:

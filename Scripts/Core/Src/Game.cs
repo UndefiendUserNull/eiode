@@ -73,7 +73,6 @@ public partial class Game : Node
             if (_isMouseShowed) HideMouse();
             else ShowMouse();
         }
-        if (Input.IsActionJustPressed(InputHash.D_RELOAD_SCENE)) { GetTree().ReloadCurrentScene(); }
     }
     [ConsoleCommand("ReloadScene", "Reloads Current Scene")]
     public void ReloadCurrentScene()

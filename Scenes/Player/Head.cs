@@ -99,7 +99,7 @@ public partial class Head : Node3D
         _magazineEmpty = CurrentAmmo <= 0;
         _magazineFull = CurrentAmmo == G.magazineSize;
 
-        if (Input.IsActionJustPressed(InputHash.REALOAD) && CanReload())
+        if (Input.IsActionJustPressed(InputHash.RELOAD) && CanReload())
         {
             _reloading = true;
             EmitSignalStartedReloading();

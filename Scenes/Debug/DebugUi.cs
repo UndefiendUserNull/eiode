@@ -1,5 +1,6 @@
 using EIODE.Scenes.Player;
 using EIODE.Scripts.Core;
+using EIODE.Utils;
 using Godot;
 using System.Text;
 
@@ -7,9 +8,10 @@ namespace EIODE.Scenes.Debug;
 
 public partial class DebugUi : Control
 {
-    private PlayerMovement _player;
-    private Head _playerHead;
-    private Label _label;
+    private PlayerMovement _player = null;
+    private Head _playerHead = null;
+    private Label _label = null;
+    private bool _isShown = false;
     private readonly StringBuilder _sb = new();
 
     public override void _Ready()
@@ -17,11 +19,19 @@ public partial class DebugUi : Control
         _player = Game.GetGame(this).GetPlayer();
         _playerHead = _player.GetHead();
         _label = GetChild<Label>(0);
+        Hide();
     }
-
     public override void _Process(double delta)
     {
         _playerHead ??= _player.GetHead();
+
+        if (Input.IsActionJustPressed(InputHash.D_TOGGLE_DEBUG_UI))
+        {
+            _isShown = !_isShown;
+            if (_isShown) Show();
+            else Hide();
+        }
+
         _sb.Clear();
         _sb.Append($"FPS : {Engine.GetFramesPerSecond()}\n");
         _sb.Append($"Player Position : {_player.Position}\n");
