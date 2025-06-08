@@ -12,24 +12,35 @@ public partial class DevConsole : Control
     private RichTextLabel _log = null;
     private bool _isShown = false;
     private Game _game = null;
-    private StringBuilder _sb = new();
-    private List<string> _history = [];
-    private int _currentHistoryIndex = -1;
+    private AutoCompleter completer = null;
+    private readonly StringBuilder _sb = new();
+    private readonly List<string> _history = [];
+    [Export] private int _currentHistoryIndex = 0;
     public override void _Ready()
     {
+        completer = new(ConsoleCommandSystem.GetCommands().Keys);
         _input = GetChild<LineEdit>(1);
         _log = GetChild<Panel>(0).GetChild<RichTextLabel>(0);
         _game = Game.GetGame(this);
-        _input.TextSubmitted += Input_TextSubmitted;
         _log.Clear();
         ConsoleCommandSystem.RegisterInstance(this);
         this.Hide();
         _log.Text = _sb.ToString();
+        _input.TextSubmitted += Input_TextSubmitted;
+        _input.TextChanged += Input_TextChanged;
+    }
+
+    private void Input_TextChanged(string newText)
+    {
+        foreach (var suggestion in completer.GetSuggestions(newText))
+        {
+        }
     }
 
     public override void _ExitTree()
     {
         _input.TextSubmitted -= Input_TextSubmitted;
+        _input.TextChanged -= Input_TextChanged;
     }
 
     private void Input_TextSubmitted(string newText)
@@ -68,12 +79,29 @@ public partial class DevConsole : Control
         {
             if (Input.IsActionJustPressed(InputHash.UP))
             {
-                if (_currentHistoryIndex <= _history.Count)
+                if (_currentHistoryIndex + 1 < _history.Count)
                     _currentHistoryIndex++;
                 else
                     _currentHistoryIndex = 0;
 
                 _input.Text = _history[_currentHistoryIndex];
+            }
+            if (Input.IsActionJustPressed(InputHash.DOWN))
+            {
+                if (_currentHistoryIndex - 1 > 0)
+                    _currentHistoryIndex--;
+                else
+                    _currentHistoryIndex = _history.Count - 1;
+
+                if (_currentHistoryIndex >= 0)
+                    _input.Text = _history[_currentHistoryIndex];
+            }
+            if (Input.IsActionJustPressed(InputHash.K_TAB))
+            {
+                var suggestions = completer.GetSuggestions(_input.Text);
+
+                if (suggestions.Count > 0)
+                    _input.Text = suggestions[0];
             }
         }
     }

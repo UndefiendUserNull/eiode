@@ -31,7 +31,14 @@ public partial class MainUi : Control
         RefreshAmmo(_head.CurrentAmmo, _head.CurrentMaxAmmo);
         _label_reloading.Hide();
     }
+    public override void _ExitTree()
+    {
+        _head.AmmoChanged -= Head_AmmoChanged;
+        _head.StartedReloading -= Head_StartedReloading;
+        _head.EndedReloading -= Head_EndedReloading;
+        _head.GunSettingsChanged -= Head_GunSettingsChanged;
 
+    }
     private void Head_GunSettingsChanged(Gun previous, Gun current)
     {
         throw new System.NotImplementedException();

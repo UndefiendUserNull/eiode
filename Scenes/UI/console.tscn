@@ -35,7 +35,6 @@ bbcode_enabled = true
 text = "[INFO] : Game Started
 [ERROR] : [color=red]Player Was Not Found[/color]
 [WARNING] : [color=yellow]Head Is Not Named Head"
-fit_content = true
 scroll_following = true
 threaded = true
 selection_enabled = true

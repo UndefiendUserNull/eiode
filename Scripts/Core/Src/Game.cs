@@ -8,21 +8,28 @@ namespace EIODE.Scripts.Core;
 public partial class Game : Node
 {
     [Export] public PackedScene FirstLevelToLoad;
+    [Export] public bool Disabled { get; set; }
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     private bool _firstLevelLoaded = false;
-    private readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 15, 0);
+    private readonly Vector3 PLAYER_SPAWN_POSITION = new(20, 10, -85);
 
     public PlayerMovement Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
     public override void _Ready()
     {
+        if (Disabled)
+        {
+            GD.Print("Game scene is disabled.");
+            return;
+        }
+
+        ConsoleCommandSystem.Initialize();
         SpawnConsole();
         SpawnPlayer();
         LoadFirstLevel();
         HideMouse();
-        ConsoleCommandSystem.Initialize();
         ConsoleCommandSystem.RegisterInstance(this);
         Console.Print("Game _Ready finished");
     }

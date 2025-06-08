@@ -79,8 +79,11 @@ public partial class LevelLoader : Node
         int scenesFoundLength = 0;
         foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
         {
-            scenesFoundString += $"{item}\n";
-            scenesFoundLength++;
+            if (item.EndsWith(".tscn"))
+            {
+                scenesFoundString += $"{item}\n";
+                scenesFoundLength++;
+            }
         }
         Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
     }

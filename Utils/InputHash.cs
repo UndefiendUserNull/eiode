@@ -17,4 +17,5 @@ public static class InputHash
     public const string K_CTRL = "K_CTRL";
     public const string K_ENTER = "K_ENTER";
     public const string K_ESC = "K_ESC";
+    public const string K_TAB = "K_TAB";
 }
