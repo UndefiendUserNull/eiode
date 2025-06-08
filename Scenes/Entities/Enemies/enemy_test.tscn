@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsnu2g6pu10g"]
+[gd_scene load_steps=7 format=3 uid="uid://bsnu2g6pu10g"]
 
 [ext_resource type="PackedScene" uid="uid://bss5q2p1si1p4" path="res://Components/Hurtbox/hurtbox.tscn" id="1_48dwr"]
+[ext_resource type="Script" uid="uid://irgwc1y14iib" path="res://Scenes/Entities/Enemies/EnemyTest.cs" id="1_u4avs"]
 [ext_resource type="PackedScene" uid="uid://dyhy3u35n0t33" path="res://Components/Health/health_component.tscn" id="2_8dq10"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8dq10"]
@@ -16,6 +17,7 @@ radius = 0.565
 height = 2.59
 
 [node name="enemy_test" type="Node3D"]
+script = ExtResource("1_u4avs")
 
 [node name="hurtbox" parent="." instance=ExtResource("1_48dwr")]
 

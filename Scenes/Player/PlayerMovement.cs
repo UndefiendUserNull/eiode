@@ -82,6 +82,7 @@ public partial class PlayerMovement : CharacterBody3D
     {
         _direction = Vector3.Zero;
         _inputDirection = Input.GetVector(InputHash.LEFT, InputHash.RIGHT, InputHash.FORWARD, InputHash.BACKWARD);
+
         if (_inputDirection.Y < 0) _direction -= Transform.Basis.Z;
         else if (_inputDirection.Y > 0) _direction += Transform.Basis.Z;
 
@@ -121,7 +122,6 @@ public partial class PlayerMovement : CharacterBody3D
         }
 
         Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
-        //if (onFloor) Velocity = AdjustedVelocityToSlope(Velocity);
         MoveAndSlide();
     }
 
@@ -179,8 +179,8 @@ public partial class PlayerMovement : CharacterBody3D
     private void CameraRotation(InputEventMouseMotion e)
     {
         RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
 
+        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
         _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
     }
     public void Lock()
