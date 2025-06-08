@@ -15,7 +15,6 @@ public partial class PlayerMovement : CharacterBody3D
     private float _jumpHeight = 0.0f;
     private Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
-    private Node3D _head = null;
     private Head _headSrc = null;
     private RayCast3D _feet = null; // :D
 
@@ -53,8 +52,7 @@ public partial class PlayerMovement : CharacterBody3D
 
         _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
 
-        _head = GetChild<Node3D>(0);
-        _headSrc = _head as Head;
+        _headSrc = GetChild<Head>(0);
 
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
 
@@ -166,9 +164,9 @@ public partial class PlayerMovement : CharacterBody3D
     private void CameraRotation(InputEventMouseMotion e)
     {
         RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
+        _headSrc.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
 
-        _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
+        _headSrc.Rotation = new Vector3(Mathf.Clamp(_headSrc.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _headSrc.Rotation.Y, _headSrc.Rotation.Z);
     }
     public void Lock()
     {
@@ -201,7 +199,7 @@ public partial class PlayerMovement : CharacterBody3D
 
         if (GetChild(0).GetChildOrNull<Camera3D>(0) == null) GD.PushError("The first child of the player doesn't have Camera3D as a first child");
 
-        if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION)) GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
+        if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION)) GD.PushWarning($"Player's head position {_headSrc.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
     }
 
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
