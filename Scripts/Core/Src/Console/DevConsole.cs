@@ -76,6 +76,7 @@ public partial class DevConsole : Control
             }
             else
             {
+                _currentHistoryIndex = 0;
                 HideConsole();
             }
         }

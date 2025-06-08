@@ -100,7 +100,7 @@ public partial class PlayerMovement : CharacterBody3D
         {
             _timeInAir += (float)delta;
             Velocity -= new Vector3(0, S._gravity * (float)delta, 0);
-            Velocity = UpdateVelocityAir(desiredDirection, delta);
+            //Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
 
         if (_wantToJump && CanJump())
@@ -252,6 +252,11 @@ public partial class PlayerMovement : CharacterBody3D
                 break;
         }
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
+    }
+    [ConsoleCommand("reset", "Resets player's position", true)]
+    public void Cc_ResetPlayerPosition()
+    {
+        Position = Game.PLAYER_SPAWN_POSITION;
     }
 
 }

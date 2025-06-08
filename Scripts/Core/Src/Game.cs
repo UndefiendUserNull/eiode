@@ -12,7 +12,7 @@ public partial class Game : Node
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     public bool FirstLevelLoaded { get; private set; } = false;
-    private readonly Vector3 PLAYER_SPAWN_POSITION = new(20, 10, -85);
+    public static readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 5, 0);
 
     public PlayerMovement Player { get; private set; }
     public DevConsole Console { get; private set; }
