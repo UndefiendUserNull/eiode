@@ -25,7 +25,7 @@ public partial class Head : Node3D
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
     public Gun G = null;
-
+    public Camera3D Camera { get; private set; } = null;
     [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
     [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
     [Signal] public delegate void StartedReloadingEventHandler();
@@ -49,6 +49,8 @@ public partial class Head : Node3D
         _parent = GetParent<Node3D>();
 
         EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+
+        Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
 
         ConsoleCommandSystem.RegisterInstance(this);
     }

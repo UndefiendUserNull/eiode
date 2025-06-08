@@ -1,11 +1,10 @@
 <Project Sdk="Godot.NET.Sdk/4.4.1">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <OutputType>Library</OutputType>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<OutputType>Library</OutputType>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+	<ItemGroup>
+	</ItemGroup>
 </Project>

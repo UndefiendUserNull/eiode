@@ -1,7 +1,9 @@
 using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
+using System;
 using Godot;
+using EIODE.Scripts.Core;
 
 namespace EIODE.Scenes.Player;
 
@@ -21,6 +23,8 @@ public partial class PlayerMovement : CharacterBody3D
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
     private const float MIN_PITCH = -80f;
     private const float MAX_PITCH = 90f;
+    private const float PLAYER_COLLISION_RADIUS = 0.3f;
+    private const float PLAYER_COLLISION_HEIGHT = 3.0f;
     #endregion
 
     #region Timers
@@ -44,15 +48,20 @@ public partial class PlayerMovement : CharacterBody3D
 
     private void Init()
     {
-        Validation();
         // Should be unlocked from outside
         Lock();
+
         _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
-        if (!_feet.Name.ToString().Equals("feet", System.StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
+
         _head = GetChild<Node3D>(0);
         _headSrc = _head as Head;
+
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
+
         Input.MouseMode = Input.MouseModeEnum.Captured;
+
+        Validation();
+
         ConsoleCommandSystem.RegisterInstance(this);
     }
 
@@ -75,7 +84,7 @@ public partial class PlayerMovement : CharacterBody3D
 
     private void Movement(double delta)
     {
-        Vector3 desiredDirection = _direction.Normalized();
+        Vector3 desiredDirection = _direction.LengthSquared() > 1f ? _direction.Normalized() : _direction;
         bool onFloor = IsOnFloor();
 
         if (_wantToJump)
@@ -112,19 +121,23 @@ public partial class PlayerMovement : CharacterBody3D
 
     private Vector3 UpdateVelocityGround(Vector3 direction, double delta)
     {
-        float speed = Velocity.Length();
-        if (speed != 0)
-        {
-            float control = Mathf.Max(S._stopSpeed, speed);
-            float drop = (control * S._friction * (float)delta);
-            Velocity *= Mathf.Max(speed - drop, 0) / speed;
-        }
-        return Accelerate(direction, S._maxVelocityGround, delta);
+        //float speed = Velocity.Length();
+        //if (speed != 0)
+        //{
+        //    float control = Mathf.Max(S._stopSpeed, speed);
+        //    float drop = (control * S._friction * (float)delta);
+        //    Velocity *= Mathf.Max(speed - drop, 0) / speed;
+        //}
+        //return Accelerate(direction, S._maxVelocityGround, delta);
+        Vector3 desiredVelocity = direction * S._maxVelocityGround;
+        return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._acceleration * (float)delta));
     }
 
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
-        return Accelerate(direction, S._maxVelocityAir, delta);
+        //return Accelerate(direction, S._maxVelocityAir, delta);
+        Vector3 desiredVelocity = direction * S._maxVelocityAir;
+        return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._airControl * (float)delta));
     }
 
     private Vector3 AdjustedVelocityToSlope(Vector3 velocity)
@@ -184,15 +197,57 @@ public partial class PlayerMovement : CharacterBody3D
             return;
         }
 
-        if (GetChild(0).GetChildOrNull<Camera3D>(0) == null)
-            GD.PushError("The first child of the player doesn't have Camera3D as a first child");
+        if (!_feet.Name.ToString().Equals("feet", StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
 
-        if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION))
-            GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
+        if (GetChild(0).GetChildOrNull<Camera3D>(0) == null) GD.PushError("The first child of the player doesn't have Camera3D as a first child");
+
+        if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION)) GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
     }
+
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
-    public void MovePosition(float x, float y, float z)
+    public void Cc_MovePosition(float x, float y, float z)
     {
         Position = new Vector3(x, y, z);
     }
+    [ConsoleCommand("player_move_ray", "Shoots a ray from the head and moves the player to the hit point", true)]
+    public void Cc_MovePositionToRay()
+    {
+        RayCast3D ray = new()
+        {
+            TargetPosition = Vector3.Forward * 5000,
+            ExcludeParent = true,
+            ProcessMode = ProcessModeEnum.Always,
+            HitBackFaces = false,
+            CollideWithBodies = true,
+        };
+
+        _headSrc.Camera.AddChild(ray);
+        ray.Position = _headSrc.Camera.Position;
+        ray.Position = _headSrc.Camera.Position;
+
+        ray.ForceUpdateTransform();
+        ray.ForceRaycastUpdate();
+
+        if (ray.IsColliding()) GlobalPosition = new Vector3(ray.GetCollisionPoint().X - PLAYER_COLLISION_RADIUS, ray.GetCollisionPoint().Y + PLAYER_COLLISION_HEIGHT / 2, ray.GetCollisionPoint().Z - PLAYER_COLLISION_RADIUS);
+
+        ray.QueueFree();
+    }
+
+    [ConsoleCommand("player_movement_set", "jumpmod (float), grav (float)", true)]
+    public void Cc_MovementSet(string arg, float value)
+    {
+        switch (arg)
+        {
+            case "jumpmod":
+                S._jumpModifier = value;
+                break;
+            case "grav":
+                S._gravity = value;
+                break;
+            default:
+                break;
+        }
+        _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
+    }
+
 }

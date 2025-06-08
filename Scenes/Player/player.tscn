@@ -39,7 +39,7 @@ shape = SubResource("SeparationRayShape3D_0u5uq")
 [node name="Hitbox Timer" type="Timer" parent="Head"]
 wait_time = 0.08
 
-[node name="CollisionShape" type="CollisionShape3D" parent="."]
+[node name="MainCollision" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tugb3")
 debug_color = Color(0.254902, 0.635294, 0, 0.8)
 
@@ -48,7 +48,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
 visible = false
 
 [node name="Main UI" parent="." instance=ExtResource("7_0u5uq")]
-visible = false
 
 [node name="Feet" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)

@@ -5,12 +5,14 @@
 [resource]
 script = ExtResource("1_88lb2")
 _sensitivity = 0.2
-_maxVelocityAir = 2.0
-_maxVelocityGround = 75.0
-_jumpModifier = 4.5
+_acceleration = 10.0
+_airControl = 5.0
+_maxVelocityAir = 12.5
+_maxVelocityGround = 13.0
+_jumpModifier = 3.2
 _maxAcceleration = 95.0
-_gravity = 105.0
-_stopSpeed = 0.7
+_gravity = 95.0
+_stopSpeed = 0.96
 _friction = 7.5
 _jumpBufferingTime = 0.12
 _coyoteTime = 0.15

@@ -7,6 +7,8 @@ namespace EIODE.Resources.Src;
 public partial class PlayerMovementSettings : Resource
 {
     [Export] public float _sensitivity = 0.05f;
+    [Export] public float _acceleration = 5f;
+    [Export] public float _airControl = 2f;
     [Export] public float _maxVelocityAir = 0.6f;
     [Export] public float _maxVelocityGround = 6.0f;
     // Used in Init
