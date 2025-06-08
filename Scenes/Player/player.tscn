@@ -32,7 +32,6 @@ fov = 90.0
 
 [node name="Hitbox" parent="Head" instance=ExtResource("5_dd0ac")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.1, 0)
-collision_layer = 7
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Hitbox"]
 shape = SubResource("SeparationRayShape3D_0u5uq")

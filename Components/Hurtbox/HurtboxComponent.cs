@@ -14,16 +14,14 @@ public partial class HurtboxComponent : Area3D
             GD.PushError($"No health component found {Name}");
             SetProcess(false);
         }
+        _healthComponent.OnHealthChange += HealthComponent_OnHealthChange;
 
-        _healthComponent.OnHealthChange += _healthComponent_OnHealthChange;
     }
-
     public override void _ExitTree()
     {
-        _healthComponent.OnHealthChange -= _healthComponent_OnHealthChange;
-
+        _healthComponent.OnHealthChange -= HealthComponent_OnHealthChange;
     }
-    private void _healthComponent_OnHealthChange(int health)
+    private void HealthComponent_OnHealthChange(int health)
     {
         GD.Print(health);
     }

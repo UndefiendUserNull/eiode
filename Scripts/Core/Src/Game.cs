@@ -18,11 +18,11 @@ public partial class Game : Node
     public static readonly string Location = "/root/Game";
     public override void _Ready()
     {
+        ConsoleCommandSystem.Initialize();
         SpawnConsole();
         SpawnPlayer();
         LoadFirstLevel();
         HideMouse();
-        ConsoleCommandSystem.Initialize();
         ConsoleCommandSystem.RegisterInstance(this);
         Console.Print("Game _Ready finished");
     }
