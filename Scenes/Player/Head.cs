@@ -145,13 +145,6 @@ public partial class Head : Node3D
         // passes big number to delta so reloading timer fills fast
         Reload(99999);
     }
-    private void CreateLineTracer()
-    {
-        var line = G.lineTracer.Instantiate<Node3D>();
-        line.Rotation = new Vector3(Rotation.X, _parent.Rotation.Y, 0);
-        line.Position = new Vector3(_parent.Position.X, _parent.Position.Y + 1f, _parent.Position.Z);
-        GetTree().Root.AddChild(line);
-    }
     private bool CanShoot()
     {
         return !_reloading && _shootingTime >= G.fireRate && !_magazineEmpty;
