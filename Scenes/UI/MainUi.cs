@@ -13,11 +13,13 @@ public partial class MainUi : Control
     private Label _label_reloading = null;
     private int _currentAmmo = 0;
     private int _currentMaxAmmo = 0;
+    private Game _game = null;
     private string _text_ammo = string.Empty;
     public override void _Ready()
     {
+        _game = Game.GetGame(this);
+        _head = _game.GetPlayer().GetHead();
         _container = NodeUtils.GetChildWithName<VBoxContainer>("V", this);
-        _head = GetNode<Game>(Game.Location).GetPlayer().GetHead();
 
         _head.AmmoChanged += Head_AmmoChanged;
         _head.StartedReloading += Head_StartedReloading;
@@ -33,11 +35,13 @@ public partial class MainUi : Control
     }
     public override void _ExitTree()
     {
+        if (!_game.FirstLevelLoaded)
+            return;
+
         _head.AmmoChanged -= Head_AmmoChanged;
         _head.StartedReloading -= Head_StartedReloading;
         _head.EndedReloading -= Head_EndedReloading;
         _head.GunSettingsChanged -= Head_GunSettingsChanged;
-
     }
     private void Head_GunSettingsChanged(Gun previous, Gun current)
     {

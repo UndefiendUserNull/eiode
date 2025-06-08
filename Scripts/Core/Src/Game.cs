@@ -11,7 +11,7 @@ public partial class Game : Node
     [Export] public bool Disabled { get; set; }
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
-    private bool _firstLevelLoaded = false;
+    public bool FirstLevelLoaded { get; private set; } = false;
     private readonly Vector3 PLAYER_SPAWN_POSITION = new(20, 10, -85);
 
     public PlayerMovement Player { get; private set; }
