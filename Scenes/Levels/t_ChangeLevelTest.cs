@@ -20,7 +20,7 @@ public partial class t_ChangeLevelTest : Area3D
         if (body is PlayerMovement && !_entered)
         {
             _entered = true;
-            LevelLoader.Instance.ChangeLevel(LevelLoader.LoadLevel("res://Scenes/Levels/platforming_test_1.tscn"));
+            LevelLoader.Instance.ChangeLevel(LevelLoader.LoadLevel("res://Scenes/Levels/platformer_00.tscn"));
         }
     }
 }

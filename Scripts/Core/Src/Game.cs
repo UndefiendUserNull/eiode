@@ -2,6 +2,8 @@ using EIODE.Scenes.Player;
 using EIODE.Core.Console;
 using EIODE.Utils;
 using Godot;
+using System.IO;
+using System;
 
 namespace EIODE.Scripts.Core;
 
@@ -31,7 +33,7 @@ public partial class Game : Node
         LoadFirstLevel();
         HideMouse();
         ConsoleCommandSystem.RegisterInstance(this);
-        Console.Print("Game _Ready finished");
+        Console.Log("Game _Ready finished");
     }
 
     private void SpawnConsole()
@@ -74,11 +76,7 @@ public partial class Game : Node
             else ShowMouse();
         }
     }
-    [ConsoleCommand("ReloadScene", "Reloads Current Scene")]
-    public void ReloadCurrentScene()
-    {
-        GetTree().ReloadCurrentScene();
-    }
+
     public static void ShowMouse()
     {
         Input.MouseMode = Input.MouseModeEnum.Visible;
@@ -96,7 +94,28 @@ public partial class Game : Node
         GetTree().Root.CallDeferred(MethodName.AddChild, Player);
         _playerReady = true;
         Player.Name = "Player";
-        Console.Print("Player ready");
+        Console.Log("Player ready");
     }
 
+    [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
+    public void Cc_ChangeLevel(string levelName)
+    {
+        string path;
+
+        if (!levelName.EndsWith(".tscn"))
+            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName + ".tscn");
+        else
+            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName);
+
+        Console.Log(path);
+        if (Godot.FileAccess.FileExists(path))
+        {
+            PackedScene level = LevelLoader.LoadLevel(path);
+            LevelLoader.Instance.ChangeLevel(level);
+        }
+        else
+        {
+            Console.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+        }
+    }
 }

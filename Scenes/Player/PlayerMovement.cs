@@ -107,13 +107,11 @@ public partial class PlayerMovement : CharacterBody3D
         if (_timeSinceLastJumpInput > S._jumpBufferingTime * 2 && onFloor)
             _timeSinceLastJumpInput = S._jumpBufferingTime + 1;
 
-        if (onFloor)
-            _timeInAir = 0.0f;
+        if (onFloor) _timeInAir = 0.0f;
         else
         {
             _timeInAir += (float)delta;
             Velocity -= new Vector3(0, S._gravity * (float)delta, 0);
-            //Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
 
         if (_wantToJump && CanJump())
@@ -125,30 +123,14 @@ public partial class PlayerMovement : CharacterBody3D
         MoveAndSlide();
     }
 
-    private Vector3 Accelerate(Vector3 direction, float maxVelocity, double delta)
-    {
-        float currentSpeed = Velocity.Dot(direction);
-        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, S._maxAcceleration * (float)delta);
-        return Velocity + increasingSpeed * direction;
-    }
-
     private Vector3 UpdateVelocityGround(Vector3 direction, double delta)
     {
-        //float speed = Velocity.Length();
-        //if (speed != 0)
-        //{
-        //    float control = Mathf.Max(S._stopSpeed, speed);
-        //    float drop = (control * S._friction * (float)delta);
-        //    Velocity *= Mathf.Max(speed - drop, 0) / speed;
-        //}
-        //return Accelerate(direction, S._maxVelocityGround, delta);
         Vector3 desiredVelocity = direction * S._maxVelocityGround;
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._acceleration * (float)delta));
     }
 
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
-        //return Accelerate(direction, S._maxVelocityAir, delta);
         Vector3 desiredVelocity = direction * S._maxVelocityAir;
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._airControl * (float)delta));
     }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://bijfpj30spjxi"]
+[gd_scene load_steps=91 format=3 uid="uid://bijfpj30spjxi"]
 
 [ext_resource type="Script" uid="uid://bap5p7mtqm2we" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_8ilv8"]
 [ext_resource type="Script" uid="uid://delelx44b81i3" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="2_a3sed"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cr3i0n8335um7" path="res://Scenes/Debug/debug_ui.tscn" id="6_a3sed"]
 [ext_resource type="Material" uid="uid://bgkhhksnrsns0" path="res://Assets/mat_tile_grey_darkcyan.tres" id="7_aar4x"]
 [ext_resource type="PackedScene" uid="uid://bsnu2g6pu10g" path="res://Scenes/Entities/Enemies/enemy_test.tscn" id="7_csla5"]
+[ext_resource type="Texture2D" uid="uid://ddbwsruj5coo2" path="res://Assets/Textures/Decals/pngegg.png" id="9_kqtrp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8ilv8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -863,3 +864,9 @@ materials = Array[Material]([ExtResource("7_aar4x")])
 
 [node name="enemy_test" parent="." instance=ExtResource("7_csla5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5524, 21.3931, -67.2314)
+
+[node name="Decal" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8478, 6, -54.7171)
+size = Vector3(1, 1, 1)
+texture_albedo = ExtResource("9_kqtrp")
+distance_fade_enabled = true

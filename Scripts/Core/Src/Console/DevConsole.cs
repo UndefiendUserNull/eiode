@@ -11,11 +11,11 @@ public partial class DevConsole : Control
     [Export] private int _currentHistoryIndex = 0;
     private LineEdit _input = null;
     private RichTextLabel _log = null;
-    private bool _isShown = false;
     private Game _game = null;
     private AutoCompleter completer = null;
     //private readonly StringBuilder _sb = new();
     private readonly List<string> _history = [];
+    public bool IsShown { get; private set; } = false;
 
     public override void _Ready()
     {
@@ -49,7 +49,7 @@ public partial class DevConsole : Control
 
     private void Input_TextSubmitted(string newText)
     {
-        if (_isShown)
+        if (IsShown)
         {
             string command = _input.Text.Trim('\n');
             if (!string.IsNullOrEmpty(command))
@@ -66,9 +66,9 @@ public partial class DevConsole : Control
     {
         if (Input.IsActionJustPressed(InputHash.TOGGLE_CONSOLE))
         {
-            _isShown = !_isShown;
+            IsShown = !IsShown;
 
-            if (_isShown)
+            if (IsShown)
             {
                 ShowConsole();
                 _input.Clear();
@@ -80,7 +80,7 @@ public partial class DevConsole : Control
                 HideConsole();
             }
         }
-        if (_isShown)
+        if (IsShown)
         {
             if (Input.IsActionJustPressed(InputHash.UP))
             {

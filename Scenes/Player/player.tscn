@@ -42,7 +42,7 @@ shape = SubResource("SeparationRayShape3D_0u5uq")
 [node name="Hitbox Timer" type="Timer" parent="Head"]
 wait_time = 0.08
 
-[node name="MainCollision" type="CollisionShape3D" parent="."]
+[node name="Collider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tugb3")
 debug_color = Color(0.254902, 0.635294, 0, 0.8)
 
