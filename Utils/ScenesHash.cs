@@ -1,5 +1,9 @@
 namespace EIODE.Utils
 {
+    /// <summary>
+    /// Class that contains any important scene that's used in instantiation
+    /// This is not an auto generated class, you should your own
+    /// </summary>
     public static class ScenesHash
     {
         public const string PLAYER_SCENE = "res://Scenes/Player/player.tscn";

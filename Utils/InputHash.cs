@@ -1,4 +1,9 @@
 namespace EIODE.Utils;
+
+/// <summary>
+/// Class that contains most of the Input actions that are mapped in the Input Map
+/// This is not an auto generated class, you should add any new Input
+/// </summary>
 public static class InputHash
 {
     // Main
