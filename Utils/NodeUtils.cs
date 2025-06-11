@@ -5,6 +5,12 @@ namespace EIODE.Utils;
 
 public static class NodeUtils
 {
+    /// <summary>
+    /// Searches parent's children for any child that's of type <typeparamref name="T"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static T GetChildWithNodeType<T>(Node parent) where T : Node
     {
         if (parent == null)
@@ -28,6 +34,13 @@ public static class NodeUtils
         return default;
     }
 
+    /// <summary>
+    /// Searches parent's children for any node that's named <paramref name="name"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="name"></param>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public static T GetChildWithName<T>(string name, Node parent) where T : Node
     {
         if (parent == null)

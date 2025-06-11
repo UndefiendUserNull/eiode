@@ -8,26 +8,31 @@ using System.Collections.Generic;
 namespace EIODE.Core.Console;
 public partial class DevConsole : Control
 {
+    [Export] private int _currentHistoryIndex = 0;
     private LineEdit _input = null;
     private RichTextLabel _log = null;
-    private bool _isShown = false;
     private Game _game = null;
     private AutoCompleter completer = null;
-    private readonly StringBuilder _sb = new();
+    //private readonly StringBuilder _sb = new();
     private readonly List<string> _history = [];
-    [Export] private int _currentHistoryIndex = 0;
+    public bool IsShown { get; private set; } = false;
+
     public override void _Ready()
     {
+        _game = Game.GetGame(this);
+        if (!_game.InitSpawnConsole) return;
         completer = new(ConsoleCommandSystem.GetCommands().Keys);
         _input = GetChild<LineEdit>(1);
         _log = GetChild<Panel>(0).GetChild<RichTextLabel>(0);
-        _game = Game.GetGame(this);
-        _log.Clear();
         ConsoleCommandSystem.RegisterInstance(this);
         this.Hide();
-        _log.Text = _sb.ToString();
         _input.TextSubmitted += Input_TextSubmitted;
         _input.TextChanged += Input_TextChanged;
+        _log.Clear();
+        _log.PushFontSize(14);
+        _log.PushOutlineSize(8);
+        _log.PushOutlineColor(Color.Color8(0, 0, 0));
+        //_log.AppendText(_sb.ToString());
     }
 
     private void Input_TextChanged(string newText)
@@ -45,12 +50,12 @@ public partial class DevConsole : Control
 
     private void Input_TextSubmitted(string newText)
     {
-        if (_isShown)
+        if (IsShown)
         {
             string command = _input.Text.Trim('\n');
             if (!string.IsNullOrEmpty(command))
             {
-                _game.Console.Print($"Executing: {command}");
+                _game.Console?.Log(command, LogLevel.BLANK);
                 ConsoleCommandSystem.ExecuteCommand(command);
                 _history.Add(command);
             }
@@ -60,11 +65,11 @@ public partial class DevConsole : Control
 
     public override void _Process(double delta)
     {
-        if (Input.IsActionJustPressed(InputHash.OPEN_CONSOLE))
+        if (Input.IsActionJustPressed(InputHash.TOGGLE_CONSOLE))
         {
-            _isShown = !_isShown;
+            IsShown = !IsShown;
 
-            if (_isShown)
+            if (IsShown)
             {
                 ShowConsole();
                 _input.Clear();
@@ -72,10 +77,11 @@ public partial class DevConsole : Control
             }
             else
             {
+                _currentHistoryIndex = 0;
                 HideConsole();
             }
         }
-        if (_isShown)
+        if (IsShown)
         {
             if (Input.IsActionJustPressed(InputHash.UP))
             {
@@ -135,9 +141,10 @@ public partial class DevConsole : Control
             case LogLevel.ERROR:
                 Error(msg);
                 break;
+            case LogLevel.BLANK:
+                BlankLog(msg);
+                break;
         }
-        if (_log != null && _sb != null)
-            _log.Text = _sb.ToString();
     }
 
     // Too lazy to change all the GD.Print to a Log one, DON'T USE THIS, Use Log instead
@@ -157,22 +164,34 @@ public partial class DevConsole : Control
     {
         INFO,
         WARNING,
-        ERROR
+        ERROR,
+        BLANK
     }
-
+    public void BlankLog(string msg)
+    {
+        var line = $"{msg}";
+        AddLogLine(line);
+    }
     public void Info(string msg)
     {
-        _sb.AppendLine($"[INFO] : {msg}");
-    }
+        var line = $"[color=green][INFO] : {msg}[/color]";
+        AddLogLine(line);
 
+    }
     public void Warn(string msg)
     {
-        _sb.AppendLine($"[WARNING] : {msg}");
+        var line = $"[color=yellow][WARNING] : {msg}[/color]";
+        AddLogLine(line);
     }
 
     public void Error(string msg)
     {
-        _sb.AppendLine($"[ERROR] : {msg}");
+        var line = $"[color=red][ERROR] : {msg}[/color]";
+        AddLogLine(line);
+    }
+    private void AddLogLine(string line)
+    {
+        _log?.AppendText(line + '\n');
     }
 
     [ConsoleCommand("help", "Helps you :D")]

@@ -1,39 +1,43 @@
 using Godot;
 using EIODE.Utils;
+using EIODE.Scripts.Core;
 namespace EIODE.Components;
 
-public partial class HurtboxComponent : Area3D
+public partial class HurtboxComponent : Area3D, IComponent
 {
-    private HealthComponent _healthComponent;
+    public HealthComponent HealthComponent { get; private set; }
+
     public override void _Ready()
     {
         if (ComponentsUtils.GetChildWithComponent<HealthComponent>(GetParent()) != null)
-            _healthComponent = ComponentsUtils.GetChildWithComponent<HealthComponent>(GetParent());
+            HealthComponent = ComponentsUtils.GetChildWithComponent<HealthComponent>(GetParent());
         else
         {
             GD.PushError($"No health component found {Name}");
             SetProcess(false);
         }
-        _healthComponent.OnHealthChange += HealthComponent_OnHealthChange;
+        HealthComponent.OnDeath += HealthComponent_OnDeath;
+        HealthComponent.OnTakeDamage += HealthComponent_OnTakeDamage;
+    }
 
-    }
-    public override void _ExitTree()
+    private void HealthComponent_OnTakeDamage()
     {
-        _healthComponent.OnHealthChange -= HealthComponent_OnHealthChange;
+        Game.GetGame(this).Console?.Log($"{GetParent().Name} : {HealthComponent.CurrentHealth}");
     }
-    private void HealthComponent_OnHealthChange(int health)
+
+    private void HealthComponent_OnDeath()
     {
-        GD.Print(health);
+        GetParent().QueueFree();
     }
 
     public void TakeDamage(HitboxComponent hitbox)
     {
-        _healthComponent.TakeDamage(hitbox.Damage);
+        HealthComponent.TakeDamage(hitbox.Damage);
     }
 
     public void TakeDamage(int damage)
     {
-        _healthComponent.TakeDamage(damage);
+        HealthComponent.TakeDamage(damage);
     }
     public HurtboxComponent() { }
 }

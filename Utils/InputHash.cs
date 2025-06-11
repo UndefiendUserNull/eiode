@@ -1,4 +1,9 @@
 namespace EIODE.Utils;
+
+/// <summary>
+/// Class that contains most of the Input actions that are mapped in the Input Map
+/// This is not an auto generated class, you should add any new Input
+/// </summary>
 public static class InputHash
 {
     // Main
@@ -8,9 +13,9 @@ public static class InputHash
     public const string BACKWARD = "backward";
     public const string JUMP = "jump";
     public const string SHOOT = "shoot";
-    public const string REALOAD = "reload";
-    public const string D_RELOAD_SCENE = "D_reloadScene";
-    public const string OPEN_CONSOLE = "open_console";
+    public const string RELOAD = "reload";
+    public const string D_TOGGLE_DEBUG_UI = "D_toggle_debug_ui";
+    public const string TOGGLE_CONSOLE = "toggle_console";
     public const string UP = "up";
     public const string DOWN = "down";
     // Keys

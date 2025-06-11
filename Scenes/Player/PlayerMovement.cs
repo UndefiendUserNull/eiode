@@ -10,14 +10,18 @@ namespace EIODE.Scenes.Player;
 public partial class PlayerMovement : CharacterBody3D
 {
     [Export] private PlayerMovementSettings _res_playerSettings;
-
+    [Export] public float duration = 0.1f;
+    [Export] public float rotation = -2f;
     private PlayerMovementSettings S => _res_playerSettings;
     private float _jumpHeight = 0.0f;
-    private Vector3 _direction = Vector3.Zero;
+    public Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
-    private Node3D _head = null;
-    private Head _headSrc = null;
+    private Head _head = null;
     private RayCast3D _feet = null; // :D
+    private Game _game = null;
+    private Camera3D _camera = null;
+    private float _cameraZRotation = 0f;
+    private Vector2 _inputDirection = Vector2.Zero;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -40,10 +44,15 @@ public partial class PlayerMovement : CharacterBody3D
             CameraRotation(motion);
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
         MainInput();
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
         Movement(delta);
+        CameraTweens(delta);
     }
 
     private void Init()
@@ -53,12 +62,15 @@ public partial class PlayerMovement : CharacterBody3D
 
         _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
 
-        _head = GetChild<Node3D>(0);
-        _headSrc = _head as Head;
+        _head = GetChild<Head>(0);
+
+        _camera = _head.Camera;
 
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
+
+        _game = Game.GetGame(this);
 
         Validation();
 
@@ -68,12 +80,13 @@ public partial class PlayerMovement : CharacterBody3D
     private void MainInput()
     {
         _direction = Vector3.Zero;
+        _inputDirection = Input.GetVector(InputHash.LEFT, InputHash.RIGHT, InputHash.FORWARD, InputHash.BACKWARD);
 
-        if (Input.IsActionPressed(InputHash.FORWARD)) _direction -= Transform.Basis.Z;
-        else if (Input.IsActionPressed(InputHash.BACKWARD)) _direction += Transform.Basis.Z;
+        if (_inputDirection.Y < 0) _direction -= Transform.Basis.Z;
+        else if (_inputDirection.Y > 0) _direction += Transform.Basis.Z;
 
-        if (Input.IsActionPressed(InputHash.LEFT)) _direction -= Transform.Basis.X;
-        else if (Input.IsActionPressed(InputHash.RIGHT)) _direction += Transform.Basis.X;
+        if (_inputDirection.X < 0) _direction -= Transform.Basis.X;
+        else if (_inputDirection.X > 0) _direction += Transform.Basis.X;
 
         if (Input.IsActionJustPressed(InputHash.JUMP))
         {
@@ -93,13 +106,11 @@ public partial class PlayerMovement : CharacterBody3D
         if (_timeSinceLastJumpInput > S._jumpBufferingTime * 2 && onFloor)
             _timeSinceLastJumpInput = S._jumpBufferingTime + 1;
 
-        if (onFloor)
-            _timeInAir = 0.0f;
+        if (onFloor) _timeInAir = 0.0f;
         else
         {
             _timeInAir += (float)delta;
             Velocity -= new Vector3(0, S._gravity * (float)delta, 0);
-            Velocity = UpdateVelocityAir(desiredDirection, delta);
         }
 
         if (_wantToJump && CanJump())
@@ -108,34 +119,17 @@ public partial class PlayerMovement : CharacterBody3D
         }
 
         Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
-        if (onFloor) Velocity = AdjustedVelocityToSlope(Velocity);
         MoveAndSlide();
-    }
-
-    private Vector3 Accelerate(Vector3 direction, float maxVelocity, double delta)
-    {
-        float currentSpeed = Velocity.Dot(direction);
-        float increasingSpeed = Mathf.Clamp(maxVelocity - currentSpeed, 0, S._maxAcceleration * (float)delta);
-        return Velocity + increasingSpeed * direction;
     }
 
     private Vector3 UpdateVelocityGround(Vector3 direction, double delta)
     {
-        //float speed = Velocity.Length();
-        //if (speed != 0)
-        //{
-        //    float control = Mathf.Max(S._stopSpeed, speed);
-        //    float drop = (control * S._friction * (float)delta);
-        //    Velocity *= Mathf.Max(speed - drop, 0) / speed;
-        //}
-        //return Accelerate(direction, S._maxVelocityGround, delta);
         Vector3 desiredVelocity = direction * S._maxVelocityGround;
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._acceleration * (float)delta));
     }
 
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
-        //return Accelerate(direction, S._maxVelocityAir, delta);
         Vector3 desiredVelocity = direction * S._maxVelocityAir;
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._airControl * (float)delta));
     }
@@ -166,8 +160,8 @@ public partial class PlayerMovement : CharacterBody3D
     private void CameraRotation(InputEventMouseMotion e)
     {
         RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
 
+        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
         _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
     }
     public void Lock()
@@ -181,7 +175,7 @@ public partial class PlayerMovement : CharacterBody3D
     }
     public Head GetHead()
     {
-        if (_headSrc != null) return _headSrc;
+        if (_head != null) return _head;
         else
         {
             GD.PushError("Head in player is null");
@@ -189,6 +183,29 @@ public partial class PlayerMovement : CharacterBody3D
         }
     }
 
+    private void CameraTweens(double delta)
+    {
+        CameraTilting(delta);
+    }
+
+    private void CameraTilting(double delta)
+    {
+        float desiredZRotation;
+
+        if (_inputDirection.X > 0) desiredZRotation = -rotation;
+        else if (_inputDirection.X < 0) desiredZRotation = rotation;
+        else desiredZRotation = 0;
+
+        desiredZRotation = Mathf.DegToRad(desiredZRotation);
+
+        Vector3 rot = _head.Rotation;
+
+        // Responsiveness, idk why it looks like this and it makes the Z tilting look cool instead of using duration directly
+        float t = 1f - Mathf.Exp(-duration * (float)delta);
+        rot.Z = Mathf.LerpAngle(rot.Z, desiredZRotation, t);
+
+        _head.Rotation = rot;
+    }
     private void Validation()
     {
         if (S == null)
@@ -204,6 +221,7 @@ public partial class PlayerMovement : CharacterBody3D
         if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION)) GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
     }
 
+    #region Console Commands
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
     public void Cc_MovePosition(float x, float y, float z)
     {
@@ -221,15 +239,23 @@ public partial class PlayerMovement : CharacterBody3D
             CollideWithBodies = true,
         };
 
-        _headSrc.Camera.AddChild(ray);
-        ray.Position = _headSrc.Camera.Position;
-        ray.Position = _headSrc.Camera.Position;
+        _head.Camera.AddChild(ray);
+        ray.Position = _head.Camera.Position;
+        ray.Position = _head.Camera.Position;
 
         ray.ForceUpdateTransform();
         ray.ForceRaycastUpdate();
 
-        if (ray.IsColliding()) GlobalPosition = new Vector3(ray.GetCollisionPoint().X - PLAYER_COLLISION_RADIUS, ray.GetCollisionPoint().Y + PLAYER_COLLISION_HEIGHT / 2, ray.GetCollisionPoint().Z - PLAYER_COLLISION_RADIUS);
-
+        // Set the position to where the ray hit and move the player away from the hit surface using the radius and the height
+        // so the player doesn't sink inside the hit surface
+        if (ray.IsColliding())
+        {
+            Vector3 collisionPoint = ray.GetCollisionPoint();
+            Vector3 newPos = new(collisionPoint.X - PLAYER_COLLISION_RADIUS, collisionPoint.Y + PLAYER_COLLISION_HEIGHT / 2, collisionPoint.Z - PLAYER_COLLISION_RADIUS);
+            GlobalPosition = newPos;
+            _game.Console?.Log($"Moved player to {newPos}");
+        }
+        else _game.Console?.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
         ray.QueueFree();
     }
 
@@ -242,6 +268,7 @@ public partial class PlayerMovement : CharacterBody3D
                 S._jumpModifier = value;
                 break;
             case "grav":
+                if (value < 0f) _game.Console?.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
                 S._gravity = value;
                 break;
             default:
@@ -249,5 +276,11 @@ public partial class PlayerMovement : CharacterBody3D
         }
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
     }
-
+    [ConsoleCommand("reset", "Resets player's position", true)]
+    public void Cc_ResetPlayerPosition()
+    {
+        Position = Game.PLAYER_SPAWN_POSITION;
+        Velocity = Vector3.Zero;
+    }
+    #endregion
 }

@@ -15,6 +15,7 @@ grow_vertical = 2
 script = ExtResource("1_8ecer")
 
 [node name="Panel" type="Panel" parent="."]
+self_modulate = Color(0.14902, 0.196078, 0.34902, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,12 +33,16 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
 bbcode_enabled = true
-text = "[INFO] : Game Started
-[ERROR] : [color=red]Player Was Not Found[/color]
-[WARNING] : [color=yellow]Head Is Not Named Head"
+text = "[font_size=14]
+[outline_size=8]
+[outline_color=black]
+[color=green][INFO] : These are the default console log settings[/color]
+[WARNING] : [color=yellow]Logs should look like this[/color]
+[ERROR] : [color=red]This text will be cleared on start[/color]"
 scroll_following = true
 threaded = true
 selection_enabled = true
+drag_and_drop_selection_enabled = false
 
 [node name="Input" type="LineEdit" parent="."]
 layout_mode = 1

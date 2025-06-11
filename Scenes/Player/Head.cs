@@ -55,20 +55,23 @@ public partial class Head : Node3D
         ConsoleCommandSystem.RegisterInstance(this);
     }
 
-    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, dpb int)")]
+    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
     public void Set(string type, int amount)
     {
         if (type.Equals("cammo", System.StringComparison.CurrentCultureIgnoreCase))
         {
             CurrentAmmo = amount;
+            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
         }
         else if (type.Equals("mammo", System.StringComparison.CurrentCultureIgnoreCase))
         {
             CurrentMaxAmmo = amount;
+            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+
         }
-        else if (type.Equals("dpb", System.StringComparison.CurrentCultureIgnoreCase))
+        else if (type.Equals("damage", System.StringComparison.CurrentCultureIgnoreCase))
         {
-            // CurrentDamagePerBullet = amount;
+            _hitbox.Damage = amount;
         }
     }
 
@@ -99,7 +102,7 @@ public partial class Head : Node3D
         _magazineEmpty = CurrentAmmo <= 0;
         _magazineFull = CurrentAmmo == G.magazineSize;
 
-        if (Input.IsActionJustPressed(InputHash.REALOAD) && CanReload())
+        if (Input.IsActionJustPressed(InputHash.RELOAD) && CanReload())
         {
             _reloading = true;
             EmitSignalStartedReloading();
@@ -144,13 +147,6 @@ public partial class Head : Node3D
     {
         // passes big number to delta so reloading timer fills fast
         Reload(99999);
-    }
-    private void CreateLineTracer()
-    {
-        var line = G.lineTracer.Instantiate<Node3D>();
-        line.Rotation = new Vector3(Rotation.X, _parent.Rotation.Y, 0);
-        line.Position = new Vector3(_parent.Position.X, _parent.Position.Y + 1f, _parent.Position.Z);
-        GetTree().Root.AddChild(line);
     }
     private bool CanShoot()
     {

@@ -10,7 +10,7 @@ public static class ConsoleCommandSystem
 {
     private static readonly Dictionary<string, (MethodInfo Method, object Target, string Description, bool IsCheat)>
         _commands = new(StringComparer.OrdinalIgnoreCase);
-
+    private static bool _initialized = false;
     public static void Initialize()
     {
         var methods = AppDomain.CurrentDomain.GetAssemblies()
@@ -28,6 +28,7 @@ public static class ConsoleCommandSystem
                 GD.Print($"Registered command '{attribute.Command}'{(attribute.IsCheat ? " [CHEAT]" : "")}: {attribute.Description}");
             }
         }
+        _initialized = true;
         GD.Print($"Console Command System is Ready! {_commands.Count} commands found.");
     }
     public static Dictionary<string, (MethodInfo Method, object Target, string Description, bool IsCheat)> GetCommands()
@@ -37,6 +38,7 @@ public static class ConsoleCommandSystem
     // Register an instance object's methods (non-static)
     public static void RegisterInstance(object instance)
     {
+        if (!_initialized) return;
         var methods = instance.GetType()
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
             .Where(m => m.GetCustomAttribute<ConsoleCommandAttribute>() != null);
@@ -50,6 +52,8 @@ public static class ConsoleCommandSystem
 
     public static void ExecuteCommand(string input)
     {
+        if (!_initialized) return;
+
         string[] parts = input.Split([' '], StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 0)
         {
@@ -80,6 +84,8 @@ public static class ConsoleCommandSystem
 
     private static object[] ParseArguments(ParameterInfo[] parameters, string[] args)
     {
+        if (!_initialized) return default;
+
         if (args.Length < parameters.Count(p => !p.IsOptional))
         {
             GD.PushError($"Not enough arguments. Expected: {parameters.Length}, Got: {args.Length}");
