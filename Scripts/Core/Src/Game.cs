@@ -19,21 +19,56 @@ public partial class Game : Node
     public PlayerMovement Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
+    public bool InitSpawnConsole { get; private set; } = true;
+
     public override void _Ready()
     {
+        var args = System.Environment.GetCommandLineArgs();
+        if (args.Length > 0)
+        {
+            foreach (var arg in args)
+            {
+                switch (arg.ToLower())
+                {
+                    case "--disable-game":
+                        Disabled = true;
+                        break;
+                    case "--no-console":
+                        InitSpawnConsole = false;
+                        break;
+                    case "--1080p":
+                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
+                        break;
+                }
+            }
+        }
+        var zebby = "";
+        foreach (var item in args)
+        {
+            zebby += item + ", ";
+        }
+        zebby += "  " + args.Length;
+        GD.Print("ARGS: " + zebby);
         if (Disabled)
         {
             GD.Print("Game scene is disabled.");
             return;
         }
-
-        ConsoleCommandSystem.Initialize();
-        SpawnConsole();
+        if (InitSpawnConsole == true)
+        {
+            GD.Print("Console Is Enabled");
+            ConsoleCommandSystem.Initialize();
+            SpawnConsole();
+        }
+        else
+        {
+            GD.Print("Console Is Disabaled");
+        }
         SpawnPlayer();
         LoadFirstLevel();
         HideMouse();
         ConsoleCommandSystem.RegisterInstance(this);
-        Console.Log("Game _Ready finished");
+        Console?.Log("Game _Ready finished");
     }
 
     private void SpawnConsole()
@@ -42,7 +77,7 @@ public partial class Game : Node
         Console = consoleScene.Instantiate<DevConsole>();
         GetTree().Root.CallDeferred(MethodName.AddChild, Console);
         Console.Name = "Console";
-        Console.Log("Console ready", DevConsole.LogLevel.INFO);
+        Console?.Log("Console ready", DevConsole.LogLevel.INFO);
     }
 
     private void LoadFirstLevel()
@@ -94,7 +129,7 @@ public partial class Game : Node
         GetTree().Root.CallDeferred(MethodName.AddChild, Player);
         _playerReady = true;
         Player.Name = "Player";
-        Console.Log("Player ready");
+        Console?.Log("Player ready");
     }
 
     [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
@@ -107,7 +142,7 @@ public partial class Game : Node
         else
             path = Path.Combine(LevelLoader.LEVELS_PATH, levelName);
 
-        Console.Log(path);
+        Console?.Log(path);
         if (Godot.FileAccess.FileExists(path))
         {
             PackedScene level = LevelLoader.LoadLevel(path);
@@ -115,7 +150,7 @@ public partial class Game : Node
         }
         else
         {
-            Console.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
         }
     }
 }
