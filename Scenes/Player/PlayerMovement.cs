@@ -159,10 +159,14 @@ public partial class PlayerMovement : CharacterBody3D
 
     private void CameraRotation(InputEventMouseMotion e)
     {
+        // Horizontal rotation (around Y axis)
         RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
 
-        _head.RotateX(Mathf.DegToRad(-e.Relative.Y * S._sensitivity));
-        _head.Rotation = new Vector3(Mathf.Clamp(_head.Rotation.X, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH)), _head.Rotation.Y, _head.Rotation.Z);
+        // Vertical rotation (around X axis)
+        float newPitch = _head.Rotation.X + Mathf.DegToRad(-e.Relative.Y * S._sensitivity);
+        newPitch = Mathf.Clamp(newPitch, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH));
+
+        _head.Rotation = new Vector3(newPitch, _head.Rotation.Y, _head.Rotation.Z);
     }
     public void Lock()
     {
