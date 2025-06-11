@@ -3,7 +3,6 @@ using EIODE.Core.Console;
 using EIODE.Utils;
 using Godot;
 using System.IO;
-using System;
 
 namespace EIODE.Scripts.Core;
 
@@ -143,14 +142,30 @@ public partial class Game : Node
             path = Path.Combine(LevelLoader.LEVELS_PATH, levelName);
 
         Console?.Log(path);
-        if (Godot.FileAccess.FileExists(path))
+
+        if (Engine.IsEditorHint())
         {
-            PackedScene level = LevelLoader.LoadLevel(path);
-            LevelLoader.Instance.ChangeLevel(level);
+            if (Godot.FileAccess.FileExists(path))
+            {
+                PackedScene level = LevelLoader.LoadLevel(path);
+                LevelLoader.Instance.ChangeLevel(level);
+            }
+            else
+            {
+                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+            }
         }
         else
         {
-            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+            if (ResourceLoader.Exists(path))
+            {
+                PackedScene level = LevelLoader.LoadLevel(path);
+                LevelLoader.Instance.ChangeLevel(level);
+            }
+            else
+            {
+                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+            }
         }
     }
 }

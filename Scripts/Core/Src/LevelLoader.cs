@@ -1,6 +1,6 @@
 using EIODE.Core.Console;
 using Godot;
-using System.IO;
+using System;
 
 namespace EIODE.Scripts.Core;
 
@@ -14,7 +14,6 @@ public partial class LevelLoader : Node
     public override void _EnterTree()
     {
         Instance = this;
-        _console = Game.GetGame(this).Console;
     }
     public static PackedScene LoadLevel(string path)
     {
@@ -23,7 +22,7 @@ public partial class LevelLoader : Node
             GD.Print($"Loading level {path} ...");
             return ResourceLoader.Load<PackedScene>(path);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             GD.PushError($"Error while loading level {e}");
             throw;
@@ -32,7 +31,7 @@ public partial class LevelLoader : Node
 
     public void ChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        Game.GetGame(this).Console.Log($"Changing Level to {newLevel}");
+        Game.GetGame(this).Console?.Log($"Changing Level to {newLevel}");
         CallDeferred(MethodName.DeferredChangeLevel, newLevel, freeCurrentLevel, movePlayer);
     }
 
@@ -54,31 +53,42 @@ public partial class LevelLoader : Node
 
         if (movePlayer)
         {
-            Game.GetGame(this).Console.Log($"Moving player to {newLevel} ...");
+            Game.GetGame(this).Console?.Log($"Moving player to {newLevel} ...");
             var player = Game.GetGame(this).GetPlayer();
             player.Position = Game.PLAYER_SPAWN_POSITION;
             player.GetHead().Rotation = Vector3.Zero;
             player.Lock();
             player.Velocity = Vector3.Zero;
             player.Reparent(CurrentLevel);
-            if (!Game.GetGame(this).Console.IsShown)
-                player.UnLock();
+            if (Game.GetGame(this).Console != null)
+                if (!Game.GetGame(this).Console.IsShown)
+                    player.UnLock();
         }
     }
 
     [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
     public static void Cc_ListLevels()
     {
-        string scenesFoundString = "\n";
-        int scenesFoundLength = 0;
-        foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
+        string levelsFoundString = "\n";
+        string[] levelsFound;
+
+        // If inside the editor, search in "res://"
+        if (Engine.IsEditorHint())
         {
-            if (item.EndsWith(".tscn"))
-            {
-                scenesFoundString += $"{item}\n";
-                scenesFoundLength++;
-            }
+            using var dir = DirAccess.Open(LEVELS_PATH);
+            levelsFound = dir?.GetFiles() ?? Array.Empty<string>();
         }
-        Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
+        //else, search in the packed resources
+        else
+        {
+            levelsFound = ResourceLoader.ListDirectory(LEVELS_PATH);
+        }
+
+        foreach (var level in levelsFound)
+        {
+            levelsFoundString += level + "\n";
+        }
+
+        Game.GetGame(Instance).Console?.Log($"{levelsFound.Length} Scenes Found : {levelsFoundString}");
     }
 }
