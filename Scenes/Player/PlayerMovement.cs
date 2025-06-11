@@ -22,7 +22,6 @@ public partial class PlayerMovement : CharacterBody3D
     private Camera3D _camera = null;
     private float _cameraZRotation = 0f;
     private Vector2 _inputDirection = Vector2.Zero;
-    private bool _isDashing = false;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -94,10 +93,6 @@ public partial class PlayerMovement : CharacterBody3D
             _wantToJump = true;
             _timeSinceLastJumpInput = 0.0f;
         }
-    }
-    private void Dash()
-    {
-
     }
 
     private void Movement(double delta)
@@ -285,6 +280,7 @@ public partial class PlayerMovement : CharacterBody3D
     public void Cc_ResetPlayerPosition()
     {
         Position = Game.PLAYER_SPAWN_POSITION;
+        Velocity = Vector3.Zero;
     }
     #endregion
 }
