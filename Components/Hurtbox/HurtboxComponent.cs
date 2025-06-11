@@ -22,7 +22,7 @@ public partial class HurtboxComponent : Area3D, IComponent
 
     private void HealthComponent_OnTakeDamage()
     {
-        Game.GetGame(this).Console.Log($"{GetParent().Name} : {HealthComponent.CurrentHealth}");
+        Game.GetGame(this).Console?.Log($"{GetParent().Name} : {HealthComponent.CurrentHealth}");
     }
 
     private void HealthComponent_OnDeath()

@@ -4,7 +4,6 @@ using EIODE.Utils;
 using System;
 using Godot;
 using EIODE.Scripts.Core;
-using System.Collections;
 
 namespace EIODE.Scenes.Player;
 
@@ -23,6 +22,7 @@ public partial class PlayerMovement : CharacterBody3D
     private Camera3D _camera = null;
     private float _cameraZRotation = 0f;
     private Vector2 _inputDirection = Vector2.Zero;
+    private bool _isDashing = false;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -94,6 +94,10 @@ public partial class PlayerMovement : CharacterBody3D
             _wantToJump = true;
             _timeSinceLastJumpInput = 0.0f;
         }
+    }
+    private void Dash()
+    {
+
     }
 
     private void Movement(double delta)
@@ -254,9 +258,9 @@ public partial class PlayerMovement : CharacterBody3D
             Vector3 collisionPoint = ray.GetCollisionPoint();
             Vector3 newPos = new(collisionPoint.X - PLAYER_COLLISION_RADIUS, collisionPoint.Y + PLAYER_COLLISION_HEIGHT / 2, collisionPoint.Z - PLAYER_COLLISION_RADIUS);
             GlobalPosition = newPos;
-            _game.Console.Log($"Moved player to {newPos}");
+            _game.Console?.Log($"Moved player to {newPos}");
         }
-        else _game.Console.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
+        else _game.Console?.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
         ray.QueueFree();
     }
 
@@ -269,7 +273,7 @@ public partial class PlayerMovement : CharacterBody3D
                 S._jumpModifier = value;
                 break;
             case "grav":
-                if (value < 0f) _game.Console.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
+                if (value < 0f) _game.Console?.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
                 S._gravity = value;
                 break;
             default:

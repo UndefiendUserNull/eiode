@@ -19,10 +19,11 @@ public partial class DevConsole : Control
 
     public override void _Ready()
     {
+        _game = Game.GetGame(this);
+        if (!_game.InitSpawnConsole) return;
         completer = new(ConsoleCommandSystem.GetCommands().Keys);
         _input = GetChild<LineEdit>(1);
         _log = GetChild<Panel>(0).GetChild<RichTextLabel>(0);
-        _game = Game.GetGame(this);
         ConsoleCommandSystem.RegisterInstance(this);
         this.Hide();
         _input.TextSubmitted += Input_TextSubmitted;
@@ -54,7 +55,7 @@ public partial class DevConsole : Control
             string command = _input.Text.Trim('\n');
             if (!string.IsNullOrEmpty(command))
             {
-                _game.Console.Log(command, LogLevel.BLANK);
+                _game.Console?.Log(command, LogLevel.BLANK);
                 ConsoleCommandSystem.ExecuteCommand(command);
                 _history.Add(command);
             }
