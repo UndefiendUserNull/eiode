@@ -13,7 +13,10 @@ config_version=5
 config/name="EIODE"
 run/main_scene="uid://chotnciutfrv"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/use_filter=false
+boot_splash/image="uid://bdmxxcb3neb0j"
+config/icon="uid://cdjdegsibx884"
 
 [autoload]
 
@@ -26,6 +29,7 @@ CyclopsAutoload="*res://addons/cyclops_level_builder/cyclops_global_scene.tscn"
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+window/size/resizable=false
 window/stretch/mode="canvas_items"
 
 [dotnet]
@@ -145,9 +149,4 @@ runtime="coreclr"
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=2
 textures/default_filters/anisotropic_filtering_level=4
-anti_aliasing/quality/msaa_3d=1
-textures/default_filters/texture_mipmap_bias=-1.0
-textures/decals/filter=5
-textures/light_projectors/filter=5
