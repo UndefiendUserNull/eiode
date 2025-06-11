@@ -16,6 +16,37 @@ Hi :D
 
 ---
 
+## Controls *v0.0.1-prototype* :
+
+Open Console : F1
+
+Show/Hide Mouse : ESC
+
+---
+
+## Console Commands *v0.0.1-prototype* :
+
+'help': Shows this list in the console
+
+'change_level': Changes levels to given level name (string)
+
+'list_levels': Lists all levels in the Scenes//Levels folder
+
+'head_set': Change a setting of the current gun settings (cammo int, mammo int, damage int)
+
+'Reload': Reloads Current Gun
+
+'player_move' [CHEAT]: Moves Player To Given Position (x, y, z)
+
+'player_move_ray' [CHEAT]: Shoots a ray from the head and moves the player to the hit point
+
+'player_movement_set' [CHEAT]: jumpmod(float), grav(float)
+
+'reset' [CHEAT]: Resets player's position
+
+**Commands Usage** : change_level platformer_00 "*changes the current level to be platformer_00*"
+
+---
 ## Notes :
 
 - Project still under development
