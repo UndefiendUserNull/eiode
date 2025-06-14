@@ -22,6 +22,7 @@ boot_splash/image="uid://bdmxxcb3neb0j"
 Discord="res://Core/Src/discord.gd"
 Game="*res://Core/game.tscn"
 LevelLoader="*res://Core/level_loader.tscn"
+CyclopsAutoload="*res://addons/cyclops_level_builder/cyclops_global_scene.tscn"
 
 [display]
 
@@ -37,7 +38,7 @@ project/assembly_name="EIODE"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/cyclops_level_builder/plugin.cfg")
 
 [input]
 

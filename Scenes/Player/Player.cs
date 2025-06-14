@@ -6,8 +6,7 @@ using System;
 using Godot;
 
 namespace EIODE.Scenes.Player;
-
-public partial class PlayerMovement : CharacterBody3D
+public partial class Player : CharacterBody3D
 {
     [Export] private PlayerMovementSettings _res_playerSettings;
     [Export] public float duration = 0.1f;

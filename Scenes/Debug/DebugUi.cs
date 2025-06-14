@@ -8,7 +8,7 @@ namespace EIODE.Scenes.Debug;
 
 public partial class DebugUi : Control
 {
-    private PlayerMovement _player = null;
+    private Player _player = null;
     private Head _playerHead = null;
     private Label _label = null;
     private bool _isShown = false;
