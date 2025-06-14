@@ -7,5 +7,5 @@ Game Starts:
   6- Done :D "Hopefully no errors"
 
 Notes :
-  1- Any level MUSN'T include any player scene inside of it, the LevelLoader handels that
+  1- Any level MUSTN'T include any player scene inside of it, the LevelLoader handels that
   2- Before making any level changing make sure to NOT CHANGE THE LEVEL MORE THAN ONE TIME, use a flag or something idk

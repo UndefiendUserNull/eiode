@@ -159,10 +159,10 @@ public partial class PlayerMovement : CharacterBody3D
 
     private void CameraRotation(InputEventMouseMotion e)
     {
-        // Horizontal rotation (around Y axis)
+        // horizontal
         RotateY(Mathf.DegToRad(-e.Relative.X * S._sensitivity));
 
-        // Vertical rotation (around X axis)
+        // vertical
         float newPitch = _head.Rotation.X + Mathf.DegToRad(-e.Relative.Y * S._sensitivity);
         newPitch = Mathf.Clamp(newPitch, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH));
 
@@ -263,8 +263,8 @@ public partial class PlayerMovement : CharacterBody3D
         ray.QueueFree();
     }
 
-    [ConsoleCommand("player_movement_set", "jumpmod (float), grav (float)", true)]
-    public void Cc_MovementSet(string arg, float value)
+    [ConsoleCommand("movement_set", "jumpmod (float), grav (float), reset", true)]
+    public void Cc_MovementSet(string arg, float value = 0)
     {
         switch (arg)
         {
@@ -274,6 +274,10 @@ public partial class PlayerMovement : CharacterBody3D
             case "grav":
                 if (value < 0f) _game.Console?.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
                 S._gravity = value;
+                break;
+            case "reset":
+                S._jumpModifier = _res_playerSettings._jumpModifier;
+                S._gravity = _res_playerSettings._gravity;
                 break;
             default:
                 break;
