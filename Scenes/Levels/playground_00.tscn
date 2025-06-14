@@ -1,7 +1,6 @@
-[gd_scene load_steps=21 format=4 uid="uid://q80pdy7tl5qt"]
+[gd_scene load_steps=20 format=4 uid="uid://q80pdy7tl5qt"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_uj8tf"]
-[ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="2_exbjy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8ilv8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -53,7 +52,7 @@ points = PackedVector3Array(0, 3, -57, 0, 3, 71, 0, 0, 71, 0, 0, -57, 96, 3, -55
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 2, 1, 1),
 "format": 34359738369,
-"material": ExtResource("2_exbjy"),
+"material": ExtResource("1_uj8tf"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 36,
@@ -69,7 +68,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_exbjy"),
+"material": ExtResource("1_uj8tf"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
