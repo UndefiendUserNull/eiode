@@ -19,15 +19,16 @@ boot_splash/image="uid://bdmxxcb3neb0j"
 
 [autoload]
 
-Discord="res://Scripts/Core/Src/discord.gd"
-Game="*res://Scripts/Core/game.tscn"
-LevelLoader="*res://Scripts/Core/level_loader.tscn"
+Discord="res://Core/Src/discord.gd"
+Game="*res://Core/game.tscn"
+LevelLoader="*res://Core/level_loader.tscn"
 
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
 window/size/resizable=false
+window/size/borderless=true
 window/stretch/mode="viewport"
 
 [dotnet]
@@ -147,6 +148,5 @@ runtime="coreclr"
 
 [rendering]
 
-textures/default_filters/use_nearest_mipmap_filter=true
 textures/default_filters/anisotropic_filtering_level=4
 textures/default_filters/texture_mipmap_bias=-1.0

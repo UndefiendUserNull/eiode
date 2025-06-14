@@ -2,6 +2,7 @@ using EIODE.Components;
 using EIODE.Resources.Src;
 using EIODE.Core.Console;
 using EIODE.Utils;
+using EIODE.Scripts.Core;
 using Godot;
 
 namespace EIODE.Scenes.Player;
@@ -25,6 +26,8 @@ public partial class Head : Node3D
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
     public Gun G = null;
+    private Game _game = null;
+    private DevConsole _console = null;
     public Camera3D Camera { get; private set; } = null;
     [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
     [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
@@ -53,27 +56,12 @@ public partial class Head : Node3D
         Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
 
         ConsoleCommandSystem.RegisterInstance(this);
+
+        _game = Game.GetGame(this);
+        _console = _game.Console;
     }
 
-    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
-    public void Set(string type, int amount)
-    {
-        if (type.Equals("cammo", System.StringComparison.CurrentCultureIgnoreCase))
-        {
-            CurrentAmmo = amount;
-            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
-        }
-        else if (type.Equals("mammo", System.StringComparison.CurrentCultureIgnoreCase))
-        {
-            CurrentMaxAmmo = amount;
-            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
 
-        }
-        else if (type.Equals("damage", System.StringComparison.CurrentCultureIgnoreCase))
-        {
-            _hitbox.Damage = amount;
-        }
-    }
 
     public override void _Process(double delta)
     {
@@ -141,13 +129,7 @@ public partial class Head : Node3D
             EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
         }
     }
-    //  This is a dummy test command, useless atm
-    [ConsoleCommand("Reload", "Reloads Current Gun")]
-    public void ForceReload()
-    {
-        // passes big number to delta so reloading timer fills fast
-        Reload(99999);
-    }
+
     private bool CanShoot()
     {
         return !_reloading && _shootingTime >= G.fireRate && !_magazineEmpty;
@@ -161,4 +143,39 @@ public partial class Head : Node3D
     {
         return (G.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
     }
+
+    #region CC
+
+    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
+    public void Set(string type, int amount)
+    {
+        switch (type)
+        {
+            case "cammo":
+                CurrentAmmo = amount;
+                EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+                _console?.Log($"Changed current ammo to be {amount}");
+                break;
+            case "mammo":
+                CurrentMaxAmmo = amount;
+                EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+                _console?.Log($"Changed max ammo to be {amount}");
+                break;
+            case "damage":
+                _hitbox.Damage = amount;
+                _console?.Log($"Changed current damage to be {amount}");
+                break;
+            default:
+                break;
+        }
+    }
+
+    [ConsoleCommand("fast_reload", "Reloads Current Gun")]
+    public void FastReload()
+    {
+        // passes big number to delta so reloading timer fills fast
+        Reload(99999);
+    }
+
+    #endregion
 }
