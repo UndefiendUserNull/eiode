@@ -6,6 +6,7 @@ using System;
 namespace EIODE.Scenes.Levels;
 public partial class t_ChangeLevelTest : Area3D
 {
+    [Export] public PackedScene NextLevel { get; set; }
     private bool _entered = false;
     public override void _Ready()
     {
@@ -20,7 +21,7 @@ public partial class t_ChangeLevelTest : Area3D
         if (body is PlayerMovement && !_entered)
         {
             _entered = true;
-            LevelLoader.Instance.ChangeLevel(LevelLoader.LoadLevel("res://Scenes/Levels/platformer_00.tscn"));
+            LevelLoader.Instance.ChangeLevel(NextLevel);
         }
     }
 }

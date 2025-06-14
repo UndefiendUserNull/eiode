@@ -16,21 +16,19 @@ config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/use_filter=false
 boot_splash/image="uid://bdmxxcb3neb0j"
-config/icon="uid://cdjdegsibx884"
 
 [autoload]
 
 Discord="res://Scripts/Core/Src/discord.gd"
 Game="*res://Scripts/Core/game.tscn"
 LevelLoader="*res://Scripts/Core/level_loader.tscn"
-CyclopsAutoload="*res://addons/cyclops_level_builder/cyclops_global_scene.tscn"
 
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
 window/size/resizable=false
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
 
 [dotnet]
 
@@ -38,7 +36,7 @@ project/assembly_name="EIODE"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/cyclops_level_builder/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 
@@ -149,4 +147,6 @@ runtime="coreclr"
 
 [rendering]
 
+textures/default_filters/use_nearest_mipmap_filter=true
 textures/default_filters/anisotropic_filtering_level=4
+textures/default_filters/texture_mipmap_bias=-1.0
