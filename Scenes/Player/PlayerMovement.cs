@@ -1,9 +1,9 @@
 using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
+using EIODE.Scripts.Core;
 using System;
 using Godot;
-using EIODE.Scripts.Core;
 
 namespace EIODE.Scenes.Player;
 
@@ -20,6 +20,7 @@ public partial class PlayerMovement : CharacterBody3D
     private RayCast3D _feet = null; // :D
     private Game _game = null;
     private Camera3D _camera = null;
+    private DevConsole _console;
     private float _cameraZRotation = 0f;
     private Vector2 _inputDirection = Vector2.Zero;
 
@@ -75,6 +76,9 @@ public partial class PlayerMovement : CharacterBody3D
         Validation();
 
         ConsoleCommandSystem.RegisterInstance(this);
+
+        _console = _game.Console;
+
     }
 
     private void MainInput()
@@ -229,7 +233,9 @@ public partial class PlayerMovement : CharacterBody3D
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
     public void Cc_MovePosition(float x, float y, float z)
     {
-        Position = new Vector3(x, y, z);
+        var newPos = new Vector3(x, y, z);
+        Position = newPos;
+        _console?.Log($"Moved player to {newPos}");
     }
     [ConsoleCommand("player_move_ray", "Shoots a ray from the head and moves the player to the hit point", true)]
     public void Cc_MovePositionToRay()
@@ -257,9 +263,9 @@ public partial class PlayerMovement : CharacterBody3D
             Vector3 collisionPoint = ray.GetCollisionPoint();
             Vector3 newPos = new(collisionPoint.X - PLAYER_COLLISION_RADIUS, collisionPoint.Y + PLAYER_COLLISION_HEIGHT / 2, collisionPoint.Z - PLAYER_COLLISION_RADIUS);
             GlobalPosition = newPos;
-            _game.Console?.Log($"Moved player to {newPos}");
+            _console?.Log($"Moved player to {newPos}");
         }
-        else _game.Console?.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
+        else _console?.Log("Ray didn't collide with any object.", DevConsole.LogLevel.ERROR);
         ray.QueueFree();
     }
 
@@ -269,26 +275,45 @@ public partial class PlayerMovement : CharacterBody3D
         switch (arg)
         {
             case "jumpmod":
+                var _prevJumpMod = S._jumpModifier;
                 S._jumpModifier = value;
+                _console?.Log($"Changed _jumpModifier from {_prevJumpMod} to {S._jumpModifier}");
                 break;
             case "grav":
+                var _prevGrav = S._gravity;
                 if (value < 0f) _game.Console?.Log("Gravity value should be positive.", DevConsole.LogLevel.WARNING);
                 S._gravity = value;
-                break;
-            case "reset":
-                S._jumpModifier = _res_playerSettings._jumpModifier;
-                S._gravity = _res_playerSettings._gravity;
+                _console?.Log($"Changed _gravity from {_prevGrav} to {S._gravity}");
                 break;
             default:
                 break;
         }
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
     }
+    [ConsoleCommand("movement_reset (string)", "Resets given movement setting \"jumpmod, grav\"")]
+    public void Cc_MovementReset(string arg)
+    {
+        switch (arg)
+        {
+            case "jumpmod":
+                S._jumpModifier = _res_playerSettings._jumpModifier;
+                _console?.Log("_jumpModifier Reset");
+                break;
+            case "grav":
+                S._gravity = _res_playerSettings._gravity;
+                _console?.Log("_gravity Reset");
+                break;
+            default:
+                break;
+        }
+    }
+
     [ConsoleCommand("reset", "Resets player's position", true)]
     public void Cc_ResetPlayerPosition()
     {
         Position = Game.PLAYER_SPAWN_POSITION;
         Velocity = Vector3.Zero;
+        _console?.Log("Player set position to spawn Reset");
     }
     #endregion
 }

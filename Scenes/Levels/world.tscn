@@ -1,9 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://c20xv1lcvoy48"]
+[gd_scene load_steps=14 format=3 uid="uid://c20xv1lcvoy48"]
 
 [ext_resource type="PackedScene" uid="uid://cr3i0n8335um7" path="res://Scenes/Debug/debug_ui.tscn" id="2_6pun2"]
 [ext_resource type="PackedScene" uid="uid://bsnu2g6pu10g" path="res://Scenes/Entities/Enemies/enemy_test.tscn" id="3_nbifx"]
-[ext_resource type="PackedScene" uid="uid://cb33ir0qqnqep" path="res://Scenes/Levels/platformer_00.tscn" id="4_434w7"]
-[ext_resource type="Script" uid="uid://ib0frun5knk0" path="res://Scenes/Levels/t_ChangeLevelTest.cs" id="5_q3jv7"]
+[ext_resource type="Script" uid="uid://ib0frun5knk0" path="res://Scenes/Levels_OLD/t_ChangeLevelTest.cs" id="5_q3jv7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v6wy8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -153,7 +152,6 @@ mesh = SubResource("QuadMesh_434w7")
 [node name="Area3D" type="Area3D" parent="Change level test"]
 collision_mask = 255
 script = ExtResource("5_q3jv7")
-NextLevel = ExtResource("4_434w7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Change level test/Area3D"]
 shape = SubResource("BoxShape3D_434w7")

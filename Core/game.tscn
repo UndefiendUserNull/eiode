@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://0dqa8uw1t4s"]
 
-[ext_resource type="Script" uid="uid://5ste8btvxtmo" path="res://Scripts/Core/Src/Game.cs" id="1_3na2w"]
-[ext_resource type="PackedScene" uid="uid://dciig2saen1sa" path="res://Scenes/Levels/playground_00.tscn" id="2_mvhus"]
+[ext_resource type="Script" uid="uid://5ste8btvxtmo" path="res://Core/Src/Game.cs" id="1_3na2w"]
+[ext_resource type="PackedScene" uid="uid://hei6sqx0gk6t" path="res://Scenes/Levels/platformer_02.tscn" id="2_xt2r0"]
 
 [node name="Game" type="Node"]
 process_mode = 3
 process_priority = 99
 process_physics_priority = 99
 script = ExtResource("1_3na2w")
-FirstLevelToLoad = ExtResource("2_mvhus")
+FirstLevelToLoad = ExtResource("2_xt2r0")
