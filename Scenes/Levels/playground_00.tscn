@@ -182,7 +182,7 @@ points = PackedVector3Array(0, 1, 0, 0, 1, 2, 0, 0, 2, 0, 0, 0, 5, 1, 0, 5, 1, 2
 environment = SubResource("Environment_csla5")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.984808, -0.111619, 0.133022, 0, 0.766044, 0.642788, -0.173648, 0.633022, -0.754407, 0, 0, 0)
+transform = Transform3D(-0.984808, -0.111619, 0.133022, 0.086824, 0.346903, 0.933874, -0.150384, 0.931236, -0.331941, 41.0848, 18.5055, 0)
 light_color = Color(0.942823, 0.942823, 0.942823, 1)
 light_energy = 0.74
 shadow_enabled = true
