@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://cr3i0n8335um7" path="res://Scenes/Debug/debug_ui.tscn" id="2_6pun2"]
 [ext_resource type="PackedScene" uid="uid://bsnu2g6pu10g" path="res://Scenes/Entities/Enemies/enemy_test.tscn" id="3_nbifx"]
-[ext_resource type="Script" uid="uid://ib0frun5knk0" path="res://Scenes/Levels_OLD/t_ChangeLevelTest.cs" id="5_q3jv7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v6wy8"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -35,6 +34,36 @@ lightmap_size_hint = Vector2i(14, 21)
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
 [sub_resource type="QuadMesh" id="QuadMesh_434w7"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_6pun2"]
+script/source = "using EIODE.Scenes.Player;
+using EIODE.Scripts.Core;
+using Godot;
+using System;
+
+namespace EIODE.Scenes.Levels;
+public partial class t_ChangeLevelTest : Area3D
+{
+    [Export] public PackedScene NextLevel { get; set; }
+    private bool _entered = false;
+    public override void _Ready()
+    {
+        BodyEntered += T_ChangeLevelTest_BodyEntered;
+    }
+    public override void _ExitTree()
+    {
+        BodyEntered -= T_ChangeLevelTest_BodyEntered;
+    }
+    private void T_ChangeLevelTest_BodyEntered(Node3D body)
+    {
+        if (body is PlayerMovement && !_entered)
+        {
+            _entered = true;
+            LevelLoader.Instance.ChangeLevel(NextLevel);
+        }
+    }
+}
+"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_434w7"]
 
@@ -151,7 +180,7 @@ mesh = SubResource("QuadMesh_434w7")
 
 [node name="Area3D" type="Area3D" parent="Change level test"]
 collision_mask = 255
-script = ExtResource("5_q3jv7")
+script = SubResource("CSharpScript_6pun2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Change level test/Area3D"]
 shape = SubResource("BoxShape3D_434w7")

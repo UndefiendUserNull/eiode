@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://clqrrw0dlrbr2"]
 
-[ext_resource type="Script" uid="uid://cla74cor3vtij" path="res://Scripts/Core/Src/Console/DevConsole.cs" id="1_8ecer"]
+[ext_resource type="Script" uid="uid://cla74cor3vtij" path="res://Core/Src/Console/DevConsole.cs" id="1_wpg1w"]
 
 [node name="Console" type="Control"]
 top_level = true
@@ -12,7 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_8ecer")
+script = ExtResource("1_wpg1w")
 
 [node name="Panel" type="Panel" parent="."]
 self_modulate = Color(0.14902, 0.196078, 0.34902, 1)

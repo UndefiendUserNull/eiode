@@ -15,7 +15,7 @@ public partial class Game : Node
     public bool FirstLevelLoaded { get; private set; } = false;
     public static readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 5, 0);
 
-    public PlayerMovement Player { get; private set; }
+    public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
     public bool InitSpawnConsole { get; private set; } = true;
@@ -85,7 +85,7 @@ public partial class Game : Node
         // idk why the fuck that works instead of setting the position directly
         Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PLAYER_SPAWN_POSITION);
     }
-    public PlayerMovement GetPlayer()
+    public Player GetPlayer()
     {
         if (Player == null)
         {
@@ -124,7 +124,7 @@ public partial class Game : Node
     private void SpawnPlayer()
     {
         var playerScene = ResourceLoader.Load<PackedScene>(ScenesHash.PLAYER_SCENE);
-        Player = playerScene.Instantiate<PlayerMovement>();
+        Player = playerScene.Instantiate<Player>();
         GetTree().Root.CallDeferred(MethodName.AddChild, Player);
         _playerReady = true;
         Player.Name = "Player";

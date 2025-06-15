@@ -6,12 +6,10 @@ using System;
 using Godot;
 
 namespace EIODE.Scenes.Player;
-
-public partial class PlayerMovement : CharacterBody3D
+public partial class Player : CharacterBody3D
 {
     [Export] private PlayerMovementSettings _res_playerSettings;
-    [Export] public float duration = 0.1f;
-    [Export] public float rotation = -2f;
+
     private PlayerMovementSettings S => _res_playerSettings;
     private float _jumpHeight = 0.0f;
     public Vector3 _direction = Vector3.Zero;
@@ -22,7 +20,7 @@ public partial class PlayerMovement : CharacterBody3D
     private Camera3D _camera = null;
     private DevConsole _console;
     private float _cameraZRotation = 0f;
-    private Vector2 _inputDirection = Vector2.Zero;
+    public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
@@ -53,7 +51,6 @@ public partial class PlayerMovement : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         Movement(delta);
-        CameraTweens(delta);
     }
 
     private void Init()
@@ -84,13 +81,10 @@ public partial class PlayerMovement : CharacterBody3D
     private void MainInput()
     {
         _direction = Vector3.Zero;
-        _inputDirection = Input.GetVector(InputHash.LEFT, InputHash.RIGHT, InputHash.FORWARD, InputHash.BACKWARD);
 
-        if (_inputDirection.Y < 0) _direction -= Transform.Basis.Z;
-        else if (_inputDirection.Y > 0) _direction += Transform.Basis.Z;
+        InputDirection = Input.GetVector(InputHash.LEFT, InputHash.RIGHT, InputHash.FORWARD, InputHash.BACKWARD);
 
-        if (_inputDirection.X < 0) _direction -= Transform.Basis.X;
-        else if (_inputDirection.X > 0) _direction += Transform.Basis.X;
+        _direction = (Transform.Basis.Z * InputDirection.Y + Transform.Basis.X * InputDirection.X).Normalized();
 
         if (Input.IsActionJustPressed(InputHash.JUMP))
         {
@@ -187,33 +181,11 @@ public partial class PlayerMovement : CharacterBody3D
         else
         {
             GD.PushError("Head in player is null");
-            return null;
+            throw new NullReferenceException();
         }
     }
 
-    private void CameraTweens(double delta)
-    {
-        CameraTilting(delta);
-    }
 
-    private void CameraTilting(double delta)
-    {
-        float desiredZRotation;
-
-        if (_inputDirection.X > 0) desiredZRotation = -rotation;
-        else if (_inputDirection.X < 0) desiredZRotation = rotation;
-        else desiredZRotation = 0;
-
-        desiredZRotation = Mathf.DegToRad(desiredZRotation);
-
-        Vector3 rot = _head.Rotation;
-
-        // Responsiveness, idk why it looks like this and it makes the Z tilting look cool instead of using duration directly
-        float t = 1f - Mathf.Exp(-duration * (float)delta);
-        rot.Z = Mathf.LerpAngle(rot.Z, desiredZRotation, t);
-
-        _head.Rotation = rot;
-    }
     private void Validation()
     {
         if (S == null)
@@ -240,9 +212,10 @@ public partial class PlayerMovement : CharacterBody3D
     [ConsoleCommand("player_move_ray", "Shoots a ray from the head and moves the player to the hit point", true)]
     public void Cc_MovePositionToRay()
     {
+        int maxRayDistance = 5000;
         RayCast3D ray = new()
         {
-            TargetPosition = Vector3.Forward * 5000,
+            TargetPosition = Vector3.Forward * maxRayDistance,
             ExcludeParent = true,
             ProcessMode = ProcessModeEnum.Always,
             HitBackFaces = false,
@@ -251,7 +224,7 @@ public partial class PlayerMovement : CharacterBody3D
 
         _head.Camera.AddChild(ray);
         ray.Position = _head.Camera.Position;
-        ray.Position = _head.Camera.Position;
+        ray.Rotation = _head.Camera.Rotation;
 
         ray.ForceUpdateTransform();
         ray.ForceRaycastUpdate();

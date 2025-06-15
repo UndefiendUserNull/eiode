@@ -11,6 +11,10 @@ public partial class Head : Node3D
     [Export] public float ShootingRayLength { get; set; } = -1000;
     [Export] private Gun CurrentGunSettings { get; set; } = null;
 
+    [Export] public float CameraTiltSpeed { get; set; } = 10f;
+
+    [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
+
     public bool _shooting = false;
     public bool _reloading = false;
     // used in special cases
@@ -28,7 +32,9 @@ public partial class Head : Node3D
     public Gun G = null;
     private Game _game = null;
     private DevConsole _console = null;
+    private Player _player = null;
     public Camera3D Camera { get; private set; } = null;
+
     [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
     [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
     [Signal] public delegate void StartedReloadingEventHandler();
@@ -58,6 +64,7 @@ public partial class Head : Node3D
         ConsoleCommandSystem.RegisterInstance(this);
 
         _game = Game.GetGame(this);
+        _player = _game.Player;
         _console = _game.Console;
     }
 
@@ -66,6 +73,8 @@ public partial class Head : Node3D
     public override void _Process(double delta)
     {
         HandleShooting(delta);
+        CameraTilting(delta, _player.InputDirection);
+
         if (G != CurrentGunSettings)
         {
             EmitSignalGunSettingsChanged(G, CurrentGunSettings);
@@ -142,6 +151,24 @@ public partial class Head : Node3D
     private bool GetShootingPressed()
     {
         return (G.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
+    }
+    private void CameraTilting(double delta, Vector2 _inputDirection)
+    {
+        float desiredZRotation;
+
+        if (_inputDirection.X > 0) desiredZRotation = -MaxCameraTiltRadian;
+        else if (_inputDirection.X < 0) desiredZRotation = MaxCameraTiltRadian;
+        else desiredZRotation = 0;
+
+        desiredZRotation = Mathf.DegToRad(desiredZRotation);
+
+        Vector3 rot = Rotation;
+
+        // Responsiveness, idk why it looks like this and it makes the Z tilting look cool instead of using duration directly
+        float t = 1f - Mathf.Exp(-CameraTiltSpeed * (float)delta);
+        rot.Z = Mathf.LerpAngle(rot.Z, desiredZRotation, t);
+
+        Rotation = rot;
     }
 
     #region CC

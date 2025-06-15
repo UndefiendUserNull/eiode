@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dqk8i0f08x0q2"]
 
-[ext_resource type="Script" uid="uid://vwwqwf56640l" path="res://Scenes/Player/PlayerMovement.cs" id="1_uvnfx"]
+[ext_resource type="Script" uid="uid://bytf8ubehbpod" path="res://Scenes/Player/Player.cs" id="1_uvnfx"]
 [ext_resource type="Resource" uid="uid://dql1va6oatqi6" path="res://Resources/MainPlayerMovementSettings.tres" id="2_a3d8c"]
 [ext_resource type="Script" uid="uid://blga75bmxo2r2" path="res://Scenes/Player/Head.cs" id="3_xpcdj"]
 [ext_resource type="Resource" uid="uid://dk7foobtgscip" path="res://Resources/Gun Types/SMG.tres" id="4_0u5uq"]
@@ -18,10 +18,9 @@ height = 3.0
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 5
+safe_margin = 0.01
 script = ExtResource("1_uvnfx")
 _res_playerSettings = ExtResource("2_a3d8c")
-duration = 5.0
-rotation = 3.0
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
@@ -29,7 +28,7 @@ script = ExtResource("3_xpcdj")
 CurrentGunSettings = ExtResource("4_0u5uq")
 
 [node name="Camera" type="Camera3D" parent="Head"]
-fov = 120.0
+fov = 90.0
 
 [node name="Hitbox" parent="Head/Camera" instance=ExtResource("5_dd0ac")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.1, 0)
@@ -49,6 +48,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
 visible = false
 
 [node name="Main UI" parent="." instance=ExtResource("7_0u5uq")]
+visible = false
 
 [node name="Feet" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
