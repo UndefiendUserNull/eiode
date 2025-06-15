@@ -1,10 +1,11 @@
-using Godot;
 using EIODE.Utils;
 using EIODE.Scripts.Core;
-using System;
 using System.Collections.Generic;
+using System;
+using Godot;
 
 namespace EIODE.Core.Console;
+
 public partial class DevConsole : Control
 {
     [Export] private int _currentHistoryIndex = -1;
@@ -12,7 +13,14 @@ public partial class DevConsole : Control
     private RichTextLabel _log = null!;
     private Game _game = null!;
     private AutoCompleter _completer = null!;
+    private Panel _mainPanel = null;
+    private Label _suggestionsLabel = null!;
+    private ColorRect _suggestionsPanel = null!;
     private readonly List<string> _history = [];
+
+    private List<string> _currentSuggestions = [];
+    private int _currentSuggestionIndex = -1;
+    private string _suggestionsLabelText = string.Empty;
 
     public bool IsShown { get; private set; } = false;
 
@@ -25,7 +33,11 @@ public partial class DevConsole : Control
             return;
         }
 
-        _log = GetChild<Panel>(0).GetChild<RichTextLabel>(0);
+        // This sucks, should define them in a better way soon
+        _mainPanel = GetChild<Panel>(0);
+        _log = _mainPanel.GetChild<RichTextLabel>(0);
+        _suggestionsPanel = _mainPanel.GetChild<ColorRect>(1);
+        _suggestionsLabel = _suggestionsPanel.GetChild<Label>(0);
         _input = GetChild<LineEdit>(1);
 
         _completer = new AutoCompleter(ConsoleCommandSystem.GetCommands().Keys);
@@ -35,6 +47,9 @@ public partial class DevConsole : Control
 
         _input.TextSubmitted += OnTextSubmitted;
         _input.TextChanged += OnTextChanged;
+
+        _suggestionsLabel.Text = string.Empty;
+        _suggestionsPanel.Hide();
 
         _log.Clear();
         _log.PushFontSize(14);
@@ -57,15 +72,31 @@ public partial class DevConsole : Control
         {
             Log(command, LogLevel.BLANK);
             ConsoleCommandSystem.ExecuteCommand(command);
-            _history.Insert(0, command); // Insert at front for easy cycling
+            _history.Insert(0, command); // Newest at front
             _currentHistoryIndex = -1;
         }
         _input.Clear();
+        _currentSuggestions.Clear();
+        _currentSuggestionIndex = -1;
     }
 
     private void OnTextChanged(string text)
     {
-        // TODO: Show auto-complete UI
+        // Reset suggestions when text changes
+        if (_input.Text.Trim() != string.Empty)
+        {
+            _suggestionsPanel.Show();
+            _currentSuggestions = [.. _completer.GetSuggestions(text)];
+            _currentSuggestionIndex = -1;
+            _suggestionsLabelText = string.Empty;
+            foreach (var suggestion in _currentSuggestions)
+            {
+                _suggestionsLabelText += suggestion + '\n';
+            }
+            _suggestionsLabel.Text = _suggestionsLabelText;
+        }
+
+        if (_currentSuggestions.Count <= 0) _suggestionsPanel.Hide();
     }
 
     public override void _Process(double delta)
@@ -77,6 +108,8 @@ public partial class DevConsole : Control
 
         if (!IsShown) return;
 
+        if (_input.Text.Trim() == string.Empty) _suggestionsPanel.Hide();
+
         if (Input.IsActionJustPressed(InputHash.UP))
         {
             CycleHistory(1);
@@ -87,7 +120,7 @@ public partial class DevConsole : Control
         }
         else if (Input.IsActionJustPressed(InputHash.K_TAB))
         {
-            AutoComplete();
+            CycleAutoComplete();
         }
     }
 
@@ -111,6 +144,8 @@ public partial class DevConsole : Control
         _input.Clear();
         _input.GrabFocus();
         _currentHistoryIndex = -1;
+        _currentSuggestions.Clear();
+        _currentSuggestionIndex = -1;
         _game.GetPlayer().Lock();
         Game.ShowMouse();
     }
@@ -130,26 +165,24 @@ public partial class DevConsole : Control
         _currentHistoryIndex += direction;
 
         if (_currentHistoryIndex < 0)
-        {
             _currentHistoryIndex = 0;
-        }
         else if (_currentHistoryIndex >= _history.Count)
-        {
             _currentHistoryIndex = _history.Count - 1;
-        }
 
         _input.Text = _history[_currentHistoryIndex];
         _input.CaretColumn = _input.Text.Length;
     }
 
-    private void AutoComplete()
+    private void CycleAutoComplete()
     {
-        var suggestions = _completer.GetSuggestions(_input.Text);
-        if (suggestions.Count > 0)
-        {
-            _input.Text = suggestions[0];
-            _input.CaretColumn = _input.Text.Length;
-        }
+        if (_currentSuggestions.Count == 0) return;
+
+        _currentSuggestionIndex++;
+        if (_currentSuggestionIndex >= _currentSuggestions.Count)
+            _currentSuggestionIndex = 0;
+
+        _input.Text = _currentSuggestions[_currentSuggestionIndex];
+        _input.CaretColumn = _input.Text.Length;
     }
 
     public void Log(string msg, LogLevel logLevel = LogLevel.INFO)
