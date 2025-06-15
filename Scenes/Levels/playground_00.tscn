@@ -192,6 +192,7 @@ shadow_enabled = true
 [node name="ground" type="Node3D" parent="Blocks"]
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.082818, 0.10392, 0.0220642)
 mesh = SubResource("ArrayMesh_qdo8s")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/ground"]
