@@ -25,8 +25,8 @@ public partial class DevConsole : Control
             return;
         }
 
-        _input = GetNode<LineEdit>("Input");
-        _log = GetNode<RichTextLabel>("Panel/Logger");
+        _log = GetChild<Panel>(0).GetChild<RichTextLabel>(0);
+        _input = GetChild<LineEdit>(1);
 
         _completer = new AutoCompleter(ConsoleCommandSystem.GetCommands().Keys);
 
@@ -168,7 +168,10 @@ public partial class DevConsole : Control
 
     private void AddLogLine(string line)
     {
-        _log.AppendText(line + "\n");
+        if (_log != null)
+            _log.AppendText(line + "\n");
+        else
+            GD.Print(line);
     }
 
     [ConsoleCommand("help", "Shows all available console commands.")]
