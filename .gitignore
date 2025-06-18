@@ -4,7 +4,11 @@
 /Output/
 *.exe
 /addons/
+/Properties/
 ref.txt
 addons_downloader/Lib/
 addons_downloader/Scripts/
 .vscode/
+.editorconfig
+cyclops_settings.config
+*.user
