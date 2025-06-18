@@ -156,9 +156,7 @@ public partial class Head : Node3D
     {
         float desiredZRotation;
 
-        if (_inputDirection.X > 0) desiredZRotation = -MaxCameraTiltRadian;
-        else if (_inputDirection.X < 0) desiredZRotation = MaxCameraTiltRadian;
-        else desiredZRotation = 0;
+        desiredZRotation = -_inputDirection.X * MaxCameraTiltRadian;
 
         desiredZRotation = Mathf.DegToRad(desiredZRotation);
 
@@ -174,7 +172,7 @@ public partial class Head : Node3D
     #region CC
 
     [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
-    public void Set(string type, int amount)
+    public void Cc_Set(string type, int amount)
     {
         switch (type)
         {
@@ -198,11 +196,16 @@ public partial class Head : Node3D
     }
 
     [ConsoleCommand("fast_reload", "Reloads Current Gun")]
-    public void FastReload()
+    public void Cc_FastReload()
     {
-        // passes big number to delta so reloading timer fills fast
+        // passes big number to delta so it reloads immediately 
         Reload(99999);
     }
 
+    [ConsoleCommand("desired_fov", "Sets default FOV (float)")]
+    public void Cc_SetFov(float v)
+    {
+        Camera.Fov = v;
+    }
     #endregion
 }
