@@ -3,6 +3,7 @@ using EIODE.Scripts.Core;
 using System.Collections.Generic;
 using System;
 using Godot;
+using System.Text.RegularExpressions;
 
 namespace EIODE.Core.Console;
 
@@ -204,17 +205,10 @@ public partial class DevConsole : Control
         if (_log != null)
             _log.AppendText(line + "\n");
         else
-            GD.Print(line);
+            GD.Print(ExtractMessage(line));
     }
 
-    [ConsoleCommand("help", "Shows all available console commands.")]
-    public void Help()
-    {
-        foreach (var cmd in ConsoleCommandSystem.GetCommands())
-        {
-            Log($"{cmd.Key}: {cmd.Value.Description}");
-        }
-    }
+
 
     [Obsolete("Use Log() instead.")]
     public void Print(string msg) => Info(msg);
@@ -226,6 +220,21 @@ public partial class DevConsole : Control
     public void Warn(string msg) => Log(msg, LogLevel.WARNING);
     public void Error(string msg) => Log(msg, LogLevel.ERROR);
 
+
+    /// <summary>
+    /// Extracts the {msg} part from a string formatted like "[color=green][INFO] : {msg}[/color]"
+    /// </summary>
+    public static string ExtractMessage(string formattedMessage)
+    {
+        // Remove color tags (e.g., [color=green] and [/color])
+        string withoutColor = ColorRegex().Replace(formattedMessage, "");
+
+        // Extract the part after "[LEVEL] : " (where LEVEL = INFO, WARNING, etc.)
+        var match = LogLevelRegex().Match(withoutColor);
+
+        return match.Success ? match.Groups[1].Value.Trim() : formattedMessage;
+    }
+
     public enum LogLevel
     {
         INFO,
@@ -233,4 +242,42 @@ public partial class DevConsole : Control
         ERROR,
         BLANK
     }
+
+    #region CC
+
+    [ConsoleCommand("help", "Shows all available console commands.")]
+    public void Cc_Help()
+    {
+        foreach (var cmd in ConsoleCommandSystem.GetCommands())
+        {
+            Log($"{cmd.Key}: {cmd.Value.Description}");
+        }
+    }
+
+    [ConsoleCommand("clear", "Clears the console log")]
+    public void Cc_Clear()
+    {
+        _log.Clear();
+    }
+
+    [ConsoleCommand("quit", "Quits the game")]
+    public void Cc_Quit()
+    {
+        GetTree().Quit();
+    }
+    #endregion
+
+    #region Regex
+
+    [GeneratedRegex(@"\[color=[^\]]+\]|\[\/color\]", RegexOptions.Compiled)]
+    public static partial Regex ColorRegex();
+
+    [GeneratedRegex(@"^\[[A-Z]+\]\s*:\s*(.*)$", RegexOptions.Compiled)]
+    public static partial Regex LogLevelRegex();
+
+    #endregion
+
+
+
+
 }
