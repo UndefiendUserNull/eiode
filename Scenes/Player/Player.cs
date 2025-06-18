@@ -10,7 +10,7 @@ public partial class Player : CharacterBody3D
 {
     [Export] private PlayerMovementSettings _res_playerSettings;
 
-    private PlayerMovementSettings S => _res_playerSettings;
+    private PlayerMovementSettings S = null;
     private float _jumpHeight = 0.0f;
     public Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
@@ -58,6 +58,8 @@ public partial class Player : CharacterBody3D
         // Should be unlocked from outside
         Lock();
 
+        S = (PlayerMovementSettings)_res_playerSettings.Duplicate();
+
         _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
 
         _head = GetChild<Head>(0);
@@ -101,9 +103,6 @@ public partial class Player : CharacterBody3D
         if (_wantToJump)
             _timeSinceLastJumpInput += (float)delta;
 
-        if (_timeSinceLastJumpInput > S._jumpBufferingTime * 2 && onFloor)
-            _timeSinceLastJumpInput = S._jumpBufferingTime + 1;
-
         if (onFloor) _timeInAir = 0.0f;
         else
         {
@@ -115,7 +114,6 @@ public partial class Player : CharacterBody3D
         {
             Jump(desiredDirection, delta);
         }
-
         Velocity = onFloor ? UpdateVelocityGround(desiredDirection, delta) : UpdateVelocityAir(desiredDirection, delta);
         MoveAndSlide();
     }
@@ -126,6 +124,8 @@ public partial class Player : CharacterBody3D
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-S._acceleration * (float)delta));
     }
 
+
+
     private Vector3 UpdateVelocityAir(Vector3 direction, double delta)
     {
         Vector3 desiredVelocity = direction * S._maxVelocityAir;
@@ -134,11 +134,16 @@ public partial class Player : CharacterBody3D
 
     private Vector3 AdjustedVelocityToSlope(Vector3 velocity)
     {
-        if (_feet.CollideWithBodies)
+        if (_feet.IsColliding())
         {
-            Quaternion slopeRotation = new(Vector3.Up, _feet.GetCollisionNormal());
-            Vector3 adjustedVelocity = slopeRotation * velocity;
-            if (adjustedVelocity.Y < 0) return adjustedVelocity;
+            Vector3 normal = _feet.GetCollisionNormal();
+            float angle = Mathf.RadToDeg(Mathf.Acos(normal.Dot(Vector3.Up)));
+
+            if (angle > 5f && velocity.Y < 0)
+            {
+                float boost = 1f + (angle / 45f);
+                return velocity * boost;
+            }
         }
         return velocity;
     }
@@ -147,12 +152,15 @@ public partial class Player : CharacterBody3D
         Vector3 horizontalVelocity = UpdateVelocityGround(desiredDirection, delta);
         Velocity = new Vector3(horizontalVelocity.X, _jumpHeight, horizontalVelocity.Z);
         _wantToJump = false;
+        _timeSinceLastJumpInput = S._jumpBufferingTime + 1; // Ensure no immediate re-jump
     }
 
     private bool CanJump()
     {
-        return (IsOnFloor() && (_timeSinceLastJumpInput < S._jumpBufferingTime)) ||
-               (!IsOnFloor() && (_timeInAir < S._coyoteTime));
+        bool hasBufferedJump = _timeSinceLastJumpInput < S._jumpBufferingTime;
+        bool canCoyoteJump = !IsOnFloor() && (_timeInAir < S._coyoteTime);
+
+        return (IsOnFloor() && hasBufferedJump) || canCoyoteJump;
     }
 
     private void CameraRotation(InputEventMouseMotion e)
@@ -201,7 +209,8 @@ public partial class Player : CharacterBody3D
         if (!Mathf.IsEqualApprox(GetChild<Node3D>(0).Position.Y, DEFAULT_HEAD_Y_POSITION)) GD.PushWarning($"Player's head position {_head.Position.Y} != {DEFAULT_HEAD_Y_POSITION}");
     }
 
-    #region Console Commands
+    #region CC
+
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
     public void Cc_MovePosition(float x, float y, float z)
     {
@@ -242,7 +251,7 @@ public partial class Player : CharacterBody3D
         ray.QueueFree();
     }
 
-    [ConsoleCommand("movement_set", "jumpmod (float), grav (float), reset", true)]
+    [ConsoleCommand("movement_set", "Sets movement values: \"jumpmod, grav, sens, accel, airctrl, maxair, maxground, jumpbuffer, coyote\"", true)]
     public void Cc_MovementSet(string arg, float value = 0)
     {
         switch (arg)
@@ -258,27 +267,101 @@ public partial class Player : CharacterBody3D
                 S._gravity = value;
                 _console?.Log($"Changed _gravity from {_prevGrav} to {S._gravity}");
                 break;
+            case "sens":
+                var _prevSens = S._sensitivity;
+                S._sensitivity = value;
+                _console?.Log($"Changed _sensitivity from {_prevSens} to {S._sensitivity}");
+                break;
+            case "accel":
+                var _prevAccel = S._acceleration;
+                S._acceleration = value;
+                _console?.Log($"Changed _acceleration from {_prevAccel} to {S._acceleration}");
+                break;
+            case "airctrl":
+                var _prevAirCtrl = S._airControl;
+                S._airControl = value;
+                _console?.Log($"Changed _airControl from {_prevAirCtrl} to {S._airControl}");
+                break;
+            case "maxair":
+                var _prevMaxAir = S._maxVelocityAir;
+                S._maxVelocityAir = value;
+                _console?.Log($"Changed _maxVelocityAir from {_prevMaxAir} to {S._maxVelocityAir}");
+                break;
+            case "maxground":
+                var _prevMaxGround = S._maxVelocityGround;
+                S._maxVelocityGround = value;
+                _console?.Log($"Changed _maxVelocityGround from {_prevMaxGround} to {S._maxVelocityGround}");
+                break;
+            case "jumpbuffer":
+                var _prevJumpBuffer = S._jumpBufferingTime;
+                S._jumpBufferingTime = value;
+                _console?.Log($"Changed _jumpBufferingTime from {_prevJumpBuffer} to {S._jumpBufferingTime}");
+                break;
+            case "coyote":
+                var _prevCoyote = S._coyoteTime;
+                S._coyoteTime = value;
+                _console?.Log($"Changed _coyoteTime from {_prevCoyote} to {S._coyoteTime}");
+                break;
+            case "help":
+                _console?.Log("jumpmod, grav, sens, accel, airctrl, maxair, maxground, jumpbuffer, coyote");
+                break;
             default:
+                _console?.Log($"Unknown parameter: {arg}", DevConsole.LogLevel.WARNING);
                 break;
         }
         _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
     }
-    [ConsoleCommand("movement_reset (string)", "Resets given movement setting \"jumpmod, grav\"")]
+
+    [ConsoleCommand("movement_reset", "Resets given movement setting \"jumpmod, grav, sens, accel, airctrl, maxair, maxground, jumpbuffer, coyote\"")]
     public void Cc_MovementReset(string arg)
     {
         switch (arg)
         {
             case "jumpmod":
                 S._jumpModifier = _res_playerSettings._jumpModifier;
-                _console?.Log("_jumpModifier Reset");
+                _console?.Log($"_jumpModifier Reset to {S._jumpModifier}");
                 break;
             case "grav":
                 S._gravity = _res_playerSettings._gravity;
-                _console?.Log("_gravity Reset");
+                _console?.Log($"_gravity Reset to {S._gravity}");
+                break;
+            case "sens":
+                S._sensitivity = _res_playerSettings._sensitivity;
+                _console?.Log($"_sensitivity Reset to {S._sensitivity}");
+                break;
+            case "accel":
+                S._acceleration = _res_playerSettings._acceleration;
+                _console?.Log($"_acceleration Reset to {S._acceleration}");
+                break;
+            case "airctrl":
+                S._airControl = _res_playerSettings._airControl;
+                _console?.Log($"_airControl Reset to {S._airControl}");
+                break;
+            case "maxair":
+                S._maxVelocityAir = _res_playerSettings._maxVelocityAir;
+                _console?.Log($"_maxVelocityAir Reset to {S._maxVelocityAir}");
+                break;
+            case "maxground":
+                S._maxVelocityGround = _res_playerSettings._maxVelocityGround;
+                _console?.Log($"_maxVelocityGround Reset to {S._maxVelocityGround}");
+                break;
+            case "jumpbuffer":
+                S._jumpBufferingTime = _res_playerSettings._jumpBufferingTime;
+                _console?.Log($"_jumpBufferingTime Reset to {S._jumpBufferingTime}");
+                break;
+            case "coyote":
+                S._coyoteTime = _res_playerSettings._coyoteTime;
+                _console?.Log($"_coyoteTime Reset to {S._coyoteTime}");
+                break;
+            case "help":
+                _console?.Log("Available reset parameters: jumpmod, grav, sens, accel, airctrl, maxair, maxground, jumpbuffer, coyote");
                 break;
             default:
+                _console?.Log($"Unknown reset parameter: {arg}");
                 break;
         }
+        _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
+
     }
 
     [ConsoleCommand("reset", "Resets player's position", true)]
