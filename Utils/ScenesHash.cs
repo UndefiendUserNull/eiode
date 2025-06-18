@@ -9,5 +9,6 @@ namespace EIODE.Utils
         public const string PLAYER_SCENE = "res://Scenes/Player/player.tscn";
         public const string LEVEL_LOADER_SCENE = "res://Core/level_loader.tscn";
         public const string CONSOLE_SCENE = "res://Core/console.tscn";
+        public const string DEBUG_UI_SCENE = "res://Scenes/Debug/debug_ui.tscn";
     }
 }

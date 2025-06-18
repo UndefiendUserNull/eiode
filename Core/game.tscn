@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://0dqa8uw1t4s"]
 
 [ext_resource type="Script" uid="uid://5ste8btvxtmo" path="res://Core/Src/Game.cs" id="1_3na2w"]
-[ext_resource type="PackedScene" uid="uid://cfswgg6lfyjd0" path="res://Scenes/Levels/platformer_01.tscn" id="2_xt2r0"]
+[ext_resource type="PackedScene" uid="uid://q80pdy7tl5qt" path="res://Scenes/Levels/playground_00.tscn" id="2_xt2r0"]
 
 [node name="Game" type="Node"]
 process_mode = 3

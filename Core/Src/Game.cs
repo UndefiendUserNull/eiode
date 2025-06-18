@@ -1,8 +1,9 @@
 using EIODE.Scenes.Player;
 using EIODE.Core.Console;
+using EIODE.Scenes.Debug;
 using EIODE.Utils;
-using Godot;
 using System.IO;
+using Godot;
 
 namespace EIODE.Scripts.Core;
 
@@ -12,6 +13,7 @@ public partial class Game : Node
     [Export] public bool Disabled { get; set; }
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
+    private DebugUi _debugUi = null;
     public bool FirstLevelLoaded { get; private set; } = false;
     public static readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 5, 0);
 
@@ -131,6 +133,8 @@ public partial class Game : Node
         Console?.Log("Player ready");
     }
 
+    #region CC
+
     [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
     public void Cc_ChangeLevel(string levelName)
     {
@@ -168,4 +172,35 @@ public partial class Game : Node
             }
         }
     }
+
+    [ConsoleCommand("toggle_debug_ui", "Creates the standard debug ui (int).")]
+    public void Cc_ToggleDebugUi(int toggle = 1)
+    {
+        if (toggle == 1)
+        {
+            if (_debugUi == null)
+            {
+                _debugUi = ResourceLoader.Load<PackedScene>(ScenesHash.DEBUG_UI_SCENE).Instantiate<DebugUi>();
+                _debugUi.Name = "Debug UI";
+                _debugUi.EnableUI();
+                GetTree().Root.CallDeferred(MethodName.AddChild, _debugUi);
+                Console?.Log("Debug UI Created.");
+            }
+            else _debugUi.EnableUI();
+
+            Console?.Log("Debug UI Enabled.");
+        }
+        else if (toggle == 0)
+        {
+            if (_debugUi == null)
+            {
+                Console?.Log("There's no Debug ui, use \"toggle_debug_ui 1\" to create another one", DevConsole.LogLevel.WARNING);
+                return;
+            }
+            _debugUi.DisableUI();
+            Console?.Log("Debug UI Disabled.");
+        }
+    }
+
+    #endregion
 }
