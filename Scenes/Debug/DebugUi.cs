@@ -51,4 +51,20 @@ public partial class DebugUi : Control
         _sb.Append($"Hitbox Enabled : {_playerHead._hitboxEnabled}\n");
         _label.Text = _sb.ToString();
     }
+
+    public void EnableUI()
+    {
+        Show();
+        _isShown = true;
+        ProcessMode = ProcessModeEnum.Inherit;
+        _sb.Clear();
+    }
+
+    public void DisableUI()
+    {
+        Hide();
+        _isShown = false;
+        ProcessMode = ProcessModeEnum.Disabled;
+        _sb.Clear();
+    }
 }
