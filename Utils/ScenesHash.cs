@@ -10,5 +10,6 @@ namespace EIODE.Utils
         public const string LEVEL_LOADER_SCENE = "res://Core/level_loader.tscn";
         public const string CONSOLE_SCENE = "res://Core/console.tscn";
         public const string DEBUG_UI_SCENE = "res://Scenes/Debug/debug_ui.tscn";
+        public const string MESH_UTILS_MAIN_DOCK_SCENE = "res://addons/3d-mesh-utils/MainDock.tscn";
     }
 }

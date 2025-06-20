@@ -15,14 +15,14 @@ Simply add the `[ConsoleCommand(command, description (optional), isCheat (option
 [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
 public static void Cc_ListLevels()
 {
-    string scenesFoundString = "\n";
-    int scenesFoundLength = 0;
-    foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
-    {
-        scenesFoundString += $"{item}\n";
-        scenesFoundLength++;
-    }
-    Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
+	string scenesFoundString = "\n";
+	int scenesFoundLength = 0;
+	foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
+	{
+		scenesFoundString += $"{item}\n";
+		scenesFoundLength++;
+	}
+	Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
 }
 ```
 
@@ -40,7 +40,7 @@ Here's a command from the PlayerMovement class
 [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
 public void MovePosition(float x, float y, float z)
 {
-    Position = new Vector3(x, y, z);
+	Position = new Vector3(x, y, z);
 }
 ```
 
@@ -49,15 +49,15 @@ In player's Init function you can see `ConsoleCommandSystem.RegisterInstance(thi
 ```CS
 private void Init()
 {
-    Validation();
-    // Should be unlocked from outside
-    Lock();
-    _feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
-    if (!_feet.Name.ToString().Equals("feet", System.StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
-    _head = GetChild<Node3D>(0);
-    _headSrc = _head as Head;
-    _jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
-    Input.MouseMode = Input.MouseModeEnum.Captured;
+	Validation();
+	// Should be unlocked from outside
+	Lock();
+	_feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
+	if (!_feet.Name.ToString().Equals("feet", System.StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
+	_head = GetChild<Node3D>(0);
+	_headSrc = _head as Head;
+	_jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
+	Input.MouseMode = Input.MouseModeEnum.Captured;
 --> ConsoleCommandSystem.RegisterInstance(this); <--
 }
 ```
