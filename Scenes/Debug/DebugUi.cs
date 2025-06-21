@@ -19,7 +19,7 @@ public partial class DebugUi : Control
         _player = Game.GetGame(this).GetPlayer();
         _playerHead = _player.GetHead();
         _label = GetChild<Label>(0);
-        Hide();
+        DisableUI();
     }
     public override void _Process(double delta)
     {
@@ -34,10 +34,12 @@ public partial class DebugUi : Control
 
         _sb.Clear();
         _sb.Append($"FPS : {Engine.GetFramesPerSecond()}\n");
+        _sb.Append($"Delta : {delta}\n");
         _sb.Append($"Player Position : {_player.Position}\n");
         _sb.Append($"Direction : {_player._direction}\n");
         _sb.Append($"Velocity : {_player.Velocity.Length()}\n");
-        _sb.Append($"Delta : {delta}\n");
+        _sb.Append($"YVelocity : {_player.Velocity.Y}\n");
+        _sb.Append($"Air Control : {_player.S.AirControl}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
         _sb.Append($"Shooting Time : {_playerHead._shootingTime}\n");

@@ -42,7 +42,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -74,7 +74,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -106,7 +106,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -138,7 +138,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -170,7 +170,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -202,7 +202,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -234,7 +234,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -266,7 +266,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -298,7 +298,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -330,7 +330,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -362,7 +362,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -394,7 +394,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -426,7 +426,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -458,7 +458,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -490,7 +490,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -522,7 +522,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -554,7 +554,7 @@ _surfaces = [{
 "format": 34359742527,
 "index_count": 36,
 "index_data": PackedByteArray("AAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA"),
-"material": ExtResource("2_q2637"),
+"material": ExtResource("1_eced4"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 24,
@@ -586,7 +586,6 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 [node name="block0" type="Node3D" parent="Blocks"]
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/block0"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_4vmo2")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/block0"]
@@ -598,7 +597,6 @@ shape = SubResource("ConvexPolygonShape3D_ylpti")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_0"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_35uxf")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_0"]
@@ -610,7 +608,6 @@ shape = SubResource("ConvexPolygonShape3D_bq2qa")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 8)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_1"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_bo0qd")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_1"]
@@ -633,7 +630,6 @@ shape = SubResource("ConvexPolygonShape3D_eq8xo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.74227e-08, 0, 23)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_3"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_u7kmt")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_3"]
@@ -645,7 +641,6 @@ shape = SubResource("ConvexPolygonShape3D_s0d0c")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 32)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_4"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_8xjio")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_4"]
@@ -657,7 +652,6 @@ shape = SubResource("ConvexPolygonShape3D_5u0ec")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 5, 46)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_5"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_3jxt4")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_5"]
@@ -669,7 +663,6 @@ shape = SubResource("ConvexPolygonShape3D_7litr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 5, 53)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_7"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_o6gop")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_7"]
@@ -681,7 +674,6 @@ shape = SubResource("ConvexPolygonShape3D_kxqmp")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5, 60)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_8"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_ldah2")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_8"]
@@ -693,7 +685,6 @@ shape = SubResource("ConvexPolygonShape3D_0vyem")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, -1, 52)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_9"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_irg3a")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_9"]
@@ -705,7 +696,6 @@ shape = SubResource("ConvexPolygonShape3D_0civn")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -1, 39)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_10"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_n6pde")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_10"]
@@ -717,7 +707,6 @@ shape = SubResource("ConvexPolygonShape3D_be1wa")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -1, 30)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_11"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_o2ivn")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_11"]
@@ -729,7 +718,6 @@ shape = SubResource("ConvexPolygonShape3D_c6r0t")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, -1, 19)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_12"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_5j556")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_12"]
@@ -741,7 +729,6 @@ shape = SubResource("ConvexPolygonShape3D_2bif4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -1, 4)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_13"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_3d6ur")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_13"]
@@ -753,7 +740,6 @@ shape = SubResource("ConvexPolygonShape3D_kgov3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_15"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_k1ppa")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_15"]
@@ -765,7 +751,6 @@ shape = SubResource("ConvexPolygonShape3D_tgqu5")
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 24, -1, 19)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_6"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_i7t8e")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_6"]
@@ -777,7 +762,6 @@ shape = SubResource("ConvexPolygonShape3D_jqa2i")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 64)
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/Block_16"]
-material_override = ExtResource("2_q2637")
 mesh = SubResource("ArrayMesh_meugw")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/Block_16"]
