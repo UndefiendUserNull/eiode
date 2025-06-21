@@ -74,15 +74,21 @@ public partial class Game : Node
 
     private void SpawnConsole()
     {
-        var consoleScene = ResourceLoader.Load<PackedScene>(ScenesHash.CONSOLE_SCENE);
-        Console = consoleScene.Instantiate<DevConsole>();
-        GetTree().Root.CallDeferred(MethodName.AddChild, Console);
-        Console.Name = "Console";
-        Console?.Log("Console ready", DevConsole.LogLevel.INFO);
+
+        Console = DevConsole.Instance;
+
+        // The code below is before 
+
+        //var consoleScene = ResourceLoader.Load<PackedScene>(ScenesHash.CONSOLE_SCENE);
+        //Console = consoleScene.Instantiate<DevConsole>();
+        //GetTree().Root.CallDeferred(MethodName.AddChild, Console);
+        //Console.Name = "Console";
+        //Console?.Log("Console ready", DevConsole.LogLevel.INFO);
     }
 
     private void LoadFirstLevel()
     {
+        DevConsole.Instance?.Log("Loading first level.");
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
         // idk why the fuck that works instead of setting the position directly
         Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PLAYER_SPAWN_POSITION);

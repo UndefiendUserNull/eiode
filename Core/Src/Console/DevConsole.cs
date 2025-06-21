@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System;
 using Godot;
 using System.Text.RegularExpressions;
+using EIODE.Resources.Src;
 
 namespace EIODE.Core.Console;
 
 public partial class DevConsole : Control
 {
     [Export] private int _currentHistoryIndex = -1;
+    [Export] public DevConsoleSettings Settings { get; set; }
+
     private LineEdit _input = null!;
     private RichTextLabel _log = null!;
     private Game _game = null!;
@@ -25,12 +28,18 @@ public partial class DevConsole : Control
 
     public bool IsShown { get; private set; } = false;
 
+    public static DevConsole Instance { get; private set; }
+    public override void _EnterTree()
+    {
+        Instance = this;
+    }
+
     public override void _Ready()
     {
         _game = Game.GetGame(this);
         if (!_game.InitSpawnConsole)
         {
-            QueueFree();
+            GD.Print("DevConsole is disabled.");
             return;
         }
 
@@ -53,9 +62,7 @@ public partial class DevConsole : Control
         _suggestionsPanel.Hide();
 
         _log.Clear();
-        _log.PushFontSize(14);
-        _log.PushOutlineSize(8);
-        _log.PushOutlineColor(Color.Color8(0, 0, 0));
+        ApplyConsoleSettings();
     }
 
     public override void _ExitTree()
@@ -243,6 +250,16 @@ public partial class DevConsole : Control
         BLANK
     }
 
+    [ConsoleCommand("apply_console_settings", "Applies current console settings if changed.")]
+
+    private void ApplyConsoleSettings()
+    {
+        _log.PopAll();
+        _log.PushFontSize(Settings.FontSize);
+        _log.PushOutlineSize(Settings.OutlineSize);
+        _log.PushOutlineColor(Settings.OutlineColor);
+    }
+
     #region CC
 
     [ConsoleCommand("help", "Shows all available console commands.")]
@@ -254,16 +271,38 @@ public partial class DevConsole : Control
         }
     }
 
-    [ConsoleCommand("clear", "Clears the console log")]
+    [ConsoleCommand("clear", "Clears the entire log")]
     public void Cc_Clear()
     {
         _log.Clear();
+        ApplyConsoleSettings();
     }
 
     [ConsoleCommand("quit", "Quits the game")]
     public void Cc_Quit()
     {
         GetTree().Quit();
+    }
+
+    [ConsoleCommand("console_set", "Changes a console settting value (fontsize (int), outlinesize (int))")]
+    public void Cc_ConsoleSet(string arg, int value)
+    {
+        int prevValue = 0;
+        switch (arg)
+        {
+            case "fontsize":
+                prevValue = Settings.FontSize;
+                Settings.FontSize = value;
+                break;
+            case "outlinesize":
+                prevValue = Settings.OutlineSize;
+                Settings.OutlineSize = value;
+                break;
+            default:
+                break;
+        }
+        ApplyConsoleSettings();
+        Log($"Changed {arg} from {prevValue} to {value}");
     }
     #endregion
 
