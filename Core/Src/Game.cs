@@ -20,11 +20,11 @@ public partial class Game : Node
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
-    public bool InitSpawnConsole { get; private set; } = true;
 
     public override void _Ready()
     {
         var args = System.Environment.GetCommandLineArgs();
+
         if (args.Length > 0)
         {
             foreach (var arg in args)
@@ -34,56 +34,34 @@ public partial class Game : Node
                     case "--disable-game":
                         Disabled = true;
                         break;
-                    case "--no-console":
-                        InitSpawnConsole = false;
-                        break;
                     case "--1080p":
                         DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
                         break;
                 }
             }
         }
-        var zebby = "";
-        foreach (var item in args)
-        {
-            zebby += item + ", ";
-        }
-        zebby += "  " + args.Length;
-        GD.Print("ARGS: " + zebby);
+
         if (Disabled)
         {
             GD.Print("Game scene is disabled.");
             return;
         }
-        if (InitSpawnConsole == true)
-        {
-            GD.Print("Console Is Enabled");
-            ConsoleCommandSystem.Initialize();
-            SpawnConsole();
-        }
-        else
-        {
-            GD.Print("Console Is Disabaled");
-        }
+
+        ConsoleCommandSystem.Initialize();
+
+        SetConsole();
         SpawnPlayer();
         LoadFirstLevel();
+        SpawnDebugUI(false);
         HideMouse();
+
         ConsoleCommandSystem.RegisterInstance(this);
         Console?.Log("Game _Ready finished");
     }
 
-    private void SpawnConsole()
+    private void SetConsole()
     {
-
         Console = DevConsole.Instance;
-
-        // The code below is before 
-
-        //var consoleScene = ResourceLoader.Load<PackedScene>(ScenesHash.CONSOLE_SCENE);
-        //Console = consoleScene.Instantiate<DevConsole>();
-        //GetTree().Root.CallDeferred(MethodName.AddChild, Console);
-        //Console.Name = "Console";
-        //Console?.Log("Console ready", DevConsole.LogLevel.INFO);
     }
 
     private void LoadFirstLevel()
@@ -139,6 +117,18 @@ public partial class Game : Node
         Console?.Log("Player ready");
     }
 
+    private void SpawnDebugUI(bool enableOnSpawn)
+    {
+        _debugUi = ResourceLoader.Load<PackedScene>(ScenesHash.DEBUG_UI_SCENE).Instantiate<DebugUi>();
+        _debugUi.Name = "Debug UI";
+
+        if (enableOnSpawn) _debugUi.EnableUI();
+        else _debugUi.DisableUI();
+
+        GetTree().Root.CallDeferred(MethodName.AddChild, _debugUi);
+        Console?.Log("Debug UI Created.");
+    }
+
     #region CC
 
     [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
@@ -186,11 +176,7 @@ public partial class Game : Node
         {
             if (_debugUi == null)
             {
-                _debugUi = ResourceLoader.Load<PackedScene>(ScenesHash.DEBUG_UI_SCENE).Instantiate<DebugUi>();
-                _debugUi.Name = "Debug UI";
-                _debugUi.EnableUI();
-                GetTree().Root.CallDeferred(MethodName.AddChild, _debugUi);
-                Console?.Log("Debug UI Created.");
+                SpawnDebugUI(true);
             }
             else _debugUi.EnableUI();
 
