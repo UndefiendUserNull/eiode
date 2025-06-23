@@ -237,6 +237,18 @@ public partial class Player : CharacterBody3D
         Velocity += new Vector3(0, JumpPadForce, 0);
         _wantToJump = false;
     }
+
+    /// <summary>
+    /// Resets player's Velocity, Rotation
+    /// </summary>
+    public void Reset()
+    {
+        Lock();
+        GetHead().Rotation = Vector3.Zero;
+        Velocity = Vector3.Zero;
+        UnLock();
+    }
+
     private void Validation()
     {
         if (Conf == null)

@@ -49,7 +49,15 @@ public partial class LevelLoader : Node
     {
         _console?.Log($"Changing Level to {newLevel} ...");
         CallDeferred(MethodName.DeferredChangeLevel, newLevel, freeCurrentLevel, movePlayer);
-        _console?.Log($"{newLevel} Is Loaded.");
+        _console?.Log($"Changed current level to {newLevel}");
+
+    }
+
+    public void ChangeLevel(string newLevelPath, bool freeCurrentLevel = true, bool movePlayer = true)
+    {
+        _console?.Log($"Changing Level to {newLevelPath} ...");
+        CallDeferred(MethodName.DeferredChangeLevel, LoadLevel(newLevelPath), freeCurrentLevel, movePlayer);
+        _console?.Log($"Changed current level to {newLevelPath}");
     }
 
     private void DeferredChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
@@ -73,9 +81,8 @@ public partial class LevelLoader : Node
             _console?.Log($"Moving player to {newLevel} ...");
             var player = Game.GetGame(this).GetPlayer();
             player.Position = Game.PLAYER_SPAWN_POSITION;
-            player.GetHead().Rotation = Vector3.Zero;
             player.Lock();
-            player.Velocity = Vector3.Zero;
+            player.Reset();
             player.Reparent(CurrentLevel);
             if (Game.GetGame(this).Console != null)
                 if (!Game.GetGame(this).Console.IsShown)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=50 format=4 uid="uid://c53x46w4u7ko1"]
+[gd_scene load_steps=49 format=4 uid="uid://c53x46w4u7ko1"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_5x5m0"]
 [ext_resource type="Material" uid="uid://dn5prquwvnwc3" path="res://Materials/tile_grey.tres" id="2_qi0m7"]
+[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="3_eqo1h"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5grrq"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -469,11 +470,6 @@ shadow_mesh = SubResource("ArrayMesh_vboa1")
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_usjc5"]
 points = PackedVector3Array(0, 1, 0, 0, 1, 2, 0, 0, 2, 0, 0, 0, 3, 1, 0, 3, 1, 2, 3, 0, 2, 3, 0, 0)
 
-[sub_resource type="QuadMesh" id="QuadMesh_2rd81"]
-material = ExtResource("2_qi0m7")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_anom1"]
-
 [node name="platformer_00" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -640,16 +636,6 @@ mesh = SubResource("ArrayMesh_y0y53")
 [node name="collision_shape" type="CollisionShape3D" parent="Blocks/Block_12/collision_body"]
 shape = SubResource("ConvexPolygonShape3D_usjc5")
 
-[node name="Change level test" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.2, 0, 8.74228e-08, 0, 3.5, 0, -1.04907e-07, 0, -1, -6.24551, 3.65515, 38.5138)
-mesh = SubResource("QuadMesh_2rd81")
-
-[node name="Area3D" type="Area3D" parent="Change level test"]
-collision_mask = 255
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Change level test/Area3D"]
-shape = SubResource("BoxShape3D_anom1")
-
-[node name="hint idk" type="Label3D" parent="Change level test"]
-transform = Transform3D(2.25376, 0, 0, 0, 1, 0, -7.10543e-15, 0, 1, 0, 0.682168, 0)
-text = "Enter"
+[node name="door_change_level2" parent="." instance=ExtResource("3_eqo1h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 3, 38)
+NextScene = "res://Scenes/Levels/platformer_01.tscn"
