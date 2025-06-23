@@ -41,7 +41,7 @@ public partial class DebugUi : Control
         _sb.Append($"Direction : {_player._direction}\n");
         _sb.Append($"Velocity : {_player.Velocity.Length()}\n");
         _sb.Append($"YVelocity : {_player.Velocity.Y}\n");
-        _sb.Append($"Lunch Pad Force : {_player.LunchPadForce}\n");
+        _sb.Append($"Lunch Pad Force : {_player.JumpPadForce}\n");
         _sb.Append($"Air Control : {_player.Conf.AirControl}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
