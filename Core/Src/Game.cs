@@ -56,6 +56,7 @@ public partial class Game : Node
         HideMouse();
 
         ConsoleCommandSystem.RegisterInstance(this);
+
         Console?.Log("Game _Ready finished");
     }
 
@@ -91,9 +92,8 @@ public partial class Game : Node
     {
         if (Input.IsActionJustPressed(InputHash.K_ESC))
         {
-            _isMouseShowed = !_isMouseShowed;
-            if (_isMouseShowed) HideMouse();
-            else ShowMouse();
+            if (_isMouseShowed) ShowMouse();
+            else HideMouse();
         }
     }
 
@@ -134,38 +134,17 @@ public partial class Game : Node
     [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
     public void Cc_ChangeLevel(string levelName)
     {
-        string path;
+        var path = Path.Combine(LevelLoader.LEVELS_PATH, levelName.EndsWith(".tscn") ? levelName : levelName + ".tscn");
 
-        if (!levelName.EndsWith(".tscn"))
-            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName + ".tscn");
-        else
-            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName);
 
-        Console?.Log(path);
-
-        if (Engine.IsEditorHint())
+        if (ResourceLoader.Exists(path))
         {
-            if (Godot.FileAccess.FileExists(path))
-            {
-                PackedScene level = LevelLoader.LoadLevel(path);
-                LevelLoader.Instance.ChangeLevel(level);
-            }
-            else
-            {
-                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
-            }
+            PackedScene level = LevelLoader.LoadLevel(path);
+            LevelLoader.Instance.ChangeLevel(level);
         }
         else
         {
-            if (ResourceLoader.Exists(path))
-            {
-                PackedScene level = LevelLoader.LoadLevel(path);
-                LevelLoader.Instance.ChangeLevel(level);
-            }
-            else
-            {
-                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
-            }
+            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
         }
     }
 
