@@ -655,12 +655,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1118, 3.24412, 24)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.1118, 3.24412, 24)
 LunchPower = 80.0
 
-[node name="LunchPad" parent="." instance=ExtResource("9_kqtrp")]
+[node name="LunchPad7" parent="." instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.1118, 3.24412, 24)
+LunchPower = 80.0
+
+[node name="LunchPad10" parent="." instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.1118, 3.24412, 24)
+LunchPower = 80.0
+
+[node name="LunchPad11" parent="." instance=ExtResource("9_kqtrp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.1118, 3.24412, 24)
+LunchPower = 80.0
+
+[node name="LunchPad8" parent="." instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.1118, 3.24412, 24)
+LunchPower = 80.0
+
+[node name="LunchPad9" parent="." instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 LunchPower = 150.0
 
 [node name="LunchPad4" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.549, 13.0905, 29.5804)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.549, 13.0905, 28.5804)
 LunchPower = 200.0
 
 [node name="block0" type="Node3D" parent="."]
