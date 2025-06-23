@@ -1,6 +1,7 @@
-[gd_scene load_steps=62 format=4 uid="uid://nlncoyinij8m"]
+[gd_scene load_steps=66 format=4 uid="uid://nlncoyinij8m"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_25gtk"]
+[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="2_veq20"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_aun2p"]
 _surfaces = [{
@@ -642,9 +643,29 @@ shadow_mesh = SubResource("ArrayMesh_f1rof")
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_qqsk3"]
 points = PackedVector3Array(-3, 1, 0, -3, 1, 1, -3, 0, 1, -3, 0, 0, 2, 1, 0, 2, 1, 1, 2, 0, 1, 2, 0, 0)
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7r7cj"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+sky_curve = 0.130582
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+energy_multiplier = 0.8
+
+[sub_resource type="Sky" id="Sky_et0uu"]
+sky_material = SubResource("ProceduralSkyMaterial_7r7cj")
+
+[sub_resource type="Environment" id="Environment_veq20"]
+background_mode = 1
+background_color = Color(1, 0.145728, 0.278854, 1)
+background_energy_multiplier = 0.9
+sky = SubResource("Sky_et0uu")
+tonemap_mode = 2
+tonemap_exposure = 0.8
+tonemap_white = 1.5
+glow_enabled = true
+
+[node name="platformer_02" type="Node3D"]
 
 [node name="blocks" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="block0" type="Node3D" parent="blocks"]
 
@@ -864,3 +885,14 @@ mesh = SubResource("ArrayMesh_g50fu")
 
 [node name="collision_shape" type="CollisionShape3D" parent="blocks/Block_21/collision_body"]
 shape = SubResource("ConvexPolygonShape3D_qqsk3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.984808, -0.111619, 0.133022, 0.150383, -0.165191, 0.97473, -0.0868237, 0.979924, 0.179468, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_veq20")
+
+[node name="door_change_level4" parent="." instance=ExtResource("2_veq20")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.59173, -0.134028, 32.969)
+NextScene = "res://Scenes/Levels/playground_00.tscn"

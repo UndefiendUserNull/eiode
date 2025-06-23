@@ -1,10 +1,10 @@
 using EIODE.Utils;
 using EIODE.Scripts.Core;
-using System.Collections.Generic;
-using System;
-using Godot;
-using System.Text.RegularExpressions;
 using EIODE.Resources.Src;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Godot;
 
 namespace EIODE.Core.Console;
 
@@ -279,7 +279,7 @@ public partial class DevConsole : Control
         GetTree().Quit();
     }
 
-    [ConsoleCommand("console_set", "Changes a console settting value (fontsize (int), outlinesize (int))")]
+    [ConsoleCommand("console_set", "Changes a console setting value (fontsize (int), outlinesize (int))")]
     public void Cc_ConsoleSet(string arg, int value)
     {
         int prevValue = 0;

@@ -11,6 +11,7 @@ public static class ConsoleCommandSystem
     private static readonly Dictionary<string, (MethodInfo Method, object Target, string Description, bool IsCheat)>
         _commands = new(StringComparer.OrdinalIgnoreCase);
     private static bool _initialized = false;
+
     public static void Initialize()
     {
         var methods = AppDomain.CurrentDomain.GetAssemblies()

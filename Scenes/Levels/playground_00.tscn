@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=4 uid="uid://q80pdy7tl5qt"]
+[gd_scene load_steps=67 format=4 uid="uid://q80pdy7tl5qt"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_uj8tf"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="2_a3sed"]
@@ -7,7 +7,8 @@
 [ext_resource type="Script" uid="uid://d0emhferwnuln" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="5_kqtrp"]
 [ext_resource type="Script" uid="uid://dae5bmif1d6bn" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="6_dbhn4"]
 [ext_resource type="Material" uid="uid://dn5prquwvnwc3" path="res://Materials/tile_grey.tres" id="8_aar4x"]
-[ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/lunch_pad.tscn" id="9_kqtrp"]
+[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="9_dbhn4"]
+[ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/jump_pad.tscn" id="9_kqtrp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aar4x"]
 sky_curve = 0.270375
@@ -591,6 +592,7 @@ shadow_enabled = true
 
 [node name="mesh_instance" type="MeshInstance3D" parent="Blocks/ground"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.082818, 0.10392, 0.0220642)
+material_override = ExtResource("1_uj8tf")
 mesh = SubResource("ArrayMesh_qdo8s")
 
 [node name="collision_body" type="StaticBody3D" parent="Blocks/ground"]
@@ -648,49 +650,60 @@ script = ExtResource("2_a3sed")
 mesh_vector_data = SubResource("Resource_q0jma")
 materials = Array[Material]([ExtResource("1_uj8tf")])
 
-[node name="LunchPad3" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1118, 3.24412, 24)
-
-[node name="LunchPad2" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.1118, 3.24412, 24)
-LunchPower = 80.0
-
-[node name="LunchPad7" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.1118, 3.24412, 24)
-LunchPower = 80.0
-
-[node name="LunchPad10" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.1118, 3.24412, 24)
-LunchPower = 80.0
-
-[node name="LunchPad11" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.1118, 3.24412, 24)
-LunchPower = 80.0
-
-[node name="LunchPad8" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.1118, 3.24412, 24)
-LunchPower = 80.0
-
-[node name="LunchPad9" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
-LunchPower = 150.0
-
-[node name="LunchPad4" parent="." instance=ExtResource("9_kqtrp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.549, 13.0905, 28.5804)
-LunchPower = 200.0
-
-[node name="block0" type="Node3D" parent="."]
+[node name="block0" type="Node3D" parent="Blocks"]
 script = ExtResource("2_a3sed")
 mesh_vector_data = SubResource("Resource_mh54o")
 
-[node name="Block_0" type="Node3D" parent="."]
+[node name="Block_5" type="Node3D" parent="Blocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52, 8, 15)
 script = ExtResource("2_a3sed")
 mesh_vector_data = SubResource("Resource_2m45k")
 materials = Array[Material]([ExtResource("8_aar4x")])
 
-[node name="Block_1" type="Node3D" parent="."]
+[node name="Block_6" type="Node3D" parent="Blocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69, 18, 15)
 script = ExtResource("2_a3sed")
 mesh_vector_data = SubResource("Resource_2m45k")
 materials = Array[Material]([ExtResource("8_aar4x")])
+
+[node name="lunch pads" type="Node3D" parent="."]
+
+[node name="LunchPad3" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1118, 3.24412, 24)
+JumpPower = 25.0
+
+[node name="LunchPad2" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.1118, 3.24412, 24)
+JumpPower = 35.0
+
+[node name="LunchPad5" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.1118, 3.24412, 14)
+
+[node name="LunchPad6" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.1118, 3.24412, 14)
+
+[node name="LunchPad7" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.1118, 3.24412, 24)
+JumpPower = 50.0
+
+[node name="LunchPad10" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.1118, 3.24412, 24)
+JumpPower = 50.0
+
+[node name="LunchPad11" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.1118, 3.24412, 24)
+JumpPower = 50.0
+
+[node name="LunchPad8" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.1118, 3.24412, 24)
+JumpPower = 50.0
+
+[node name="LunchPad9" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="LunchPad4" parent="lunch pads" instance=ExtResource("9_kqtrp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.549, 13.0905, 28.5804)
+
+[node name="door_change_level" parent="." instance=ExtResource("9_dbhn4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 4, 30)
+NextScene = "res://Scenes/Levels/platformer_00.tscn"

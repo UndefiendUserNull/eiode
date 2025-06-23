@@ -15,7 +15,7 @@ public partial class Game : Node
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
     public bool FirstLevelLoaded { get; private set; } = false;
-    public static readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 5, 0);
+    public static Vector3 PlayerSpawnPosition = new(0, 5, 0);
 
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
@@ -31,6 +31,9 @@ public partial class Game : Node
             {
                 switch (arg.ToLower())
                 {
+                    case "--cache-levels":
+                        LevelLoader.Cc_CacheAllLevels();
+                        break;
                     case "--disable-game":
                         Disabled = true;
                         break;
@@ -56,6 +59,7 @@ public partial class Game : Node
         HideMouse();
 
         ConsoleCommandSystem.RegisterInstance(this);
+
         Console?.Log("Game _Ready finished");
     }
 
@@ -69,7 +73,7 @@ public partial class Game : Node
         DevConsole.Instance?.Log("Loading first level.");
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
         // idk why the fuck that works instead of setting the position directly
-        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PLAYER_SPAWN_POSITION);
+        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PlayerSpawnPosition);
     }
     public Player GetPlayer()
     {
@@ -91,9 +95,8 @@ public partial class Game : Node
     {
         if (Input.IsActionJustPressed(InputHash.K_ESC))
         {
-            _isMouseShowed = !_isMouseShowed;
-            if (_isMouseShowed) HideMouse();
-            else ShowMouse();
+            if (_isMouseShowed) ShowMouse();
+            else HideMouse();
         }
     }
 
@@ -134,38 +137,17 @@ public partial class Game : Node
     [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
     public void Cc_ChangeLevel(string levelName)
     {
-        string path;
+        var path = Path.Combine(LevelLoader.LEVELS_PATH, levelName.EndsWith(".tscn") ? levelName : levelName + ".tscn");
 
-        if (!levelName.EndsWith(".tscn"))
-            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName + ".tscn");
-        else
-            path = Path.Combine(LevelLoader.LEVELS_PATH, levelName);
 
-        Console?.Log(path);
-
-        if (Engine.IsEditorHint())
+        if (ResourceLoader.Exists(path))
         {
-            if (Godot.FileAccess.FileExists(path))
-            {
-                PackedScene level = LevelLoader.LoadLevel(path);
-                LevelLoader.Instance.ChangeLevel(level);
-            }
-            else
-            {
-                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
-            }
+            PackedScene level = LevelLoader.LoadLevel(path);
+            LevelLoader.Instance.ChangeLevel(level);
         }
         else
         {
-            if (ResourceLoader.Exists(path))
-            {
-                PackedScene level = LevelLoader.LoadLevel(path);
-                LevelLoader.Instance.ChangeLevel(level);
-            }
-            else
-            {
-                Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
-            }
+            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
         }
     }
 
