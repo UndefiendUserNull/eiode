@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DevConsoleSettings" load_steps=2 format=3 uid="uid://cr6we8ot25ds7"]
+
+[ext_resource type="Script" uid="uid://c1rgknvjm1dog" path="res://Resources/Src/DevConsoleSettings.cs" id="1_isahc"]
+
+[resource]
+script = ExtResource("1_isahc")
+FontSize = 10
+OutlineSize = 8
+OutlineColor = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://c1rgknvjm1dog"

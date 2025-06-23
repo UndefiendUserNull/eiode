@@ -14,32 +14,34 @@ public partial class LevelLoader : Node
     public override void _EnterTree()
     {
         Instance = this;
+        _console = DevConsole.Instance;
     }
     public static PackedScene LoadLevel(string path)
     {
         try
         {
-            GD.Print($"Loading level {path} ...");
+            DevConsole.Instance?.Log($"Loading level {path} ...");
             return ResourceLoader.Load<PackedScene>(path);
         }
         catch (Exception e)
         {
-            GD.PushError($"Error while loading level {e}");
+            DevConsole.Instance?.Log($"Error while loading level {e}", DevConsole.LogLevel.ERROR);
             throw;
         }
     }
 
     public void ChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        Game.GetGame(this).Console?.Log($"Changing Level to {newLevel}");
+        _console?.Log($"Changing Level to {newLevel} ...");
         CallDeferred(MethodName.DeferredChangeLevel, newLevel, freeCurrentLevel, movePlayer);
+        _console?.Log($"{newLevel} Is Loaded.");
     }
 
     private void DeferredChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
         if (newLevel == null)
         {
-            GD.PushError("Given level to change to is null");
+            _console?.Log("Given level to change to is null", DevConsole.LogLevel.ERROR);
             return;
         }
         if (freeCurrentLevel) CurrentLevel.QueueFree();
@@ -53,7 +55,7 @@ public partial class LevelLoader : Node
 
         if (movePlayer)
         {
-            Game.GetGame(this).Console?.Log($"Moving player to {newLevel} ...");
+            _console?.Log($"Moving player to {newLevel} ...");
             var player = Game.GetGame(this).GetPlayer();
             player.Position = Game.PLAYER_SPAWN_POSITION;
             player.GetHead().Rotation = Vector3.Zero;
@@ -89,6 +91,6 @@ public partial class LevelLoader : Node
             levelsFoundString += level + "\n";
         }
 
-        Game.GetGame(Instance).Console?.Log($"{levelsFound.Length} Scenes Found : {levelsFoundString}");
+        DevConsole.Instance?.Log($"{levelsFound.Length} Scenes Found : {levelsFoundString}");
     }
 }

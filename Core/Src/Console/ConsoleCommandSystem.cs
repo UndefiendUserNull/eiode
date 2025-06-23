@@ -66,7 +66,7 @@ public static class ConsoleCommandSystem
 
         if (!_commands.TryGetValue(commandName, out var command))
         {
-            GD.PushError($"Unknown command: '{commandName}'");
+            DevConsole.Instance?.Log($"Unknown command: '{commandName}'", DevConsole.LogLevel.ERROR);
             return;
         }
 
@@ -88,13 +88,13 @@ public static class ConsoleCommandSystem
 
         if (args.Length < parameters.Count(p => !p.IsOptional))
         {
-            GD.PushError($"Not enough arguments. Expected: {parameters.Length}, Got: {args.Length}");
+            DevConsole.Instance?.Log($"Not enough arguments. Expected: {parameters.Length}, Got: {args.Length}", DevConsole.LogLevel.ERROR);
             throw new ArgumentException("Insufficient arguments");
         }
 
         if (args.Length > parameters.Length)
         {
-            GD.PushError($"Too many arguments. Expected: {parameters.Length}, Got: {args.Length}");
+            DevConsole.Instance?.Log($"Too many arguments. Expected: {parameters.Length}, Got: {args.Length}", DevConsole.LogLevel.ERROR);
             throw new ArgumentException("Too many arguments");
         }
 
