@@ -15,7 +15,7 @@ public partial class Game : Node
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
     public bool FirstLevelLoaded { get; private set; } = false;
-    public static readonly Vector3 PLAYER_SPAWN_POSITION = new(0, 5, 0);
+    public static Vector3 PlayerSpawnPosition = new(0, 5, 0);
 
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
@@ -73,7 +73,7 @@ public partial class Game : Node
         DevConsole.Instance?.Log("Loading first level.");
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
         // idk why the fuck that works instead of setting the position directly
-        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PLAYER_SPAWN_POSITION);
+        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PlayerSpawnPosition);
     }
     public Player GetPlayer()
     {

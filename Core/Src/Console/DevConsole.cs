@@ -279,7 +279,7 @@ public partial class DevConsole : Control
         GetTree().Quit();
     }
 
-    [ConsoleCommand("console_set", "Changes a console settting value (fontsize (int), outlinesize (int))")]
+    [ConsoleCommand("console_set", "Changes a console setting value (fontsize (int), outlinesize (int))")]
     public void Cc_ConsoleSet(string arg, int value)
     {
         int prevValue = 0;

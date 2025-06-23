@@ -25,10 +25,10 @@ public partial class LevelLoader : Node
     {
         try
         {
-            if (_allLevels.Any((x) => x.Key == path))
+            if (_allLevels.TryGetValue(path, out var cachedLevel))
             {
                 DevConsole.Instance?.Log($"Loading level {path} from cache ...");
-                return _allLevels[path];
+                return cachedLevel;
             }
             else
             {
@@ -80,7 +80,7 @@ public partial class LevelLoader : Node
         {
             _console?.Log($"Moving player to {newLevel} ...");
             var player = Game.GetGame(this).GetPlayer();
-            player.Position = Game.PLAYER_SPAWN_POSITION;
+            player.Position = Game.PlayerSpawnPosition;
             player.Lock();
             player.Reset();
             player.Reparent(CurrentLevel);
@@ -153,7 +153,7 @@ public partial class LevelLoader : Node
             }
         }
 
-        DevConsole.Instance?.Log($"Finished loading {_allLevels.Count} levels ...");
+        DevConsole.Instance?.Log($"Finished loading {_allLevels.Count}");
     }
 
     [ConsoleCommand("cache_clear", "Clears both memory and file level caches")]
