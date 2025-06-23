@@ -2,8 +2,10 @@ using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using EIODE.Scripts.Core;
+using EIODE.Scenes.Objects;
 using System;
 using Godot;
+using System.Collections.Generic;
 
 namespace EIODE.Scenes.Player;
 public partial class Player : CharacterBody3D
@@ -20,7 +22,8 @@ public partial class Player : CharacterBody3D
     private Camera3D _camera = null;
     private DevConsole _console;
     private float _cameraZRotation = 0f;
-    public float _lunchPadForce = 0f;
+    public float LunchPadForce { get; set; } = 0f;
+    public List<LunchPad> PrevLunchPads { get; set; } = [];
 
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
@@ -110,7 +113,11 @@ public partial class Player : CharacterBody3D
         {
             _timeInAir = 0.0f;
             if (Velocity.Y == 0)
-                _lunchPadForce = 0f;
+            {
+                LunchPadForce = 0f;
+                if (PrevLunchPads.Count > 0)
+                    PrevLunchPads.Clear();
+            }
         }
         else
         {
@@ -216,13 +223,18 @@ public partial class Player : CharacterBody3D
         Velocity += force;
         _wantToJump = false;
     }
-
+    public void ForceSetVelocity(Vector3 newVelocity)
+    {
+        if (newVelocity == Vector3.Zero) return;
+        Velocity = newVelocity;
+        _wantToJump = false;
+    }
     public void AddLunchForce(float force)
     {
         if (force == 0) return;
-        _lunchPadForce = Mathf.Min(Conf.MaxLunchPadForce, _lunchPadForce + force);
+        LunchPadForce = Mathf.Min(Conf.MaxLunchPadForce, LunchPadForce + force);
 
-        Velocity += new Vector3(0, _lunchPadForce, 0);
+        Velocity += new Vector3(0, LunchPadForce, 0);
         _wantToJump = false;
     }
     private void Validation()

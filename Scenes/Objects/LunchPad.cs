@@ -1,4 +1,5 @@
 using Godot;
+using System.Linq;
 
 namespace EIODE.Scenes.Objects;
 
@@ -23,7 +24,16 @@ public partial class LunchPad : Area3D
     {
         if (body != null && body is Player.Player player)
         {
-            player.AddLunchForce(LunchPower);
+            if (!player.PrevLunchPads.Any((x) => x == this))
+            {
+                player.PrevLunchPads.Add(this);
+                player.AddLunchForce(LunchPower);
+            }
+            else
+            {
+                player.LunchPadForce = 0f;
+                player.ForceSetVelocity(Vector3.Up * LunchPower);
+            }
         }
     }
 }
