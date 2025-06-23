@@ -1,31 +1,14 @@
-[gd_scene load_steps=88 format=4 uid="uid://cfswgg6lfyjd0"]
+[gd_scene load_steps=87 format=4 uid="uid://cfswgg6lfyjd0"]
 
+[ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="1_3dqw3"]
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_eced4"]
+[ext_resource type="PackedScene" uid="uid://dwsbrg54xu0va" path="res://Scenes/Enviroment/default_world_environment.tscn" id="2_2j5np"]
 [ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="2_q2637"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="3_6ggew"]
 [ext_resource type="Script" uid="uid://bayqxo5eyv602" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="4_3dqw3"]
 [ext_resource type="Script" uid="uid://bwdpt27bu7ylf" path="res://addons/cyclops_level_builder/resources/data_vector_int.gd" id="5_2j5np"]
 [ext_resource type="Script" uid="uid://d0emhferwnuln" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="6_we8rp"]
 [ext_resource type="Script" uid="uid://dae5bmif1d6bn" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="7_m1sif"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5grrq"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-sky_curve = 0.130582
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-energy_multiplier = 0.8
-
-[sub_resource type="Sky" id="Sky_q2637"]
-sky_material = SubResource("ProceduralSkyMaterial_5grrq")
-
-[sub_resource type="Environment" id="Environment_v41l5"]
-background_mode = 1
-background_color = Color(1, 0.145728, 0.278854, 1)
-background_energy_multiplier = 0.9
-sky = SubResource("Sky_q2637")
-tonemap_mode = 2
-tonemap_exposure = 0.8
-tonemap_white = 1.5
-glow_enabled = true
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_pvlsq"]
 _surfaces = [{
@@ -833,14 +816,12 @@ face_vertex_data = {
 &"vertex_index": SubResource("Resource_hqnqn")
 }
 
-[node name="platformer_00" type="Node3D"]
+[node name="platformer_01" type="Node3D"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.984808, -0.111619, 0.133022, 0.150383, -0.165191, 0.97473, -0.0868237, 0.979924, 0.179468, 0, 0, 0)
-shadow_enabled = true
+[node name="DirectionalLight3D" parent="." instance=ExtResource("1_3dqw3")]
+transform = Transform3D(-0.984808, -0.111618, 0.133022, 0.150383, -0.165191, 0.97473, -0.0868236, 0.979924, 0.179467, 0, 0, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_v41l5")
+[node name="WorldEnvironment" parent="." instance=ExtResource("2_2j5np")]
 
 [node name="Blocks" type="Node3D" parent="."]
 

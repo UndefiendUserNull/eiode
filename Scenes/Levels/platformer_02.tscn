@@ -662,7 +662,7 @@ tonemap_exposure = 0.8
 tonemap_white = 1.5
 glow_enabled = true
 
-[node name="Node3D" type="Node3D"]
+[node name="platformer_02" type="Node3D"]
 
 [node name="blocks" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)

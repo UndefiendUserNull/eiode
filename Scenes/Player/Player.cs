@@ -22,6 +22,7 @@ public partial class Player : CharacterBody3D
     private Camera3D _camera = null;
     private DevConsole _console;
     private float _cameraZRotation = 0f;
+    private float _gravityScale = 0f;
     public float JumpPadForce { get; set; } = 0f;
     public List<JumpPad> PrevJumpPads { get; set; } = [];
 
@@ -124,11 +125,11 @@ public partial class Player : CharacterBody3D
             _timeInAir += (float)delta;
             float variableGravity = Conf.Gravity;
 
-            if (_timeInAir > 0.3f)
+            if (_timeInAir > Conf.GravityMaxScale)
             {
-                float gravityScale = 1.0f + (_timeInAir - 0.3f) * 2.0f;
-                gravityScale = Mathf.Clamp(gravityScale, 1.0f, 3.0f);
-                variableGravity *= gravityScale;
+                _gravityScale = Conf.GravityMinScale + (_timeInAir - Conf.GravityMaxScale) * Conf.GravityRampMultiplier;
+                _gravityScale = Mathf.Clamp(_gravityScale, Conf.GravityMinScale, Conf.GravityMaxScale);
+                variableGravity *= _gravityScale;
             }
 
             Velocity -= new Vector3(0, variableGravity * (float)delta, 0);
@@ -233,8 +234,9 @@ public partial class Player : CharacterBody3D
     {
         if (force == 0) return;
         JumpPadForce = Mathf.Min(Conf.MaxLunchPadForce, JumpPadForce + force);
-
+        _gravityScale = 0f;
         Velocity += new Vector3(0, JumpPadForce, 0);
+
         _wantToJump = false;
     }
 
@@ -422,9 +424,17 @@ public partial class Player : CharacterBody3D
     [ConsoleCommand("reset", "Resets player's position", true)]
     public void Cc_ResetPlayerPosition()
     {
-        Position = Game.PLAYER_SPAWN_POSITION;
+        Position = Game.PlayerSpawnPosition;
         Velocity = Vector3.Zero;
         _console?.Log("Player set position to spawn Reset");
+    }
+
+    [ConsoleCommand("set_position_as_reset", "Sets PlayerSpawnPosition to the current position", true)]
+    public void Cc_SetCurrentPositionAsReset()
+    {
+        Game.PlayerSpawnPosition = Position;
+        Velocity = Vector3.Zero;
+        _console?.Log($"Reset position set to {Game.PlayerSpawnPosition}");
     }
 
     [ConsoleCommand("gravity_ramp_set", "Sets gravity ramp values: \"start, mult, min, max\"")]
