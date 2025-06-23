@@ -31,6 +31,9 @@ public partial class Game : Node
             {
                 switch (arg.ToLower())
                 {
+                    case "--cache-levels":
+                        LevelLoader.Cc_CacheAllLevels();
+                        break;
                     case "--disable-game":
                         Disabled = true;
                         break;

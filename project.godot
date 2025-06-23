@@ -41,6 +41,10 @@ window/stretch/mode="viewport"
 
 project/assembly_name="EIODE"
 
+[editor]
+
+run/main_run_args="--cache-levels"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/3d-mesh-utils/plugin.cfg", "res://addons/cyclops_level_builder/plugin.cfg")

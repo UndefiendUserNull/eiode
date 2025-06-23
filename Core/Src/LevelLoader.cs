@@ -1,9 +1,10 @@
 using EIODE.Core.Console;
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text;
 
 namespace EIODE.Scripts.Core;
 
@@ -19,6 +20,7 @@ public partial class LevelLoader : Node
         Instance = this;
         _console = DevConsole.Instance;
     }
+
     public static PackedScene LoadLevel(string path)
     {
         try
@@ -82,6 +84,30 @@ public partial class LevelLoader : Node
     }
     public static string[] GetAllLevelsPath()
     {
+        string[] levelsFound = [];
+
+        // If inside the editor, search in "res://"
+        if (Engine.IsEditorHint())
+        {
+            using var dir = DirAccess.Open(LEVELS_PATH);
+            levelsFound = dir?.GetFiles() ?? [];
+            return levelsFound;
+        }
+        //else, search in the packed resources
+        else
+        {
+            levelsFound = ResourceLoader.ListDirectory(LEVELS_PATH);
+            return levelsFound;
+        }
+    }
+
+
+    #region CC
+    [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
+    public static void Cc_ListLevels()
+    {
+        // I heard StringBuilder is better in loops
+        var levelsFoundString = new StringBuilder("\n");
         string[] levelsFound;
 
         // If inside the editor, search in "res://"
@@ -90,27 +116,20 @@ public partial class LevelLoader : Node
             using var dir = DirAccess.Open(LEVELS_PATH);
             levelsFound = dir?.GetFiles() ?? Array.Empty<string>();
         }
-        //else, search in the packed resources
         else
         {
             levelsFound = ResourceLoader.ListDirectory(LEVELS_PATH);
         }
 
-        return levelsFound;
-    }
-
-    [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
-    public static void Cc_ListLevels()
-    {
-        string levelsFoundString = "\n";
-        string[] levelsFound = GetAllLevelsPath();
-
         foreach (var level in levelsFound)
         {
-            levelsFoundString += level + "\n";
+            if (level.EndsWith(".tscn"))
+            {
+                levelsFoundString.AppendLine(level);
+            }
         }
 
-        DevConsole.Instance?.Log($"{levelsFound.Length} Scenes Found : {levelsFoundString}");
+        DevConsole.Instance?.Log($"{levelsFound.Count(l => l.EndsWith(".tscn"))} Scenes Found: {levelsFoundString}");
     }
 
     [ConsoleCommand("cache_all_levels", "Loads all levels and cache them in a list")]
@@ -121,10 +140,27 @@ public partial class LevelLoader : Node
         foreach (var levelPath in levelsPath)
         {
             var levelPathCombined = Path.Combine(LEVELS_PATH, levelPath);
-            DevConsole.Instance?.Log($"Loading Level {levelPathCombined} ...");
-            currentLevel = LoadLevel(levelPathCombined);
-            _allLevels.Add(levelPathCombined, currentLevel);
+            if (!_allLevels.ContainsKey(levelPathCombined))
+            {
+                currentLevel = LoadLevel(levelPathCombined);
+            }
         }
+
         DevConsole.Instance?.Log($"Finished loading {_allLevels.Count} levels ...");
     }
+
+    [ConsoleCommand("cache_clear", "Clears both memory and file level caches")]
+    public static void Cc_CacheClear()
+    {
+        _allLevels.Clear();
+
+        DevConsole.Instance?.Log("Level cache cleared");
+    }
+
+    #endregion
+
+
+
+
+
 }
