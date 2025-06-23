@@ -1,10 +1,10 @@
 using EIODE.Utils;
 using EIODE.Scripts.Core;
-using System.Collections.Generic;
-using System;
-using Godot;
-using System.Text.RegularExpressions;
 using EIODE.Resources.Src;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Godot;
 
 namespace EIODE.Core.Console;
 

@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://drktgix0fsk7b"]
+
+[ext_resource type="Script" uid="uid://6sjkv1f7xk8q" path="res://Scenes/Objects/JumpPad.cs" id="1_mhunq"]
+[ext_resource type="PackedScene" uid="uid://c0hys4vu422l5" path="res://Assets/Models/scene.gltf" id="2_40xin"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ox3ty"]
+size = Vector3(2, 0.5, 2)
+
+[node name="JumpPad" type="Area3D"]
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("1_mhunq")
+
+[node name="Model" parent="." instance=ExtResource("2_40xin")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24148, 0)
+shape = SubResource("BoxShape3D_ox3ty")
