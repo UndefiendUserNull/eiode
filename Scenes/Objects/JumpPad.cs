@@ -6,7 +6,7 @@ namespace EIODE.Scenes.Objects;
 public partial class JumpPad : Area3D
 {
     /// <summary>
-    /// Lunch power should be equal or less than PlayerMovementSettings.MaxLunchPadForce
+    /// Jump power should be equal or less than PlayerMovementSettings.MaxLunchPadForce
     /// </summary>
     [Export] public float JumpPower { get; set; } = 15f;
 
@@ -24,7 +24,7 @@ public partial class JumpPad : Area3D
     {
         if (body != null && body is Player.Player player)
         {
-            // If this lunch pad is not in the list PrevLunchPads, act like a normal lunch pad
+            // If this Jump pad is not in the list PrevJumpPads, act like a normal Jump pad
             if (!player.PrevJumpPads.Any((x) => x == this))
             {
                 player.PrevJumpPads.Add(this);
@@ -32,7 +32,7 @@ public partial class JumpPad : Area3D
             }
             else
             {
-                // Reset everything if this lunch pad was found
+                // Reset everything if this Jump pad was found
                 player.JumpPadForce = 0f;
                 player.ForceSetVelocity(Vector3.Up * JumpPower);
             }
