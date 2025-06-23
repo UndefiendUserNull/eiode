@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 namespace EIODE.Utils;
@@ -40,25 +41,33 @@ public static class NodeUtils
     /// <summary>
     /// Searches parent's children for any node that's named <paramref name="name"/>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="name"></param>
-    /// <param name="parent"></param>
+    /// <typeparam name="T">Child Node Type</typeparam>
     /// <returns></returns>
-    public static T GetChildWithName<T>(string name, Node parent) where T : Node
+    public static T GetChildWithName<T>(string name, Node parent, bool caseSensitive = false) where T : Node
     {
         if (parent == null)
         {
-            GD.PushError("Null " + nameof(parent));
+            GD.PushError("Couldn't find parent " + nameof(parent));
+            return default;
         }
 
-        foreach (Node child in parent.GetChildren())
+        if (caseSensitive)
         {
-            if (child.Name == name && child is T childFound)
+            foreach (var child in parent.GetChildren())
             {
-                return childFound;
+                if (child.Name == name && child is T TChild) return TChild;
             }
-
         }
+        else
+        {
+            foreach (var child in parent.GetChildren())
+            {
+                if (child.Name.ToString().Equals(name, StringComparison.CurrentCultureIgnoreCase) && child is T TChild) return TChild;
+            }
+        }
+
+
+        GD.PushError($"Couldn't find child with name {name} in {parent}");
         return default;
     }
 

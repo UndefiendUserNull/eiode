@@ -17,5 +17,5 @@ script = ExtResource("1_skkrr")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
-text = " ssssssss : 123213123"
+text = "Test : 1"
 label_settings = SubResource("LabelSettings_v6wy8")

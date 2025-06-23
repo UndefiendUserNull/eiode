@@ -37,11 +37,6 @@ public partial class DevConsole : Control
     public override void _Ready()
     {
         _game = Game.GetGame(this);
-        if (!_game.InitSpawnConsole)
-        {
-            GD.Print("DevConsole is disabled.");
-            return;
-        }
 
         // This sucks, should define them in a better way soon
         _mainPanel = GetChild<Panel>(0);

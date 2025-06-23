@@ -4,13 +4,18 @@
 
 [resource]
 script = ExtResource("1_88lb2")
-_sensitivity = 0.2
-_acceleration = 10.0
-_airControl = 5.0
-_maxVelocityAir = 20.0
-_maxVelocityGround = 22.0
-_jumpModifier = 11.5
-_gravity = 110.0
-_jumpBufferingTime = 0.12
-_coyoteTime = 0.15
+Sensitivity = 0.2
+MaxVelocityGround = 22.0
+Acceleration = 10.0
+AirControl = 5.0
+Gravity = 110.0
+GravityRampStart = 0.3
+GravityRampMultiplier = 2.0
+GravityMinScale = 1.0
+GravityMaxScale = 3.0
+MaxVelocityAir = 20.0
+JumpModifier = 11.5
+JumpBufferingTime = 0.12
+CoyoteTime = 0.15
+MaxLunchPadForce = 250.0
 metadata/_custom_type_script = "uid://sqjcvni838nj"
