@@ -2,8 +2,8 @@ using EIODE.Scenes.Player;
 using EIODE.Core;
 using EIODE.Resources.Src;
 using EIODE.Utils;
-using Godot;
 using EIODE.Core.Console;
+using Godot;
 
 namespace EIODE.Scenes.UI;
 public partial class MainUi : Control
@@ -16,6 +16,7 @@ public partial class MainUi : Control
     private int _currentMaxAmmo = 0;
     private Game _game = null;
     private string _text_ammo = string.Empty;
+
     public override void _Ready()
     {
         _game = Game.GetGame(this);
@@ -36,6 +37,7 @@ public partial class MainUi : Control
 
         ConsoleCommandSystem.RegisterInstance(this);
     }
+
     public override void _ExitTree()
     {
         if (!_game.FirstLevelLoaded)
@@ -48,7 +50,7 @@ public partial class MainUi : Control
     }
     private void Head_GunSettingsChanged(Gun previous, Gun current)
     {
-        throw new System.NotImplementedException();
+        RefreshAmmo(_head.CurrentAmmo, _head.CurrentMaxAmmo);
     }
 
     private void Head_EndedReloading()

@@ -4,6 +4,7 @@ using EIODE.Core.Console;
 using EIODE.Utils;
 using EIODE.Core;
 using Godot;
+using System.IO;
 
 namespace EIODE.Scenes.Player;
 public partial class Head : Node3D
@@ -34,6 +35,8 @@ public partial class Head : Node3D
     private DevConsole _console = null;
     private Player _player = null;
     public Camera3D Camera { get; private set; } = null;
+
+    private const string WEAPONS_PATH = "res://Resources/Gun Types/";
 
     [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
     [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
@@ -77,8 +80,10 @@ public partial class Head : Node3D
 
         if (G != CurrentGunSettings)
         {
-            EmitSignalGunSettingsChanged(G, CurrentGunSettings);
             G = CurrentGunSettings;
+            CurrentAmmo = G.magazineSize;
+            CurrentMaxAmmo = G.maxAmmo;
+            EmitSignalGunSettingsChanged(G, CurrentGunSettings);
         }
     }
 
@@ -162,7 +167,7 @@ public partial class Head : Node3D
 
         Vector3 rot = Rotation;
 
-        // Responsiveness, idk why it looks like this and it makes the Z tilting look cool instead of using duration directly
+        // Responsiveness, idk why it looks like this and it makes the Z tilting look cool instead of using CameraTiltSpeed directly
         float t = 1f - Mathf.Exp(-CameraTiltSpeed * (float)delta);
         rot.Z = Mathf.LerpAngle(rot.Z, desiredZRotation, t);
 
@@ -170,9 +175,22 @@ public partial class Head : Node3D
     }
 
     #region CC
+    [ConsoleCommand("change_weapon", "Changes current weapon (string)", true)]
+    public void Cc_ChangeWeapon(string weaponPath)
+    {
+        string weaponPathCombined = Path.Combine(WEAPONS_PATH, weaponPath + ".tres");
+        var loadedWeapon = ResourceLoader.Load<Gun>(weaponPathCombined);
+        if (loadedWeapon != null)
+        {
+            CurrentGunSettings = loadedWeapon;
+            _game.Console?.Log($"Changed current weapon to {loadedWeapon}");
+        }
+        else
+            _game.Console?.Log($"Couldn't find a gun at {weaponPathCombined}", DevConsole.LogLevel.ERROR);
+    }
 
-    [ConsoleCommand("head_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
-    public void Cc_Set(string type, int amount)
+    [ConsoleCommand("current_weapon_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
+    public void Cc_CurrentWeaponSet(string type, int amount)
     {
         switch (type)
         {

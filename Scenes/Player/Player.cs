@@ -13,7 +13,7 @@ public partial class Player : CharacterBody3D
 {
     [Export] private PlayerMovementConfig _res_playerConfig;
 
-    public PlayerMovementConfig Conf { get; private set; } = default;
+    public PlayerMovementConfig Conf { get; set; } = default;
     private float _jumpHeight = 0.0f;
     public Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
