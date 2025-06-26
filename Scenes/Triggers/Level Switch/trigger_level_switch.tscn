@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://ccnheqalixjti"]
+
+[ext_resource type="Script" uid="uid://7v3dd1gaga3v" path="res://Scenes/Triggers/Level Switch/TriggerLevelSwitch.cs" id="1_q6ffp"]
+[ext_resource type="Material" uid="uid://dn5prquwvnwc3" path="res://Materials/tile_grey.tres" id="2_q6ffp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1m7sp"]
+size = Vector3(1, 2, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1m7sp"]
+material = ExtResource("2_q6ffp")
+size = Vector3(1, 1.94, 0.31)
+
+[sub_resource type="SphereMesh" id="SphereMesh_q6ffp"]
+radius = 0.1
+height = 0.2
+
+[node name="trigger_level_switch" type="Area3D"]
+collision_layer = 64
+collision_mask = 128
+script = ExtResource("1_q6ffp")
+TriggerOnlyAfterFullyEnter = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_1m7sp")
+
+[node name="base" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_1m7sp")
+
+[node name="knob" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358359, 0, 0.102827)
+mesh = SubResource("SphereMesh_q6ffp")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1593, 0)
+text = "Enter"
