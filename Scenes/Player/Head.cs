@@ -5,6 +5,7 @@ using EIODE.Utils;
 using EIODE.Core;
 using Godot;
 using System.IO;
+using System;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
@@ -37,11 +38,14 @@ public partial class Head : Node3D
     public Camera3D Camera { get; private set; } = null;
 
     private const string WEAPONS_PATH = "res://Resources/Gun Types/";
+    private const float MIN_PITCH = -90f;
+    private const float MAX_PITCH = 90f;
 
     [Signal] public delegate void AmmoChangedEventHandler(WeaponConfig weapon);
     [Signal] public delegate void GunSettingsChangedEventHandler(WeaponConfig previous, WeaponConfig current);
     [Signal] public delegate void StartedReloadingEventHandler();
     [Signal] public delegate void EndedReloadingEventHandler();
+
     public override void _Ready()
     {
         if (WeaponResource == null) GD.PushError("No weapon was given to player");
@@ -71,7 +75,28 @@ public partial class Head : Node3D
         _console = _game.Console;
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventMouseMotion motion && Input.MouseMode == Input.MouseModeEnum.Captured)
+            CameraRotation(motion);
+        if (@event is InputEventJoypadMotion joypadMotion)
+            JoyPadCameraRotation(joypadMotion);
+    }
+    private void CameraRotation(InputEventMouseMotion e)
+    {
+        // horizontal
+        _player.RotateY(Mathf.DegToRad(-e.Relative.X * _player.Conf.Sensitivity));
 
+        // vertical
+        float newPitch = Rotation.X + Mathf.DegToRad(-e.Relative.Y * _player.Conf.Sensitivity);
+        newPitch = Mathf.Clamp(newPitch, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH));
+        Rotation = new Vector3(newPitch, Rotation.Y, Rotation.Z);
+    }
+
+    private void JoyPadCameraRotation(InputEventJoypadMotion joypadMotion)
+    {
+        throw new NotImplementedException();
+    }
 
     public override void _Process(double delta)
     {

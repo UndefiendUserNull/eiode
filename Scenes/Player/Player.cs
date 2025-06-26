@@ -3,6 +3,7 @@ using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using EIODE.Scenes.Objects;
+using EIODE.Scenes.Triggers;
 using System.Collections.Generic;
 using System;
 using Godot;
@@ -11,7 +12,7 @@ using System.Linq;
 namespace EIODE.Scenes;
 public partial class Player : CharacterBody3D, ITriggerable
 {
-    [Export] private PlayerMovementConfig _res_playerConfig;
+    [Export] private PlayerMovementConfig _res_playerMovementConfig;
 
     public PlayerMovementConfig Conf { get; set; } = default;
     private float _jumpHeight = 0.0f;
@@ -26,19 +27,13 @@ public partial class Player : CharacterBody3D, ITriggerable
     public float JumpPadForce { get; set; } = 0f;
     public List<JumpPad> PrevJumpPads { get; set; } = [];
     public float _variableGravity = 0f;
-    private Timer _floor = null;
 
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
-    private uint _defaultCollisionMask = 0;
     private bool _noClip = false;
 
-    #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.3f;
-    private const float MIN_PITCH = -80f;
-    private const float MAX_PITCH = 90f;
     private const float PLAYER_COLLISION_RADIUS = 0.3f;
     private const float PLAYER_COLLISION_HEIGHT = 3.0f;
-    #endregion
 
     #region Timers
     public float _timeInAir { get; private set; } = 0f;
@@ -46,12 +41,6 @@ public partial class Player : CharacterBody3D, ITriggerable
     #endregion
 
     public override void _EnterTree() => Init();
-
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is InputEventMouseMotion motion && Input.MouseMode == Input.MouseModeEnum.Captured)
-            CameraRotation(motion);
-    }
 
     public override void _Process(double delta)
     {
@@ -68,9 +57,7 @@ public partial class Player : CharacterBody3D, ITriggerable
         // Should be unlocked from outside
         Lock();
 
-        _defaultCollisionMask = CollisionMask;
-
-        Conf = (PlayerMovementConfig)_res_playerConfig.Duplicate();
+        Conf = (PlayerMovementConfig)_res_playerMovementConfig.Duplicate();
 
         _variableGravity = Conf.Gravity;
 
@@ -213,17 +200,8 @@ public partial class Player : CharacterBody3D, ITriggerable
         return (IsOnFloor() && hasBufferedJump) || canCoyoteJump;
     }
 
-    private void CameraRotation(InputEventMouseMotion e)
-    {
-        // horizontal
-        RotateY(Mathf.DegToRad(-e.Relative.X * Conf.Sensitivity));
 
-        // vertical
-        float newPitch = _head.Rotation.X + Mathf.DegToRad(-e.Relative.Y * Conf.Sensitivity);
-        newPitch = Mathf.Clamp(newPitch, Mathf.DegToRad(MIN_PITCH), Mathf.DegToRad(MAX_PITCH));
 
-        _head.Rotation = new Vector3(newPitch, _head.Rotation.Y, _head.Rotation.Z);
-    }
     public void Lock()
     {
         ProcessMode = ProcessModeEnum.Disabled;
@@ -469,39 +447,39 @@ public partial class Player : CharacterBody3D, ITriggerable
         switch (arg)
         {
             case "jumpmod":
-                Conf.JumpModifier = _res_playerConfig.JumpModifier;
+                Conf.JumpModifier = _res_playerMovementConfig.JumpModifier;
                 _console?.Log($"_jumpModifier Reset to {Conf.JumpModifier}");
                 break;
             case "grav":
-                Conf.Gravity = _res_playerConfig.Gravity;
+                Conf.Gravity = _res_playerMovementConfig.Gravity;
                 _console?.Log($"_gravity Reset to {Conf.Gravity}");
                 break;
             case "sens":
-                Conf.Sensitivity = _res_playerConfig.Sensitivity;
+                Conf.Sensitivity = _res_playerMovementConfig.Sensitivity;
                 _console?.Log($"_sensitivity Reset to {Conf.Sensitivity}");
                 break;
             case "accel":
-                Conf.Acceleration = _res_playerConfig.Acceleration;
+                Conf.Acceleration = _res_playerMovementConfig.Acceleration;
                 _console?.Log($"_acceleration Reset to {Conf.Acceleration}");
                 break;
             case "airctrl":
-                Conf.AirControl = _res_playerConfig.AirControl;
+                Conf.AirControl = _res_playerMovementConfig.AirControl;
                 _console?.Log($"_airControl Reset to {Conf.AirControl}");
                 break;
             case "maxair":
-                Conf.MaxVelocityAir = _res_playerConfig.MaxVelocityAir;
+                Conf.MaxVelocityAir = _res_playerMovementConfig.MaxVelocityAir;
                 _console?.Log($"_maxVelocityAir Reset to {Conf.MaxVelocityAir}");
                 break;
             case "maxground":
-                Conf.MaxVelocityGround = _res_playerConfig.MaxVelocityGround;
+                Conf.MaxVelocityGround = _res_playerMovementConfig.MaxVelocityGround;
                 _console?.Log($"_maxVelocityGround Reset to {Conf.MaxVelocityGround}");
                 break;
             case "jumpbuffer":
-                Conf.JumpBufferingTime = _res_playerConfig.JumpBufferingTime;
+                Conf.JumpBufferingTime = _res_playerMovementConfig.JumpBufferingTime;
                 _console?.Log($"_jumpBufferingTime Reset to {Conf.JumpBufferingTime}");
                 break;
             case "coyote":
-                Conf.CoyoteTime = _res_playerConfig.CoyoteTime;
+                Conf.CoyoteTime = _res_playerMovementConfig.CoyoteTime;
                 _console?.Log($"_coyoteTime Reset to {Conf.CoyoteTime}");
                 break;
             case "help":
