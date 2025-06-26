@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=2 format=3 uid="uid://c4n6r0eh12qok"]
+
+[ext_resource type="Script" uid="uid://djwk13ihy41gu" path="res://Resources/Src/WeaponConfig.cs" id="1_8n8hh"]
+
+[resource]
+script = ExtResource("1_8n8hh")
+Name = "Shalaby"
+damagePerBullet = 10
+fireRate = 0.01
+maxAmmo = 9999
+magazineSize = 9999
+HitboxDuration = 0.03
+reloadTime = 0.01
+auto = true
+metadata/_custom_type_script = "uid://dcmwybabtxm2k"

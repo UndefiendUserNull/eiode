@@ -1,10 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3bjl6peay5cr"]
+[gd_scene load_steps=5 format=3 uid="uid://c3bjl6peay5cr"]
 
 [ext_resource type="Script" uid="uid://do4eykfiskjwt" path="res://Scenes/UI/MainUi.cs" id="1_ikpc8"]
 [ext_resource type="Texture2D" uid="uid://cojq7jjfgr4bo" path="res://Assets/Textures/Crosshair03.png" id="1_mcebo"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mcebo"]
 font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ikpc8"]
+font_size = 22
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
@@ -50,3 +55,8 @@ label_settings = SubResource("LabelSettings_mcebo")
 layout_mode = 2
 text = "0 / 10"
 label_settings = SubResource("LabelSettings_mcebo")
+
+[node name="l_weaponName" type="Label" parent="V"]
+layout_mode = 2
+text = "Gun name"
+label_settings = SubResource("LabelSettings_ikpc8")

@@ -1,16 +1,15 @@
-[gd_resource type="Resource" script_class="Gun" load_steps=3 format=3 uid="uid://bmvfi8gxn32oj"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=2 format=3 uid="uid://bmvfi8gxn32oj"]
 
-[ext_resource type="PackedScene" uid="uid://ckfjb3htq2ujx" path="res://Scenes/Tests/t_line_renderer.tscn" id="1_y2v7h"]
-[ext_resource type="Script" uid="uid://dcmwybabtxm2k" path="res://Resources/Src/Gun.cs" id="2_j8dwu"]
+[ext_resource type="Script" uid="uid://djwk13ihy41gu" path="res://Resources/Src/WeaponConfig.cs" id="1_f47f8"]
 
 [resource]
-script = ExtResource("2_j8dwu")
-damagePerBullet = 25.0
+script = ExtResource("1_f47f8")
+Name = "Pistol"
+damagePerBullet = 10
 fireRate = 0.5
 maxAmmo = 7
 magazineSize = 70
 HitboxDuration = 0.03
 reloadTime = 2.0
 auto = true
-lineTracer = ExtResource("1_y2v7h")
 metadata/_custom_type_script = "uid://dcmwybabtxm2k"

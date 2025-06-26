@@ -1,5 +1,5 @@
 using EIODE.Components;
-using EIODE.Resources.Src;
+using EIODE.Resources;
 using EIODE.Core.Console;
 using EIODE.Utils;
 using EIODE.Core;
@@ -10,11 +10,12 @@ namespace EIODE.Scenes.Player;
 public partial class Head : Node3D
 {
     [Export] public float ShootingRayLength { get; set; } = -1000;
-    [Export] private Gun CurrentGunSettings { get; set; } = null;
+    [Export] private WeaponConfig WeaponResource { get; set; } = null;
 
     [Export] public float CameraTiltSpeed { get; set; } = 10f;
 
     [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
+    public WeaponConfig W { get; private set; } = null;
 
     public bool _shooting = false;
     public bool _reloading = false;
@@ -30,7 +31,6 @@ public partial class Head : Node3D
     private HitboxComponent _hitbox = null;
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
-    public Gun G = null;
     private Game _game = null;
     private DevConsole _console = null;
     private Player _player = null;
@@ -38,29 +38,29 @@ public partial class Head : Node3D
 
     private const string WEAPONS_PATH = "res://Resources/Gun Types/";
 
-    [Signal] public delegate void AmmoChangedEventHandler(int currentAmmo, int currentMaxAmmo);
-    [Signal] public delegate void GunSettingsChangedEventHandler(Gun previous, Gun current);
+    [Signal] public delegate void AmmoChangedEventHandler(WeaponConfig weapon);
+    [Signal] public delegate void GunSettingsChangedEventHandler(WeaponConfig previous, WeaponConfig current);
     [Signal] public delegate void StartedReloadingEventHandler();
     [Signal] public delegate void EndedReloadingEventHandler();
     public override void _Ready()
     {
-        if (CurrentGunSettings == null) GD.PushError("No gun settings was given to player");
-        else G = CurrentGunSettings;
+        if (WeaponResource == null) GD.PushError("No weapon was given to player");
+        else W = WeaponResource;
 
         _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
 
         // There should be only one timer as a child for the "Head" node
         _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
 
-        _hitbox.Damage = G.damagePerBullet;
+        _hitbox.Damage = W.damagePerBullet;
         _hitbox.Disable();
 
-        CurrentAmmo = G.magazineSize;
-        CurrentMaxAmmo = G.maxAmmo;
+        CurrentAmmo = W.magazineSize;
+        CurrentMaxAmmo = W.maxAmmo;
 
         _parent = GetParent<Node3D>();
 
-        EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+        EmitSignalAmmoChanged(W);
 
         Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
 
@@ -78,31 +78,31 @@ public partial class Head : Node3D
         HandleShooting(delta);
         CameraTilting(delta, _player.InputDirection);
 
-        if (G != CurrentGunSettings)
+        if (W != WeaponResource)
         {
-            G = CurrentGunSettings;
-            CurrentAmmo = G.magazineSize;
-            CurrentMaxAmmo = G.maxAmmo;
-            EmitSignalGunSettingsChanged(G, CurrentGunSettings);
+            W = WeaponResource;
+            CurrentAmmo = W.magazineSize;
+            CurrentMaxAmmo = W.maxAmmo;
+            EmitSignalGunSettingsChanged(W, WeaponResource);
         }
     }
 
 
     private void HandleShooting(double delta)
     {
-        if (!_shooting && _shootingTime <= G.fireRate)
+        if (!_shooting && _shootingTime <= W.fireRate)
         {
             _shootingTime += (float)delta;
         }
 
-        if (_hitboxEnabled && _shootingTime >= G.HitboxDuration)
+        if (_hitboxEnabled && _shootingTime >= W.HitboxDuration)
         {
             _hitbox.Disable();
             _hitboxEnabled = false;
         }
 
         _magazineEmpty = CurrentAmmo <= 0;
-        _magazineFull = CurrentAmmo == G.magazineSize;
+        _magazineFull = CurrentAmmo == W.magazineSize;
 
         if (Input.IsActionJustPressed(InputHash.RELOAD) && CanReload())
         {
@@ -123,7 +123,7 @@ public partial class Head : Node3D
         _hitboxEnabled = true;
         _shootingTime = 0;
         CurrentAmmo--;
-        EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+        EmitSignalAmmoChanged(W);
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
         _shooting = false;
     }
@@ -131,22 +131,22 @@ public partial class Head : Node3D
     private void Reload(double delta)
     {
         _reloadingTimer += (float)delta;
-        if (_reloadingTimer >= G.reloadTime)
+        if (_reloadingTimer >= W.reloadTime)
         {
             EmitSignalEndedReloading();
             _reloading = false;
-            int ammoNeeded = G.magazineSize - CurrentAmmo;
+            int ammoNeeded = W.magazineSize - CurrentAmmo;
             int ammoToTake = Mathf.Min(ammoNeeded, CurrentMaxAmmo);
             CurrentAmmo += ammoToTake;
             CurrentMaxAmmo -= ammoToTake;
             _reloadingTimer = 0f;
-            EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+            EmitSignalAmmoChanged(W);
         }
     }
 
     private bool CanShoot()
     {
-        return !_reloading && _shootingTime >= G.fireRate && !_magazineEmpty;
+        return !_reloading && _shootingTime >= W.fireRate && !_magazineEmpty;
     }
 
     private bool CanReload()
@@ -155,7 +155,7 @@ public partial class Head : Node3D
     }
     private bool GetShootingPressed()
     {
-        return (G.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
+        return (W.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
     }
     private void CameraTilting(double delta, Vector2 _inputDirection)
     {
@@ -179,10 +179,10 @@ public partial class Head : Node3D
     public void Cc_ChangeWeapon(string weaponPath)
     {
         string weaponPathCombined = Path.Combine(WEAPONS_PATH, weaponPath + ".tres");
-        var loadedWeapon = ResourceLoader.Load<Gun>(weaponPathCombined);
+        var loadedWeapon = ResourceLoader.Load<WeaponConfig>(weaponPathCombined);
         if (loadedWeapon != null)
         {
-            CurrentGunSettings = loadedWeapon;
+            WeaponResource = loadedWeapon;
             _game.Console?.Log($"Changed current weapon to {loadedWeapon}");
         }
         else
@@ -196,12 +196,12 @@ public partial class Head : Node3D
         {
             case "cammo":
                 CurrentAmmo = amount;
-                EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+                EmitSignalAmmoChanged(W);
                 _console?.Log($"Changed current ammo to be {amount}");
                 break;
             case "mammo":
                 CurrentMaxAmmo = amount;
-                EmitSignalAmmoChanged(CurrentAmmo, CurrentMaxAmmo);
+                EmitSignalAmmoChanged(W);
                 _console?.Log($"Changed max ammo to be {amount}");
                 break;
             case "damage":
