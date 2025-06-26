@@ -10,12 +10,12 @@ namespace EIODE.Core;
 public partial class Game : Node
 {
     [Export] public PackedScene FirstLevelToLoad;
+    public static Vector3 PlayerSpawnPosition = new(0, 15, 0);
     [Export] public bool Disabled { get; set; }
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
     public bool FirstLevelLoaded { get; private set; } = false;
-    public static Vector3 PlayerSpawnPosition = new(0, 5, 0);
 
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }

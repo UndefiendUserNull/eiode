@@ -2,11 +2,11 @@ using EIODE.Core;
 using EIODE.Core.Console;
 using EIODE.Resources.Src;
 using EIODE.Utils;
-using EIODE.Scripts.Core;
 using EIODE.Scenes.Objects;
 using System.Collections.Generic;
 using System;
 using Godot;
+using System.Linq;
 
 namespace EIODE.Scenes.Player;
 public partial class Player : CharacterBody3D
@@ -18,14 +18,15 @@ public partial class Player : CharacterBody3D
     public Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
     private Head _head = null;
-    private RayCast3D _feet = null; // :D
+    private Area3D _feet = null; // :D
     private Game _game = null;
     private Camera3D _camera = null;
     private DevConsole _console;
     private float _cameraZRotation = 0f;
-    private float _gravityScale = 0f;
     public float JumpPadForce { get; set; } = 0f;
     public List<JumpPad> PrevJumpPads { get; set; } = [];
+    public float _variableGravity = 0f;
+    private Timer _floor = null;
 
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
@@ -67,7 +68,10 @@ public partial class Player : CharacterBody3D
 
         Conf = (PlayerMovementConfig)_res_playerConfig.Duplicate();
 
-        _feet = NodeUtils.GetChildWithName<RayCast3D>("Feet", this);
+        _variableGravity = Conf.Gravity;
+
+        _feet = NodeUtils.GetChildWithName<Area3D>("Feet", this);
+        _feet.AreaEntered += Feet_AreaEntered;
 
         _head = GetChild<Head>(0);
 
@@ -83,10 +87,23 @@ public partial class Player : CharacterBody3D
 
         ConsoleCommandSystem.RegisterInstance(this);
 
+
         _console = _game.Console;
 
     }
 
+    public override void _ExitTree()
+    {
+        _feet.AreaEntered -= Feet_AreaEntered;
+    }
+
+    private void Feet_AreaEntered(Area3D area)
+    {
+        if (area is JumpPad jp)
+        {
+            AddJumpPadForce(jp);
+        }
+    }
 
     private void MainInput()
     {
@@ -111,29 +128,32 @@ public partial class Player : CharacterBody3D
         if (_wantToJump)
             _timeSinceLastJumpInput += (float)delta;
 
+
         if (onFloor)
         {
+            JumpPadForce = 0f;
+            _variableGravity = 0f;
+
+            if (PrevJumpPads.Count > 0)
+                PrevJumpPads.Clear();
+
+
             _timeInAir = 0.0f;
-            if (Velocity.Y == 0)
-            {
-                JumpPadForce = 0f;
-                if (PrevJumpPads.Count > 0)
-                    PrevJumpPads.Clear();
-            }
         }
         else
         {
             _timeInAir += (float)delta;
-            float variableGravity = Conf.Gravity;
 
-            if (_timeInAir > Conf.GravityMaxScale)
+            _variableGravity = Conf.Gravity;
+
+            if (_timeInAir > Conf.GravityRampStart)
             {
-                _gravityScale = Conf.GravityMinScale + (_timeInAir - Conf.GravityMaxScale) * Conf.GravityRampMultiplier;
-                _gravityScale = Mathf.Clamp(_gravityScale, Conf.GravityMinScale, Conf.GravityMaxScale);
-                variableGravity *= _gravityScale;
+                float gravityScale = Conf.GravityMinScale + (_timeInAir - Conf.GravityRampStart) * Conf.GravityRampMultiplier;
+                gravityScale = Mathf.Clamp(gravityScale, Conf.GravityMinScale, Conf.GravityMaxScale);
+                _variableGravity *= gravityScale;
             }
 
-            Velocity -= new Vector3(0, variableGravity * (float)delta, 0);
+            Velocity -= new Vector3(0, _variableGravity * (float)delta, 0);
         }
 
         if (_wantToJump && CanJump())
@@ -154,23 +174,6 @@ public partial class Player : CharacterBody3D
     {
         Vector3 desiredVelocity = direction * Conf.MaxVelocityAir;
         return Velocity.Lerp(desiredVelocity, 1f - Mathf.Exp(-Conf.AirControl * (float)delta));
-    }
-
-    [Obsolete]
-    private Vector3 AdjustedVelocityToSlope(Vector3 velocity)
-    {
-        if (_feet.IsColliding())
-        {
-            Vector3 normal = _feet.GetCollisionNormal();
-            float angle = Mathf.RadToDeg(Mathf.Acos(normal.Dot(Vector3.Up)));
-
-            if (angle > 5f && velocity.Y < 0)
-            {
-                float boost = 1f + (angle / 45f);
-                return velocity * boost;
-            }
-        }
-        return velocity;
     }
 
     private void Jump(Vector3 desiredDirection, double delta)
@@ -231,12 +234,28 @@ public partial class Player : CharacterBody3D
         Velocity = newVelocity;
         _wantToJump = false;
     }
-    public void AddJumpForce(float force)
+    public void AddJumpPadForce(JumpPad jumpPad)
     {
-        if (force == 0) return;
-        JumpPadForce = Mathf.Min(Conf.MaxLunchPadForce, JumpPadForce + force);
-        _gravityScale = 0f;
-        Velocity += new Vector3(0, JumpPadForce, 0);
+        float jumpPower = jumpPad.JumpPower;
+
+        if (jumpPower == 0) return;
+
+        if (!PrevJumpPads.Any(x => x == jumpPad))
+        {
+            PrevJumpPads.Add(jumpPad);
+
+            if (JumpPadForce >= Conf.MaxLunchPadForce)
+            {
+                ForceSetVelocity(Vector3.Up * Conf.MaxLunchPadForce);
+            }
+            else
+            {
+                _variableGravity = 0f;
+                _timeInAir = 0f;
+                JumpPadForce = Mathf.Min(Conf.MaxLunchPadForce, JumpPadForce + jumpPower);
+                Velocity += new Vector3(0, JumpPadForce, 0);
+            }
+        }
 
         _wantToJump = false;
     }
