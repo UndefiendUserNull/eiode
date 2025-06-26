@@ -1903,12 +1903,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.948, 3, 2.3204e-06)
 JumpPower = 65.0
 
 [node name="JumpPad3" parent="Blocks" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 74.948, 3, 2.88865e-06)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.948, 3, 2.84494e-06)
 JumpPower = 65.0
 
 [node name="JumpPad4" parent="Blocks" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 91.948, 3, 3.63174e-06)
-JumpPower = 65.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90.948, 3, 3.58803e-06)
+JumpPower = 75.0
 
 [node name="Block_3" type="Node3D" parent="Blocks"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136, -2, -4.99999)
@@ -1977,6 +1977,10 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 244, 3
 script = ExtResource("1_rbn3s")
 mesh_vector_data = SubResource("Resource_mb4sn")
 materials = Array[Material]([ExtResource("6_71q37")])
+
+[node name="JumpPad" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, 1)
+JumpPower = 35.0
 
 [node name="hints" type="Node3D" parent="."]
 

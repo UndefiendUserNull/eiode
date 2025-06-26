@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c0hys4vu422l5" path="res://Assets/Models/scene.gltf" id="2_40xin"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ox3ty"]
-size = Vector3(2.5, 0.672, 2.5)
+size = Vector3(2.5, 0.545839, 2.12988)
 
 [node name="JumpPad" type="Area3D"]
 collision_layer = 32
@@ -14,5 +14,13 @@ script = ExtResource("1_mhunq")
 [node name="Model" parent="." instance=ExtResource("2_40xin")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34196, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.278879, 0)
 shape = SubResource("BoxShape3D_ox3ty")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+exclude_parent = false
+target_position = Vector3(0, 1.25, 0)
+collision_mask = 0
+collide_with_bodies = false
+debug_shape_custom_color = Color(0.196078, 0.647059, 0.811765, 1)
+debug_shape_thickness = 5

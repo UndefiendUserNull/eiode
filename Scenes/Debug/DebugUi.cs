@@ -43,8 +43,8 @@ public partial class DebugUi : Control
         _sb.Append($"YVelocity : {_player.Velocity.Y}\n");
         _sb.Append($"Variable Gravity : {_player._variableGravity}\n");
         _sb.Append($"Lunch Pad Force : {_player.JumpPadForce}\n");
-        _sb.Append($"Air Control : {_player.Conf.AirControl}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
+        _sb.Append($"PrevJumpPads.Count : {_player.PrevJumpPads.Count}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
         _sb.Append($"Shooting Time : {_playerHead._shootingTime}\n");
         _sb.Append($"Current Fire Rate : {_playerHead.G.fireRate}\n");

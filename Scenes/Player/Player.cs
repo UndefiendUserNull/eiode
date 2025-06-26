@@ -13,7 +13,7 @@ public partial class Player : CharacterBody3D
 {
     [Export] private PlayerMovementConfig _res_playerConfig;
 
-    public PlayerMovementConfig Conf { get; set; } = default;
+    public PlayerMovementConfig Conf { get; private set; } = default;
     private float _jumpHeight = 0.0f;
     public Vector3 _direction = Vector3.Zero;
     private bool _wantToJump = false;
@@ -31,7 +31,7 @@ public partial class Player : CharacterBody3D
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     #region Constants
-    private const float DEFAULT_HEAD_Y_POSITION = 1.5f;
+    private const float DEFAULT_HEAD_Y_POSITION = 1.3f;
     private const float MIN_PITCH = -80f;
     private const float MAX_PITCH = 90f;
     private const float PLAYER_COLLISION_RADIUS = 0.3f;
@@ -131,12 +131,14 @@ public partial class Player : CharacterBody3D
 
         if (onFloor)
         {
-            JumpPadForce = 0f;
-            _variableGravity = 0f;
+            if (_timeInAir >= 0.02f)
+            {
+                JumpPadForce = 0f;
+                _variableGravity = 0f;
 
-            if (PrevJumpPads.Count > 0)
-                PrevJumpPads.Clear();
-
+                if (PrevJumpPads.Count > 0)
+                    PrevJumpPads.Clear();
+            }
 
             _timeInAir = 0.0f;
         }
@@ -256,7 +258,10 @@ public partial class Player : CharacterBody3D
                 Velocity += new Vector3(0, JumpPadForce, 0);
             }
         }
-
+        else
+        {
+            JumpPadForce = jumpPower;
+        }
         _wantToJump = false;
     }
 
