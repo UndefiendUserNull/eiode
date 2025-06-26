@@ -1,4 +1,4 @@
-using EIODE.Scenes.Player;
+using EIODE.Scenes;
 using EIODE.Core;
 using EIODE.Utils;
 using Godot;
@@ -8,7 +8,7 @@ namespace EIODE.Scenes.Debug;
 
 public partial class DebugUi : Control
 {
-    private Player.Player _player = null;
+    private Player _player = null;
     private Head _playerHead = null;
     private Label _label = null;
     private bool _isShown = false;

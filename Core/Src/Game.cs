@@ -1,4 +1,4 @@
-using EIODE.Scenes.Player;
+using EIODE.Scenes;
 using EIODE.Core.Console;
 using EIODE.Scenes.Debug;
 using EIODE.Utils;

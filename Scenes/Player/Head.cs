@@ -6,7 +6,7 @@ using EIODE.Core;
 using Godot;
 using System.IO;
 
-namespace EIODE.Scenes.Player;
+namespace EIODE.Scenes;
 public partial class Head : Node3D
 {
     [Export] public float ShootingRayLength { get; set; } = -1000;

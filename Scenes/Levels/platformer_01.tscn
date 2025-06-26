@@ -1,9 +1,8 @@
-[gd_scene load_steps=87 format=4 uid="uid://cfswgg6lfyjd0"]
+[gd_scene load_steps=86 format=4 uid="uid://cfswgg6lfyjd0"]
 
 [ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="1_3dqw3"]
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_eced4"]
 [ext_resource type="PackedScene" uid="uid://dwsbrg54xu0va" path="res://Scenes/Enviroment/default_world_environment.tscn" id="2_2j5np"]
-[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="2_q2637"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="3_6ggew"]
 [ext_resource type="Script" uid="uid://bayqxo5eyv602" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="4_3dqw3"]
 [ext_resource type="Script" uid="uid://bwdpt27bu7ylf" path="res://addons/cyclops_level_builder/resources/data_vector_int.gd" id="5_2j5np"]
@@ -824,6 +823,7 @@ transform = Transform3D(-0.984808, -0.111618, 0.133022, 0.150383, -0.165191, 0.9
 [node name="WorldEnvironment" parent="." instance=ExtResource("2_2j5np")]
 
 [node name="Blocks" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="block0" type="Node3D" parent="Blocks"]
 
@@ -1011,17 +1011,13 @@ mesh = SubResource("ArrayMesh_meugw")
 [node name="collision_shape" type="CollisionShape3D" parent="Blocks/Block_16/collision_body"]
 shape = SubResource("ConvexPolygonShape3D_4p4sc")
 
-[node name="door_change_level3" parent="." instance=ExtResource("2_q2637")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.137476, 7.96828, 63.0396)
-NextScene = "res://Scenes/Levels/platformer_02.tscn"
-
-[node name="Block_0" type="Node3D" parent="."]
+[node name="Block_14" type="Node3D" parent="Blocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
 script = ExtResource("3_6ggew")
 mesh_vector_data = SubResource("Resource_avape")
 materials = Array[Material]([ExtResource("1_eced4")])
 
-[node name="Block_1" type="Node3D" parent="."]
+[node name="Block_17" type="Node3D" parent="Blocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
 script = ExtResource("3_6ggew")
 mesh_vector_data = SubResource("Resource_c2nm1")

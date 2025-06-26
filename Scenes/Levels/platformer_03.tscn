@@ -1,4 +1,4 @@
-[gd_scene load_steps=205 format=3 uid="uid://bicvs6tluxt6m"]
+[gd_scene load_steps=207 format=3 uid="uid://bicvs6tluxt6m"]
 
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_rbn3s"]
 [ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/jump_pad.tscn" id="1_tbxpd"]
@@ -9,6 +9,8 @@
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="6_71q37"]
 [ext_resource type="PackedScene" uid="uid://dwsbrg54xu0va" path="res://Scenes/Enviroment/default_world_environment.tscn" id="7_6fmp5"]
 [ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="8_52lfj"]
+[ext_resource type="PackedScene" uid="uid://cfswgg6lfyjd0" path="res://Scenes/Levels/platformer_01.tscn" id="9_71q37"]
+[ext_resource type="PackedScene" uid="uid://ccnheqalixjti" path="res://Scenes/Triggers/Level Switch/trigger_level_switch.tscn" id="10_wlb5o"]
 
 [sub_resource type="Resource" id="Resource_kt4lu"]
 script = ExtResource("2_tbxpd")
@@ -1977,11 +1979,6 @@ face_vertex_data = {
 
 [node name="platformer_03" type="Node3D"]
 
-[node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]
-
-[node name="DirectionalLight3D" parent="." instance=ExtResource("8_52lfj")]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 27.0446, 0)
-
 [node name="Blocks" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -1, 0)
 
@@ -2157,3 +2154,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.302, -61.729)
 text = "<- Jump Pad"
 font_size = 100
 outline_size = 50
+
+[node name="trigger_level_switch" parent="." instance=ExtResource("10_wlb5o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 82, -273)
+NextScene = ExtResource("9_71q37")
+
+[node name="DirectionalLight3D" parent="." instance=ExtResource("8_52lfj")]
+
+[node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]

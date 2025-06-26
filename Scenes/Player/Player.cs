@@ -8,8 +8,8 @@ using System;
 using Godot;
 using System.Linq;
 
-namespace EIODE.Scenes.Player;
-public partial class Player : CharacterBody3D
+namespace EIODE.Scenes;
+public partial class Player : CharacterBody3D, ITriggerable
 {
     [Export] private PlayerMovementConfig _res_playerConfig;
 
