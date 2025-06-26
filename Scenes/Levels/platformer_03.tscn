@@ -1,4 +1,4 @@
-[gd_scene load_steps=207 format=3 uid="uid://bicvs6tluxt6m"]
+[gd_scene load_steps=208 format=3 uid="uid://bicvs6tluxt6m"]
 
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_rbn3s"]
 [ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/jump_pad.tscn" id="1_tbxpd"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="8_52lfj"]
 [ext_resource type="PackedScene" uid="uid://cfswgg6lfyjd0" path="res://Scenes/Levels/platformer_01.tscn" id="9_71q37"]
 [ext_resource type="PackedScene" uid="uid://ccnheqalixjti" path="res://Scenes/Triggers/Level Switch/trigger_level_switch.tscn" id="10_wlb5o"]
+[ext_resource type="PackedScene" uid="uid://dq2aqx4fyln4" path="res://Scenes/Triggers/Visibility/trigger_visibility.tscn" id="12_50cie"]
 
 [sub_resource type="Resource" id="Resource_kt4lu"]
 script = ExtResource("2_tbxpd")
@@ -2162,3 +2163,8 @@ NextScene = ExtResource("9_71q37")
 [node name="DirectionalLight3D" parent="." instance=ExtResource("8_52lfj")]
 
 [node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]
+
+[node name="trigger_visibility" parent="." node_paths=PackedStringArray("Target") instance=ExtResource("12_50cie")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 6.685, 0, 3, -50.3)
+Target = NodePath("../hints")
+ShowOnlyWhileInside = true
