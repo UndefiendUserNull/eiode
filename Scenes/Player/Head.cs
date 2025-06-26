@@ -2,7 +2,7 @@ using EIODE.Components;
 using EIODE.Resources.Src;
 using EIODE.Core.Console;
 using EIODE.Utils;
-using EIODE.Scripts.Core;
+using EIODE.Core;
 using Godot;
 
 namespace EIODE.Scenes.Player;

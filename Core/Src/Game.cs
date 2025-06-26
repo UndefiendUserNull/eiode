@@ -5,7 +5,7 @@ using EIODE.Utils;
 using System.IO;
 using Godot;
 
-namespace EIODE.Scripts.Core;
+namespace EIODE.Core;
 
 public partial class Game : Node
 {

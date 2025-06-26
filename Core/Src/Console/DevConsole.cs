@@ -1,5 +1,4 @@
 using EIODE.Utils;
-using EIODE.Scripts.Core;
 using EIODE.Resources.Src;
 using System;
 using System.Collections.Generic;

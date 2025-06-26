@@ -1,4 +1,4 @@
-using EIODE.Scripts.Core;
+using EIODE.Core;
 using Godot;
 
 namespace EIODE.Scenes.Objects;

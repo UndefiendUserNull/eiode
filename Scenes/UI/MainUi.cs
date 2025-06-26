@@ -1,5 +1,5 @@
 using EIODE.Scenes.Player;
-using EIODE.Scripts.Core;
+using EIODE.Core;
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using Godot;
