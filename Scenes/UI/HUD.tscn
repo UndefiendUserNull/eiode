@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3bjl6peay5cr"]
 
-[ext_resource type="Script" uid="uid://do4eykfiskjwt" path="res://Scenes/UI/MainUi.cs" id="1_ikpc8"]
+[ext_resource type="Script" uid="uid://c2xyhdpgub0e0" path="res://Scenes/UI/HUD.cs" id="1_ikpc8"]
 [ext_resource type="Texture2D" uid="uid://cojq7jjfgr4bo" path="res://Assets/Textures/Crosshair03.png" id="1_mcebo"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mcebo"]
