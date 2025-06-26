@@ -31,7 +31,7 @@ public partial class PlayerMovementConfig : Resource
     // Used in Init
     [Export] public float JumpBufferingTime { get; set; } = 0.12f;
     [Export] public float CoyoteTime { get; set; } = 0.15f;
-    [Export] public float MaxLunchPadForce { get; set; } = 250f;
+    [Export] public float MaxJumpPadPower { get; set; } = 350f;
 
     public PlayerMovementConfig() { }
 }

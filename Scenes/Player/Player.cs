@@ -126,6 +126,7 @@ public partial class Player : CharacterBody3D
 
     private void Movement(double delta)
     {
+        // No Clip
         if (_noClip)
         {
             Position += _direction * Conf.NoClipSpeed;
@@ -264,20 +265,26 @@ public partial class Player : CharacterBody3D
         {
             PrevJumpPads.Add(jumpPad);
 
-            if (JumpPadForce >= Conf.MaxLunchPadForce)
+            if (JumpPadForce >= Conf.MaxJumpPadPower)
             {
-                ForceSetVelocity(Vector3.Up * Conf.MaxLunchPadForce);
+                ForceSetVelocity(Vector3.Up * Conf.MaxJumpPadPower);
             }
             else
             {
                 _variableGravity = 0f;
                 _timeInAir = 0f;
-                JumpPadForce = Mathf.Min(Conf.MaxLunchPadForce, JumpPadForce + jumpPower);
+
+                if (!jumpPad.IgnoreMaxJumpPadPower)
+                    JumpPadForce = Mathf.Min(Conf.MaxJumpPadPower, JumpPadForce + jumpPower);
+                else
+                    JumpPadForce += jumpPower;
+
                 Velocity += new Vector3(0, JumpPadForce, 0);
             }
         }
         else
         {
+            PrevJumpPads.Clear();
             JumpPadForce = jumpPower;
         }
         _wantToJump = false;
@@ -313,24 +320,37 @@ public partial class Player : CharacterBody3D
     [ConsoleCommand("no_clip", "Weather to use No Clip or not (0 | 1)", true)]
     public void Cc_NoClip(int i = 1)
     {
+        void On()
+        {
+            _noClip = true;
+            _feet.Monitorable = false;
+            _feet.Monitoring = false;
+            _console?.Log("No Clip is on");
+        }
+
+        void Off()
+        {
+            _noClip = false;
+            _feet.Monitorable = true;
+            _feet.Monitoring = true;
+            _console?.Log("No Clip is off");
+        }
+
         switch (i)
         {
             // toggle if it's already on
             case 1:
                 if (_noClip)
                 {
-                    _noClip = false;
-                    _console?.Log("No Clip is off");
+                    Off();
                 }
                 else
                 {
-                    _noClip = true;
-                    _console?.Log("No Clip is on");
+                    On();
                 }
                 break;
             case 0:
-                _noClip = false;
-                _console?.Log("No Clip is off");
+                Off();
                 break;
         }
     }
