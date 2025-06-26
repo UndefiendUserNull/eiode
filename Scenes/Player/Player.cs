@@ -29,6 +29,8 @@ public partial class Player : CharacterBody3D
     private Timer _floor = null;
 
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
+    private uint _defaultCollisionMask = 0;
+    private bool _noClip = false;
 
     #region Constants
     private const float DEFAULT_HEAD_Y_POSITION = 1.3f;
@@ -65,6 +67,8 @@ public partial class Player : CharacterBody3D
     {
         // Should be unlocked from outside
         Lock();
+
+        _defaultCollisionMask = CollisionMask;
 
         Conf = (PlayerMovementConfig)_res_playerConfig.Duplicate();
 
@@ -122,6 +126,20 @@ public partial class Player : CharacterBody3D
 
     private void Movement(double delta)
     {
+        if (_noClip)
+        {
+            Position += _direction * Conf.NoClipSpeed;
+            if (Input.IsActionPressed(InputHash.NOCLIPUP))
+            {
+                Position += Vector3.Up * Conf.NoClipSpeed;
+            }
+            else if (Input.IsActionPressed(InputHash.NOCLUPDOWN))
+            {
+                Position += Vector3.Down * Conf.NoClipSpeed;
+            }
+            return;
+        }
+
         Vector3 desiredDirection = _direction.LengthSquared() > 1f ? _direction.Normalized() : _direction;
         bool onFloor = IsOnFloor();
 
@@ -291,6 +309,37 @@ public partial class Player : CharacterBody3D
 
 
     #region CC
+
+    [ConsoleCommand("no_clip", "Weather to use No Clip or not (0 | 1)", true)]
+    public void Cc_NoClip(int i = 1)
+    {
+        switch (i)
+        {
+            // toggle if it's already on
+            case 1:
+                if (_noClip)
+                {
+                    _noClip = false;
+                    _console?.Log("No Clip is off");
+                }
+                else
+                {
+                    _noClip = true;
+                    _console?.Log("No Clip is on");
+                }
+                break;
+            case 0:
+                _noClip = false;
+                _console?.Log("No Clip is off");
+                break;
+        }
+    }
+    [ConsoleCommand("set_no_clip_speed", "(float)")]
+    public void Cc_SetNoClipSpeed(float newSpeed)
+    {
+        _console?.Log($"Changed NoClipSpeed from {Conf.NoClipSpeed} to {newSpeed}");
+        Conf.NoClipSpeed = newSpeed;
+    }
 
     [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
     public void Cc_MovePosition(float x, float y, float z)

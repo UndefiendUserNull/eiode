@@ -1,11 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://dqk8i0f08x0q2"]
+[gd_scene load_steps=11 format=3 uid="uid://dqk8i0f08x0q2"]
 
 [ext_resource type="Script" uid="uid://bytf8ubehbpod" path="res://Scenes/Player/Player.cs" id="1_uvnfx"]
 [ext_resource type="Resource" uid="uid://dql1va6oatqi6" path="res://Resources/MainPlayerMovementSettings.tres" id="2_a3d8c"]
 [ext_resource type="Script" uid="uid://blga75bmxo2r2" path="res://Scenes/Player/Head.cs" id="3_xpcdj"]
-[ext_resource type="Resource" uid="uid://dk7foobtgscip" path="res://Resources/Gun Types/SMG.tres" id="4_0u5uq"]
+[ext_resource type="Resource" uid="uid://bmvfi8gxn32oj" path="res://Resources/Gun Types/pistol.tres" id="4_dd0ac"]
 [ext_resource type="PackedScene" uid="uid://baxvfvns3bm61" path="res://Components/Hitbox/hitbox.tscn" id="5_dd0ac"]
-[ext_resource type="PackedScene" uid="uid://c3bjl6peay5cr" path="res://Scenes/UI/main_ui.tscn" id="7_0u5uq"]
+[ext_resource type="PackedScene" uid="uid://c3bjl6peay5cr" path="res://Scenes/UI/HUD.tscn" id="7_0u5uq"]
+[ext_resource type="Script" uid="uid://c2xyhdpgub0e0" path="res://Scenes/UI/HUD.cs" id="7_jlvik"]
 
 [sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_0u5uq"]
 length = 1000.0
@@ -26,7 +27,7 @@ _res_playerConfig = ExtResource("2_a3d8c")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0.074786)
 script = ExtResource("3_xpcdj")
-CurrentGunSettings = ExtResource("4_0u5uq")
+WeaponResource = ExtResource("4_dd0ac")
 
 [node name="Camera" type="Camera3D" parent="Head"]
 fov = 90.0
@@ -45,6 +46,7 @@ shape = SubResource("CapsuleShape3D_tugb3")
 debug_color = Color(0.254902, 0.635294, 0, 0.8)
 
 [node name="HUD" parent="." instance=ExtResource("7_0u5uq")]
+script = ExtResource("7_jlvik")
 
 [node name="Feet" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, 0)
