@@ -3,6 +3,7 @@ using EIODE.Core;
 using EIODE.Resources.Src;
 using EIODE.Utils;
 using Godot;
+using EIODE.Core.Console;
 
 namespace EIODE.Scenes.UI;
 public partial class MainUi : Control
@@ -32,6 +33,8 @@ public partial class MainUi : Control
         _currentAmmo = _head.CurrentAmmo;
         RefreshAmmo(_head.CurrentAmmo, _head.CurrentMaxAmmo);
         _label_reloading.Hide();
+
+        ConsoleCommandSystem.RegisterInstance(this);
     }
     public override void _ExitTree()
     {
@@ -70,4 +73,15 @@ public partial class MainUi : Control
         _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
         _label_ammo.Text = _text_ammo;
     }
+
+    #region CC
+
+    [ConsoleCommand("draw_hud", "Weather to draw the hud or not (0 | 1)")]
+    public void Cc_DrawHud(int i)
+    {
+        if (i == 0) Hide();
+        else if (i == 1) Show();
+    }
+
+    #endregion
 }
