@@ -23,24 +23,25 @@ public partial class Trigger : Area3D
         BodyEntered -= Trigger_BodyEntered;
         BodyExited -= Trigger_BodyExited;
     }
-    private void Trigger_BodyExited(Node3D body)
+    public virtual void Trigger_BodyExited(Node3D body)
     {
         if (_isTriggered) return;
 
-        if (TriggerOnlyAfterFullyEnter && _isBodyEntered && _body != null) Triggerr();
+        if (TriggerOnlyAfterFullyEnter && _isBodyEntered && (_body != null && _body == body)) Triggerr();
     }
 
-    private void Trigger_BodyEntered(Node3D body)
+    public virtual void Trigger_BodyEntered(Node3D body)
     {
         if (_isTriggered) return;
 
         if (body is ITriggerable iTriggerableBody)
         {
             _body = iTriggerableBody;
-            Triggerr();
 
             if (!TriggerOnlyAfterFullyEnter)
                 Triggerr();
+            else
+                _isBodyEntered = true;
         }
     }
 
@@ -50,6 +51,10 @@ public partial class Trigger : Area3D
     public virtual void Triggerr()
     {
         _isTriggered = true;
+    }
+    public virtual void UnTriggerr()
+    {
+        _isTriggered = false;
     }
 
     public bool IsTriggered()
