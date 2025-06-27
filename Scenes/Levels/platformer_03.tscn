@@ -2165,6 +2165,6 @@ NextScene = ExtResource("9_71q37")
 [node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]
 
 [node name="trigger_visibility" parent="." node_paths=PackedStringArray("Target") instance=ExtResource("12_50cie")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 6.685, 0, 3, -50.3)
+transform = Transform3D(4.1, 0, 0, 0, 4, 0, 0, 0, 13, 0, 3, -53.6)
 Target = NodePath("../hints")
 ShowOnlyWhileInside = true

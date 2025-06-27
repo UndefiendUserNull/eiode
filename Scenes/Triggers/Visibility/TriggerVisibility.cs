@@ -1,3 +1,4 @@
+using EIODE.Utils;
 using Godot;
 
 namespace EIODE.Scenes.Triggers;
@@ -7,11 +8,30 @@ public partial class TriggerVisibility : Trigger
     [Export] public Node3D Target { get; set; } = null;
     [Export] public bool StartHidden = true;
     [Export] public bool ShowOnlyWhileInside = false;
+
+    private MeshInstance3D _triggerVisual = null;
     public override void _Ready()
     {
         base._Ready();
         if (StartHidden) Target.Hide();
 
+        _triggerVisual = NodeUtils.GetChildWithNodeType<MeshInstance3D>(this);
+
+        _triggerVisual.Hide();
+
+#if DEBUG
+        _triggerVisual.Show();
+#endif
+
+    }
+
+    public void HideTriggerVisual()
+    {
+        _triggerVisual.Hide();
+    }
+    public void ShowTriggerVisual()
+    {
+        _triggerVisual.Show();
     }
 
     public override void Triggerr()

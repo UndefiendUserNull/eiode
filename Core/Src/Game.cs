@@ -4,6 +4,7 @@ using EIODE.Scenes.Debug;
 using EIODE.Utils;
 using System.IO;
 using Godot;
+using EIODE.Scenes.Triggers;
 
 namespace EIODE.Core;
 
@@ -148,6 +149,34 @@ public partial class Game : Node
         else
         {
             Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+        }
+    }
+
+    [ConsoleCommand("triggers_visual", "Show or hide all trigger visibility visual in current scene (show | hide)")]
+    public void Cc_HideTriggersVisual(string arg)
+    {
+        var triggersFound = NodeUtils.GetChildrenWithNodeType<TriggerVisibility>(LevelLoader.Instance.CurrentLevel);
+        if (triggersFound.Length > 0)
+        {
+            foreach (var trigger in triggersFound)
+            {
+                switch (arg.ToLower())
+                {
+                    case "hide":
+                        trigger.HideTriggerVisual();
+                        break;
+                    case "show":
+                        trigger.ShowTriggerVisual();
+                        break;
+                    default:
+                        Console?.Log($"Excepted either \"show\" or \"hide\", received {arg}");
+                        break;
+                }
+            }
+        }
+        else
+        {
+            Console?.Log("Couldn't find any Triggers in current scene", DevConsole.LogLevel.ERROR);
         }
     }
 

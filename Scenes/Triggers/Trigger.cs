@@ -36,6 +36,8 @@ public partial class Trigger : Area3D
 
         if (body is ITriggerable iTriggerableBody)
         {
+            if (!iTriggerableBody.CanTrigger()) return;
+
             _body = iTriggerableBody;
 
             if (!TriggerOnlyAfterFullyEnter)
@@ -45,13 +47,18 @@ public partial class Trigger : Area3D
         }
     }
 
+
     /// <summary>
-    /// The additional 'r' at the end is because the class name is Trigger and the method cannot have the same name as the class :D
+    /// This sets _isTriggered to true, use base.Triggerr() only if the condition is satisfied
     /// </summary>
+    // The additional 'r' at the end is because the class name is Trigger and the method cannot have the same name as the class :D
     public virtual void Triggerr()
     {
         _isTriggered = true;
     }
+    /// <summary>
+    /// This sets _isTriggered to false, use base.Triggerr() only if the condition is satisfied
+    /// </summary>
     public virtual void UnTriggerr()
     {
         _isTriggered = false;

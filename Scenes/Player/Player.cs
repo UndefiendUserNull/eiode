@@ -30,6 +30,7 @@ public partial class Player : CharacterBody3D, ITriggerable
 
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
     private bool _noClip = false;
+    private bool _canTrigger = true;
 
     private const float DEFAULT_HEAD_Y_POSITION = 1.3f;
     private const float PLAYER_COLLISION_RADIUS = 0.3f;
@@ -277,6 +278,10 @@ public partial class Player : CharacterBody3D, ITriggerable
         GetHead().Rotation = Vector3.Zero;
         Velocity = Vector3.Zero;
         UnLock();
+    }
+    public bool CanTrigger()
+    {
+        return _canTrigger;
     }
 
     private void Validation()
@@ -554,6 +559,8 @@ public partial class Player : CharacterBody3D, ITriggerable
             $"MaxVelocityGround: {Conf.MaxVelocityGround}, JumpBufferingTime: {Conf.JumpBufferingTime}, CoyoteTime: {Conf.CoyoteTime}"
         );
     }
+
+
 
     #endregion
 
