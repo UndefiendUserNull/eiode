@@ -7,11 +7,8 @@ namespace EIODE.Utils;
 public static class NodeUtils
 {
     /// <summary>
-    /// Searches parent's children for any child that's of type <typeparamref name="T"/>
+    /// Searches parent's children for the first child it founds that's of type <typeparamref name="T"/>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="parent"></param>
-    /// <returns></returns>
     public static T GetChildWithNodeType<T>(Node parent) where T : Node
     {
         if (parent == null)
@@ -39,10 +36,38 @@ public static class NodeUtils
     }
 
     /// <summary>
+    /// Searches parent's children for all children that's of type <typeparamref name="T"/>
+    /// </summary>
+    public static T[] GetChildrenWithNodeType<T>(Node parent) where T : Node
+    {
+        List<T> result = [];
+
+        if (parent == null)
+        {
+            GD.PushError("Null " + nameof(parent));
+            return default;
+        }
+
+        foreach (Node child in parent.GetChildren())
+        {
+            if (child is T foundChild)
+            {
+                result.Add(foundChild);
+            }
+
+            var recursiveResult = GetChildrenWithNodeType<T>(child);
+
+            if (recursiveResult != null)
+            {
+                return recursiveResult;
+            }
+        }
+        return result.Count > 0 ? [.. result] : default;
+    }
+
+    /// <summary>
     /// Searches parent's children for any node that's named <paramref name="name"/>
     /// </summary>
-    /// <typeparam name="T">Child Node Type</typeparam>
-    /// <returns></returns>
     public static T GetChildWithName<T>(string name, Node parent, bool caseSensitive = false) where T : Node
     {
         if (parent == null)
@@ -74,9 +99,6 @@ public static class NodeUtils
     /// <summary>
     /// Searches for all the children that's inside the parent recursively within given type
     /// </summary>
-    /// <typeparam name="T">The type node you're searching for</typeparam>
-    /// <param name="parent">The parent :D</param>
-    /// <returns></returns>
     public static List<T> GetAllChildren<T>(Node parent) where T : Node
     {
         List<T> result = [];

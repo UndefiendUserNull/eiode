@@ -1,6 +1,6 @@
 using Godot;
 using EIODE.Utils;
-using EIODE.Scripts.Core;
+using EIODE.Core;
 namespace EIODE.Components;
 
 public partial class HurtboxComponent : Area3D, IComponent

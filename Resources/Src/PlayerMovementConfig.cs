@@ -22,6 +22,7 @@ public partial class PlayerMovementConfig : Resource
     [Export] public float GravityMinScale { get; set; } = 1.0f;
     [Export] public float GravityMaxScale { get; set; } = 3.0f;
     [Export] public float MaxVelocityAir { get; set; } = 20f;
+    [Export] public float NoClipSpeed { get; set; } = 8f;
 
     [ExportGroup("Jumping")]
 
@@ -30,7 +31,7 @@ public partial class PlayerMovementConfig : Resource
     // Used in Init
     [Export] public float JumpBufferingTime { get; set; } = 0.12f;
     [Export] public float CoyoteTime { get; set; } = 0.15f;
-    [Export] public float MaxLunchPadForce { get; set; } = 250f;
+    [Export] public float MaxJumpPadPower { get; set; } = 350f;
 
     public PlayerMovementConfig() { }
 }

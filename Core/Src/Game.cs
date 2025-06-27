@@ -1,21 +1,22 @@
-using EIODE.Scenes.Player;
+using EIODE.Scenes;
 using EIODE.Core.Console;
 using EIODE.Scenes.Debug;
 using EIODE.Utils;
 using System.IO;
 using Godot;
+using EIODE.Scenes.Triggers;
 
-namespace EIODE.Scripts.Core;
+namespace EIODE.Core;
 
 public partial class Game : Node
 {
     [Export] public PackedScene FirstLevelToLoad;
+    public static Vector3 PlayerSpawnPosition = new(0, 15, 0);
     [Export] public bool Disabled { get; set; }
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
     public bool FirstLevelLoaded { get; private set; } = false;
-    public static Vector3 PlayerSpawnPosition = new(0, 5, 0);
 
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
@@ -148,6 +149,34 @@ public partial class Game : Node
         else
         {
             Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+        }
+    }
+
+    [ConsoleCommand("triggers_visual", "Show or hide all trigger visibility visual in current scene (show | hide)")]
+    public void Cc_HideTriggersVisual(string arg)
+    {
+        var triggersFound = NodeUtils.GetChildrenWithNodeType<TriggerVisibility>(LevelLoader.Instance.CurrentLevel);
+        if (triggersFound.Length > 0)
+        {
+            foreach (var trigger in triggersFound)
+            {
+                switch (arg.ToLower())
+                {
+                    case "hide":
+                        trigger.HideTriggerVisual();
+                        break;
+                    case "show":
+                        trigger.ShowTriggerVisual();
+                        break;
+                    default:
+                        Console?.Log($"Excepted either \"show\" or \"hide\", received {arg}");
+                        break;
+                }
+            }
+        }
+        else
+        {
+            Console?.Log("Couldn't find any Triggers in current scene", DevConsole.LogLevel.ERROR);
         }
     }
 

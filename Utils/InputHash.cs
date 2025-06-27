@@ -18,6 +18,8 @@ public static class InputHash
     public const string TOGGLE_CONSOLE = "toggle_console";
     public const string UP = "up";
     public const string DOWN = "down";
+    public const string NOCLIPUP = "noclip_up";
+    public const string NOCLUPDOWN = "noclip_down";
     // Keys
     public const string K_CTRL = "K_CTRL";
     public const string K_ENTER = "K_ENTER";

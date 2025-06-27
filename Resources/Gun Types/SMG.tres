@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="Gun" load_steps=2 format=3 uid="uid://dk7foobtgscip"]
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=2 format=3 uid="uid://dk7foobtgscip"]
 
-[ext_resource type="Script" uid="uid://dcmwybabtxm2k" path="res://Resources/Src/Gun.cs" id="1_wotj2"]
+[ext_resource type="Script" uid="uid://djwk13ihy41gu" path="res://Resources/Src/WeaponConfig.cs" id="1_fnt4j"]
 
 [resource]
-script = ExtResource("1_wotj2")
+script = ExtResource("1_fnt4j")
+Name = "SMG"
 damagePerBullet = 2
 fireRate = 0.05
 maxAmmo = 500

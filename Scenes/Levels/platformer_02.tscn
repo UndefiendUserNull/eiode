@@ -1,7 +1,6 @@
-[gd_scene load_steps=66 format=4 uid="uid://nlncoyinij8m"]
+[gd_scene load_steps=65 format=4 uid="uid://nlncoyinij8m"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_25gtk"]
-[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="2_veq20"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_aun2p"]
 _surfaces = [{
@@ -892,7 +891,3 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_veq20")
-
-[node name="door_change_level4" parent="." instance=ExtResource("2_veq20")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.59173, -0.134028, 32.969)
-NextScene = "res://Scenes/Levels/playground_00.tscn"

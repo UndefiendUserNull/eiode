@@ -1,41 +1,27 @@
+using EIODE.Utils;
 using Godot;
-using System.Linq;
 
 namespace EIODE.Scenes.Objects;
 
+
+[Tool]
 public partial class JumpPad : Area3D
 {
-    /// <summary>
-    /// Jump power should be equal or less than PlayerMovementSettings.MaxLunchPadForce
-    /// </summary>
     [Export] public float JumpPower { get; set; } = 15f;
+    [Export] public bool IgnoreMaxJumpPadPower = false;
+    private const int DEBUG_DRAW_DIVISION_BY = 12;
 
+    private RayCast3D _ray;
+#if TOOLS
     public override void _Ready()
     {
-        BodyEntered += JumpPad_BodyEntered;
+        _ray = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
     }
-
-    public override void _ExitTree()
+    public override void _Process(double delta)
     {
-        BodyEntered -= JumpPad_BodyEntered;
+        if (_ray.TargetPosition.Y == JumpPower / DEBUG_DRAW_DIVISION_BY) return;
+        _ray.TargetPosition = Vector3.Up * (JumpPower / DEBUG_DRAW_DIVISION_BY);
     }
-
-    private void JumpPad_BodyEntered(Node3D body)
-    {
-        if (body != null && body is Player.Player player)
-        {
-            // If this Jump pad is not in the list PrevJumpPads, act like a normal Jump pad
-            if (!player.PrevJumpPads.Any((x) => x == this))
-            {
-                player.PrevJumpPads.Add(this);
-                player.AddJumpForce(JumpPower);
-            }
-            else
-            {
-                // Reset everything if this Jump pad was found
-                player.JumpPadForce = 0f;
-                player.ForceSetVelocity(Vector3.Up * JumpPower);
-            }
-        }
-    }
+#endif
 }
+

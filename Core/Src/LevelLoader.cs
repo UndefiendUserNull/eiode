@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EIODE.Scripts.Core;
+namespace EIODE.Core;
 
 public partial class LevelLoader : Node
 {

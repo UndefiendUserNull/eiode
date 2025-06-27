@@ -1,9 +1,10 @@
 using Godot;
 
-namespace EIODE.Resources.Src;
+namespace EIODE.Resources;
 [GlobalClass]
-public partial class Gun : Resource
+public partial class WeaponConfig : Resource
 {
+    [Export] public string Name = "New Gun";
     [Export] public int damagePerBullet = 10;
     [Export] public float fireRate = 0.5f;
     [Export] public int maxAmmo = 100;
@@ -13,6 +14,5 @@ public partial class Gun : Resource
     // In seconds
     [Export] public float reloadTime = 2f;
     [Export] public bool auto = false;
-    [Export] public PackedScene lineTracer = null;
-    public Gun() { }
+    public WeaponConfig() { }
 }

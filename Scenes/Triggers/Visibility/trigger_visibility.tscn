@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dq2aqx4fyln4"]
+
+[ext_resource type="Script" uid="uid://epcwhxfbh57r" path="res://Scenes/Triggers/Visibility/TriggerVisibility.cs" id="1_agp60"]
+[ext_resource type="Material" uid="uid://qxuq648q6mp3" path="res://Materials/trans_trigger.tres" id="2_7wjsi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_agp60"]
+material = ExtResource("2_7wjsi")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7wjsi"]
+
+[node name="trigger_visibility" type="Area3D"]
+collision_layer = 64
+collision_mask = 128
+script = ExtResource("1_agp60")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_agp60")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+exclude_parent = false
+target_position = Vector3(0, 0, 0)
+collision_mask = 0
+hit_back_faces = false
+debug_shape_custom_color = Color(0, 0.784314, 0, 1)
+debug_shape_thickness = 5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_7wjsi")

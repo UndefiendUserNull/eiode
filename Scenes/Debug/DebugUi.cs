@@ -1,5 +1,5 @@
-using EIODE.Scenes.Player;
-using EIODE.Scripts.Core;
+using EIODE.Scenes;
+using EIODE.Core;
 using EIODE.Utils;
 using Godot;
 using System.Text;
@@ -8,7 +8,7 @@ namespace EIODE.Scenes.Debug;
 
 public partial class DebugUi : Control
 {
-    private Player.Player _player = null;
+    private Player _player = null;
     private Head _playerHead = null;
     private Label _label = null;
     private bool _isShown = false;
@@ -41,14 +41,15 @@ public partial class DebugUi : Control
         _sb.Append($"Direction : {_player._direction}\n");
         _sb.Append($"Velocity : {_player.Velocity.Length()}\n");
         _sb.Append($"YVelocity : {_player.Velocity.Y}\n");
+        _sb.Append($"Variable Gravity : {_player._variableGravity}\n");
         _sb.Append($"Lunch Pad Force : {_player.JumpPadForce}\n");
-        _sb.Append($"Air Control : {_player.Conf.AirControl}\n");
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
+        _sb.Append($"PrevJumpPads.Count : {_player.PrevJumpPads.Count}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
         _sb.Append($"Shooting Time : {_playerHead._shootingTime}\n");
-        _sb.Append($"Current Fire Rate : {_playerHead.G.fireRate}\n");
+        _sb.Append($"Current Fire Rate : {_playerHead.W.fireRate}\n");
         _sb.Append($"Current Ammo : {_playerHead._reloading}\n");
-        _sb.Append($"Magazine Size : {_playerHead.G.magazineSize}\n");
+        _sb.Append($"Magazine Size : {_playerHead.W.magazineSize}\n");
         _sb.Append($"Magazine Empty : {_playerHead._magazineEmpty}\n");
         _sb.Append($"Current Ammo : {_playerHead.CurrentAmmo}\n");
         _sb.Append($"Reloading Timer : {_playerHead._reloadingTimer}\n");

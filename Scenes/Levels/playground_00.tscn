@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://d0emhferwnuln" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="5_kqtrp"]
 [ext_resource type="Script" uid="uid://dae5bmif1d6bn" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="6_dbhn4"]
 [ext_resource type="Material" uid="uid://dn5prquwvnwc3" path="res://Materials/tile_grey.tres" id="8_aar4x"]
-[ext_resource type="PackedScene" uid="uid://b1m573vrh120m" path="res://Scenes/Objects/door_change_level.tscn" id="9_dbhn4"]
+[ext_resource type="PackedScene" uid="uid://ccnheqalixjti" path="res://Scenes/Triggers/Level Switch/trigger_level_switch.tscn" id="9_dbhn4"]
 [ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/jump_pad.tscn" id="9_kqtrp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aar4x"]
@@ -706,4 +706,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.549, 13.0905, 28.5804)
 
 [node name="door_change_level" parent="." instance=ExtResource("9_dbhn4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 4, 30)
-NextScene = "res://Scenes/Levels/platformer_00.tscn"
