@@ -157,24 +157,24 @@ public partial class Game : Node
         }
     }
 
-    [ConsoleCommand("triggers_visual", "Show or hide all trigger visibility visual in current scene (show | hide)")]
-    public void Cc_HideTriggersVisual(string arg)
+    [ConsoleCommand("triggers_visual_visible", "Show or hide all trigger visibility visual in current scene (1 | 0)")]
+    public void Cc_HideTriggersVisual(int arg)
     {
         var triggersFound = NodeUtils.GetChildrenWithNodeType<TriggerVisibility>(LevelLoader.Instance.CurrentLevel);
         if (triggersFound.Length > 0)
         {
             foreach (var trigger in triggersFound)
             {
-                switch (arg.ToLower())
+                switch (arg)
                 {
-                    case "hide":
+                    case 0:
                         trigger.HideTriggerVisual();
                         break;
-                    case "show":
+                    case 1:
                         trigger.ShowTriggerVisual();
                         break;
                     default:
-                        Console?.Log($"Excepted either \"show\" or \"hide\", received {arg}");
+                        Console?.Log($"Excepted either \"0 (hide)\" or \"1 (show)\", received {arg}");
                         break;
                 }
             }
