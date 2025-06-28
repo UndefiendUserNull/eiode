@@ -19,7 +19,7 @@ public partial class TriggerVisibility : Trigger
     public override void _Ready()
     {
         base._Ready();
-        if (StartHidden) Target.Hide();
+        if (StartHidden) Target?.Hide();
 
         _triggerVisual = NodeUtils.GetChildWithNodeType<MeshInstance3D>(this);
 
@@ -33,18 +33,18 @@ public partial class TriggerVisibility : Trigger
 
     public void HideTriggerVisual()
     {
-        _triggerVisual.Hide();
+        _triggerVisual?.Hide();
     }
     public void ShowTriggerVisual()
     {
-        _triggerVisual.Show();
+        _triggerVisual?.Show();
     }
 
     public override void Triggerr()
     {
         if (_body is Player)
         {
-            Target.Show();
+            Target?.Show();
             _isVisible = true;
             base.Triggerr();
         }
@@ -69,6 +69,7 @@ public partial class TriggerVisibility : Trigger
 #endif
     public override void Trigger_BodyExited(Node3D body)
     {
+        if (!ShowOnlyWhileInside) return;
         if (body is Player) UnTriggerr();
     }
 
