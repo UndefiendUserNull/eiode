@@ -87,6 +87,10 @@ public partial class LevelLoader : Node
                 Game.GetGame(this).SetPlayerSpawnPosition(NodeUtils.GetChildWithName<Node3D>("SPAWN", CurrentLevel).GlobalPosition);
                 player.GlobalPosition = Game.PlayerSpawnPosition;
             }
+            else
+            {
+                player.GlobalPosition = new Vector3(0, 10, 0);
+            }
 
             player.Lock();
             player.Reset();
@@ -118,6 +122,23 @@ public partial class LevelLoader : Node
 
 
     #region CC
+    [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
+    public static void Cc_ChangeLevel(string levelName)
+    {
+        var path = Path.Combine(LEVELS_PATH, levelName.EndsWith(".tscn") ? levelName : levelName + ".tscn");
+
+
+        if (ResourceLoader.Exists(path))
+        {
+            PackedScene level = LoadLevel(path);
+            Instance.ChangeLevel(level);
+        }
+        else
+        {
+            Game.GetGame(Instance).Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+        }
+    }
+
     [ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
     public static void Cc_ListLevels()
     {

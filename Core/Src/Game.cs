@@ -191,22 +191,7 @@ public partial class Game : Node
 
     #region CC
 
-    [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
-    public void Cc_ChangeLevel(string levelName)
-    {
-        var path = Path.Combine(LevelLoader.LEVELS_PATH, levelName.EndsWith(".tscn") ? levelName : levelName + ".tscn");
 
-
-        if (ResourceLoader.Exists(path))
-        {
-            PackedScene level = LevelLoader.LoadLevel(path);
-            LevelLoader.Instance.ChangeLevel(level);
-        }
-        else
-        {
-            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
-        }
-    }
 
     [ConsoleCommand("triggers_visual_visible", "Show or hide all trigger visibility visual in current scene (1 | 0)")]
     public void Cc_HideTriggersVisual(int arg)
