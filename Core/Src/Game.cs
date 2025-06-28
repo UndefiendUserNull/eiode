@@ -2,9 +2,11 @@ using EIODE.Scenes;
 using EIODE.Core.Console;
 using EIODE.Scenes.Debug;
 using EIODE.Utils;
+using EIODE.Resources;
+using EIODE.Scenes.Triggers;
+using System.Collections.Generic;
 using System.IO;
 using Godot;
-using EIODE.Scenes.Triggers;
 
 namespace EIODE.Core;
 
@@ -21,6 +23,9 @@ public partial class Game : Node
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
+    private const string WEAPONS_PATH = "res://Resources/Gun Types/";
+
+    private static Dictionary<string, WeaponConfig> _weaponsLookup = [];
 
     public override void _Ready()
     {
@@ -32,15 +37,18 @@ public partial class Game : Node
             return;
         }
 
+
         ConsoleCommandSystem.Initialize();
 
         SetConsole();
         SpawnPlayer();
         LoadFirstLevel();
         SpawnDebugUI(false);
+        _weaponsLookup = LoadAllWeapons();
         HideMouse();
 
         ConsoleCommandSystem.RegisterInstance(this);
+
 
         Console?.Log("Game _Ready finished");
     }
@@ -93,6 +101,46 @@ public partial class Game : Node
     public static void HideMouse()
     {
         Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
+    public static Dictionary<string, WeaponConfig> LoadAllWeapons()
+    {
+        Dictionary<string, WeaponConfig> loadedWeapons = [];
+        foreach (var weaponPath in ResourceLoader.ListDirectory(WEAPONS_PATH))
+        {
+            var currentWeapon = ResourceLoader.Load<WeaponConfig>(Path.Combine(WEAPONS_PATH, weaponPath));
+            loadedWeapons.Add(currentWeapon.Name, currentWeapon);
+        }
+        return loadedWeapons;
+    }
+
+    public WeaponConfig FindWeapon(string name)
+    {
+        // Lazy initialize the lookup if empty
+        _weaponsLookup ??= LoadAllWeapons();
+
+        return _weaponsLookup.TryGetValue(name, out var weapon) ? weapon : null;
+    }
+
+    public WeaponConfig[] FindWeapons(params string[] names)
+    {
+        var result = new List<WeaponConfig>();
+
+        foreach (var item in _weaponsLookup)
+        {
+            Console.Log(item.ToString());
+        }
+
+        foreach (var name in names)
+        {
+            if (_weaponsLookup.TryGetValue(name.ToLower(), out var weapon))
+            {
+                result.Add(weapon);
+                Console?.Log(weapon.Name + " was Found");
+            }
+        }
+
+        return result.ToArray();
     }
 
     private void SpawnPlayer()
