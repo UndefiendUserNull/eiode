@@ -11,6 +11,10 @@ namespace EIODE.Scenes.Triggers;
 public partial class TriggerVisibility : Trigger
 {
     [Export] public Node3D Target { get; set; } = null;
+    /// <summary>
+    /// Hide this after Target is hidden
+    /// </summary>
+    [Export] public Node3D HideAfterTrigger { get; set; } = null;
     [Export] public bool StartHidden = true;
     [Export] public bool ShowOnlyWhileInside = false;
     private Color _debugDrawColor = Colors.Red;
@@ -45,6 +49,7 @@ public partial class TriggerVisibility : Trigger
         if (_body is Player)
         {
             Target?.Show();
+            HideAfterTrigger?.Hide();
             _isVisible = true;
             base.Triggerr();
         }
@@ -52,7 +57,7 @@ public partial class TriggerVisibility : Trigger
 #if TOOLS
     public override void _Process(double delta)
     {
-        _isVisible = Target.Visible | NodeUtils.GetChildrenWithNodeType<Node3D>(Target).All((x) => x.Visible);
+        _isVisible = Target.Visible | (Target.GetChildCount() > 0 && NodeUtils.GetChildrenWithNodeType<Node3D>(Target).All((x) => x.Visible));
         _debugDrawColor = _isVisible ? Colors.Green : Colors.Red;
         if (Target.GetChildCount() > 0)
         {
