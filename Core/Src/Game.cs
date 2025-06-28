@@ -11,8 +11,8 @@ namespace EIODE.Core;
 public partial class Game : Node
 {
     [Export] public PackedScene FirstLevelToLoad;
-    public static Vector3 PlayerSpawnPosition = new(0, 15, 0);
     [Export] public bool Disabled { get; set; }
+    public static Vector3 PlayerSpawnPosition { get; private set; } = Vector3.Zero;
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
@@ -54,8 +54,6 @@ public partial class Game : Node
     {
         DevConsole.Instance?.Log("Loading first level.");
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
-        // idk why the fuck that works instead of setting the position directly
-        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PlayerSpawnPosition);
     }
     public Player GetPlayer()
     {
@@ -71,6 +69,11 @@ public partial class Game : Node
     public static Game GetGame(Node placeHolder)
     {
         return placeHolder.GetTree().Root.GetNode<Game>(Location);
+    }
+
+    public void SetPlayerSpawnPosition(Vector3 newPos)
+    {
+        PlayerSpawnPosition = newPos;
     }
 
     public override void _Input(InputEvent @event)

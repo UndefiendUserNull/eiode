@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using EIODE.Utils;
 
 namespace EIODE.Core;
 
@@ -80,10 +81,17 @@ public partial class LevelLoader : Node
         {
             _console?.Log($"Moving player to {newLevel} ...");
             var player = Game.GetGame(this).GetPlayer();
-            player.Position = Game.PlayerSpawnPosition;
+
+            if (NodeUtils.GetChildWithName<Node3D>("SPAWN", CurrentLevel) != null)
+            {
+                Game.GetGame(this).SetPlayerSpawnPosition(NodeUtils.GetChildWithName<Node3D>("SPAWN", CurrentLevel).GlobalPosition);
+                player.GlobalPosition = Game.PlayerSpawnPosition;
+            }
+
             player.Lock();
             player.Reset();
             player.Reparent(CurrentLevel);
+
             if (Game.GetGame(this).Console != null)
                 if (!Game.GetGame(this).Console.IsShown)
                     player.UnLock();
