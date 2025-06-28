@@ -261,7 +261,7 @@ public partial class Head : Node3D
             _currentWeaponIndex = index;
             CurrentWeapon = WeaponsInventory[_currentWeaponIndex];
         }
-
+        _hitbox.SetRange(CurrentWeapon.Range);
         EmitSignalAmmoChanged(CurrentWeapon);
         EmitSignalWeaponChanged(CurrentWeapon);
     }
