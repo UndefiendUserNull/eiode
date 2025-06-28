@@ -47,13 +47,13 @@ public partial class DebugUi : Control
         _sb.Append($"PrevJumpPads.Count : {_player.PrevJumpPads.Count}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
         _sb.Append($"Shooting Time : {_playerHead._shootingTime}\n");
-        _sb.Append($"Current Fire Rate : {_playerHead.W.fireRate}\n");
+        _sb.Append($"Current Fire Rate : {_playerHead.CurrentWeapon.FireRate}\n");
         _sb.Append($"Current Ammo : {_playerHead._reloading}\n");
-        _sb.Append($"Magazine Size : {_playerHead.W.magazineSize}\n");
+        _sb.Append($"Magazine Size : {_playerHead.CurrentWeapon.MagazineSize}\n");
         _sb.Append($"Magazine Empty : {_playerHead._magazineEmpty}\n");
-        _sb.Append($"Current Ammo : {_playerHead.CurrentAmmo}\n");
+        _sb.Append($"Current Ammo : {_playerHead.CurrentWeapon.CurrentAmmo}\n");
         _sb.Append($"Reloading Timer : {_playerHead._reloadingTimer}\n");
-        _sb.Append($"Current Max Ammo : {_playerHead.CurrentMaxAmmo}\n");
+        _sb.Append($"Current Max Ammo : {_playerHead.CurrentWeapon.CurrentMaxAmmo}\n");
         _sb.Append($"Shooting : {_playerHead._shooting}\n");
         _sb.Append($"Hitbox Enabled : {_playerHead._hitboxEnabled}\n");
         _label.Text = _sb.ToString();

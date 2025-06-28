@@ -22,6 +22,8 @@ public static class InputHash
     public const string NOCLUPDOWN = "noclip_down";
     // Keys
     public const string K_CTRL = "K_CTRL";
+    public const string K_E = "K_E";
+    public const string K_Q = "K_Q";
     public const string K_ENTER = "K_ENTER";
     public const string K_ESC = "K_ESC";
     public const string K_TAB = "K_TAB";

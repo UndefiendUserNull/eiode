@@ -3,29 +3,29 @@ using EIODE.Resources;
 using EIODE.Core.Console;
 using EIODE.Utils;
 using EIODE.Core;
-using Godot;
-using System.IO;
+using System.Collections.Generic;
 using System;
+using Godot;
+using System.Linq;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
 {
     [Export] public float ShootingRayLength { get; set; } = -1000;
-    [Export] private WeaponConfig WeaponResource { get; set; } = null;
 
     [Export] public float CameraTiltSpeed { get; set; } = 10f;
 
     [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
-    public WeaponConfig W { get; private set; } = null;
+    public WeaponConfig CurrentWeapon { get; private set; } = null;
 
+    public List<WeaponConfig> WeaponsInventory { get; private set; } = [];
+    private int _currentWeaponIndex = 0;
     public bool _shooting = false;
     public bool _reloading = false;
     // used in special cases
     private bool _magazineFull = false;
     public bool _magazineEmpty = false;
     public float _shootingTime = 0.0f;
-    public int CurrentAmmo { get; private set; } = 0;
-    public int CurrentMaxAmmo { get; private set; } = 0;
     public float _reloadingTimer = 0f;
     public bool _hitboxEnabled = false;
     private bool _hitboxTimerEnded = false;
@@ -37,42 +37,41 @@ public partial class Head : Node3D
     private Player _player = null;
     public Camera3D Camera { get; private set; } = null;
 
-    private const string WEAPONS_PATH = "res://Resources/Gun Types/";
     private const float MIN_PITCH = -90f;
     private const float MAX_PITCH = 90f;
 
     [Signal] public delegate void AmmoChangedEventHandler(WeaponConfig weapon);
-    [Signal] public delegate void GunSettingsChangedEventHandler(WeaponConfig previous, WeaponConfig current);
+    [Signal] public delegate void WeaponChangedEventHandler(WeaponConfig current);
     [Signal] public delegate void StartedReloadingEventHandler();
     [Signal] public delegate void EndedReloadingEventHandler();
 
     public override void _Ready()
     {
-        if (WeaponResource == null) GD.PushError("No weapon was given to player");
-        else W = WeaponResource;
-
         _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
 
         // There should be only one timer as a child for the "Head" node
         _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
 
-        _hitbox.Damage = W.damagePerBullet;
         _hitbox.Disable();
-
-        CurrentAmmo = W.magazineSize;
-        CurrentMaxAmmo = W.maxAmmo;
 
         _parent = GetParent<Node3D>();
 
-        EmitSignalAmmoChanged(W);
+        EmitSignalAmmoChanged(CurrentWeapon);
 
         Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
 
         ConsoleCommandSystem.RegisterInstance(this);
 
         _game = Game.GetGame(this);
+
         _player = _game.Player;
         _console = _game.Console;
+
+        // call me lazy but this works
+        Cc_TankUp(0);
+        ChangeCurrentWeapon(0, true);
+        _hitbox.Damage = CurrentWeapon.DamagePerBullet;
+
     }
 
     public override void _Input(InputEvent @event)
@@ -103,31 +102,38 @@ public partial class Head : Node3D
         HandleShooting(delta);
         CameraTilting(delta, _player.InputDirection);
 
-        if (W != WeaponResource)
+        if (CurrentWeapon != WeaponsInventory[_currentWeaponIndex])
         {
-            W = WeaponResource;
-            CurrentAmmo = W.magazineSize;
-            CurrentMaxAmmo = W.maxAmmo;
-            EmitSignalGunSettingsChanged(W, WeaponResource);
+            CurrentWeapon = WeaponsInventory[_currentWeaponIndex];
+            EmitSignalWeaponChanged(CurrentWeapon);
+        }
+
+        if (Input.IsActionJustPressed(InputHash.K_E))
+        {
+            ChangeCurrentWeapon(_currentWeaponIndex + 1);
+        }
+        if (Input.IsActionJustPressed(InputHash.K_Q))
+        {
+            ChangeCurrentWeapon(_currentWeaponIndex - 1);
         }
     }
 
 
     private void HandleShooting(double delta)
     {
-        if (!_shooting && _shootingTime <= W.fireRate)
+        if (!_shooting && _shootingTime <= CurrentWeapon.FireRate)
         {
             _shootingTime += (float)delta;
         }
 
-        if (_hitboxEnabled && _shootingTime >= W.HitboxDuration)
+        if (_hitboxEnabled && _shootingTime >= CurrentWeapon.HitboxDuration)
         {
             _hitbox.Disable();
             _hitboxEnabled = false;
         }
 
-        _magazineEmpty = CurrentAmmo <= 0;
-        _magazineFull = CurrentAmmo == W.magazineSize;
+        _magazineEmpty = CurrentWeapon.CurrentAmmo <= 0;
+        _magazineFull = CurrentWeapon.CurrentAmmo == CurrentWeapon.MagazineSize;
 
         if (Input.IsActionJustPressed(InputHash.RELOAD) && CanReload())
         {
@@ -147,8 +153,8 @@ public partial class Head : Node3D
         _hitbox.Enable();
         _hitboxEnabled = true;
         _shootingTime = 0;
-        CurrentAmmo--;
-        EmitSignalAmmoChanged(W);
+        CurrentWeapon.CurrentAmmo--;
+        EmitSignalAmmoChanged(CurrentWeapon);
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
         _shooting = false;
     }
@@ -156,31 +162,32 @@ public partial class Head : Node3D
     private void Reload(double delta)
     {
         _reloadingTimer += (float)delta;
-        if (_reloadingTimer >= W.reloadTime)
+        if (_reloadingTimer >= CurrentWeapon.ReloadTime)
         {
             EmitSignalEndedReloading();
             _reloading = false;
-            int ammoNeeded = W.magazineSize - CurrentAmmo;
-            int ammoToTake = Mathf.Min(ammoNeeded, CurrentMaxAmmo);
-            CurrentAmmo += ammoToTake;
-            CurrentMaxAmmo -= ammoToTake;
+            int ammoNeeded = CurrentWeapon.MagazineSize - CurrentWeapon.CurrentAmmo;
+            int ammoToTake = Mathf.Min(ammoNeeded, CurrentWeapon.CurrentMaxAmmo);
+            CurrentWeapon.CurrentAmmo += ammoToTake;
+            CurrentWeapon.CurrentMaxAmmo -= ammoToTake;
             _reloadingTimer = 0f;
-            EmitSignalAmmoChanged(W);
+            EmitSignalAmmoChanged(CurrentWeapon);
         }
     }
 
     private bool CanShoot()
     {
-        return !_reloading && _shootingTime >= W.fireRate && !_magazineEmpty;
+        return !_reloading && _shootingTime >= CurrentWeapon.FireRate && !_magazineEmpty;
     }
 
     private bool CanReload()
     {
-        return !_reloading && !_magazineFull && CurrentMaxAmmo > 0;
+        return !_reloading && !_magazineFull && CurrentWeapon.CurrentMaxAmmo > 0;
     }
+
     private bool GetShootingPressed()
     {
-        return (W.auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
+        return (CurrentWeapon.Auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
     }
     private void CameraTilting(double delta, Vector2 _inputDirection)
     {
@@ -199,19 +206,79 @@ public partial class Head : Node3D
         Rotation = rot;
     }
 
-    #region CC
-    [ConsoleCommand("change_weapon", "Changes current weapon (string)", true)]
-    public void Cc_ChangeWeapon(string weaponPath)
+    private void AddWeaponToInventory(WeaponConfig weapon, bool replaceAll = false)
     {
-        string weaponPathCombined = Path.Combine(WEAPONS_PATH, weaponPath + ".tres");
-        var loadedWeapon = ResourceLoader.Load<WeaponConfig>(weaponPathCombined);
-        if (loadedWeapon != null)
+        bool weaponExistsInInventory = WeaponsInventory.Contains(weapon);
+
+        if (!weaponExistsInInventory || replaceAll)
         {
-            WeaponResource = loadedWeapon;
-            _game.Console?.Log($"Changed current weapon to {loadedWeapon}");
+            weapon.CurrentAmmo = weapon.MagazineSize;
+            weapon.CurrentMaxAmmo = weapon.MaxAmmo;
+
+            if (replaceAll && weaponExistsInInventory)
+            {
+                WeaponsInventory.RemoveAll(x => x == weapon);
+            }
+
+            if (!weaponExistsInInventory)
+            {
+                WeaponsInventory.Add(weapon);
+            }
+        }
+
+        _console?.Log($"Added {weapon.Name}, Count : {WeaponsInventory.Count}");
+    }
+
+    private void AddWeaponToInventory(ReadOnlySpan<string> weapons)
+    {
+        foreach (var weapon in weapons)
+        {
+            AddWeaponToInventory(_game.FindWeapon(weapon));
+        }
+    }
+
+    private void ReplaceInventory(WeaponConfig[] newInventory)
+    {
+        WeaponsInventory = [.. newInventory];
+    }
+
+    private void ChangeCurrentWeapon(int index, bool forceSet = false)
+    {
+        if (forceSet)
+        {
+            CurrentWeapon = WeaponsInventory[index];
         }
         else
-            _game.Console?.Log($"Couldn't find a gun at {weaponPathCombined}", DevConsole.LogLevel.ERROR);
+        {
+            if (_currentWeaponIndex == index) return;
+
+            if (index > WeaponsInventory.Count - 1) index = 0;
+
+            if (index < 0) index = WeaponsInventory.Count - 1;
+
+            _currentWeaponIndex = index;
+            CurrentWeapon = WeaponsInventory[_currentWeaponIndex];
+        }
+
+        EmitSignalAmmoChanged(CurrentWeapon);
+        EmitSignalWeaponChanged(CurrentWeapon);
+    }
+
+    #region CC
+    [ConsoleCommand("tank_up", "Gives all weapons of given set (0 | 1 | 2 | 3)", true)]
+    public void Cc_TankUp(int set)
+    {
+        switch (set)
+        {
+            case 0:
+                AddWeaponToInventory(WeaponsSets.SET_0);
+                break;
+            case 1:
+                AddWeaponToInventory(WeaponsSets.SET_1);
+                break;
+            default:
+                break;
+        }
     }
 
     [ConsoleCommand("current_weapon_set", "Change a setting of the current gun settings (cammo int, mammo int, damage int)")]
@@ -220,17 +287,17 @@ public partial class Head : Node3D
         switch (type)
         {
             case "cammo":
-                CurrentAmmo = amount;
-                EmitSignalAmmoChanged(W);
+                CurrentWeapon.CurrentAmmo = amount;
+                EmitSignalAmmoChanged(CurrentWeapon);
                 _console?.Log($"Changed current ammo to be {amount}");
                 break;
             case "mammo":
-                CurrentMaxAmmo = amount;
-                EmitSignalAmmoChanged(W);
+                CurrentWeapon.CurrentMaxAmmo = amount;
+                EmitSignalAmmoChanged(CurrentWeapon);
                 _console?.Log($"Changed max ammo to be {amount}");
                 break;
             case "damage":
-                _hitbox.Damage = amount;
+                CurrentWeapon.DamagePerBullet = amount;
                 _console?.Log($"Changed current damage to be {amount}");
                 break;
             default:
