@@ -17,24 +17,27 @@ public partial class HUD : Control
     private int _currentMaxAmmo = 0;
     private Game _game = null;
     private string _text_ammo = string.Empty;
+    private WeaponConfig _hands = null;
+    private bool _holdingHands = false;
 
     public override void _Ready()
     {
         _game = Game.GetGame(this);
+        _hands = _game.FindWeapon("hands");
+
         _head = _game.GetPlayer().GetHead();
         _container = NodeUtils.GetChildWithName<VBoxContainer>("V", this);
 
         _head.AmmoChanged += Head_AmmoChanged;
         _head.StartedReloading += Head_StartedReloading;
         _head.EndedReloading += Head_EndedReloading;
-        _head.GunSettingsChanged += Head_GunSettingsChanged;
+        _head.WeaponChanged += Head_WeaponChanged;
 
         _label_reloading = NodeUtils.GetChildWithName<Label>("l_reloading", _container);
         _label_ammo = NodeUtils.GetChildWithName<Label>("l_ammo", _container);
         _label_weaponName = NodeUtils.GetChildWithName<Label>("l_weaponName", _container);
 
-        _currentAmmo = _head.CurrentAmmo;
-        RefreshWeapon(_head.W);
+        RefreshWeapon(_head.CurrentWeapon);
         _label_reloading.Hide();
 
         ConsoleCommandSystem.RegisterInstance(this);
@@ -48,9 +51,9 @@ public partial class HUD : Control
         _head.AmmoChanged -= Head_AmmoChanged;
         _head.StartedReloading -= Head_StartedReloading;
         _head.EndedReloading -= Head_EndedReloading;
-        _head.GunSettingsChanged -= Head_GunSettingsChanged;
+        _head.WeaponChanged -= Head_WeaponChanged;
     }
-    private void Head_GunSettingsChanged(WeaponConfig previous, WeaponConfig current)
+    private void Head_WeaponChanged(WeaponConfig current)
     {
         RefreshWeapon(current);
     }
@@ -72,8 +75,25 @@ public partial class HUD : Control
 
     private void RefreshWeapon(WeaponConfig weapon)
     {
-        int currentAmmo = _head.CurrentAmmo;
-        int currentMaxAmmo = _head.CurrentMaxAmmo;
+        _holdingHands = weapon == _hands;
+
+        if (_holdingHands)
+        {
+            _label_reloading.Hide();
+            _label_ammo.Hide();
+            _label_weaponName.Hide();
+        }
+        else
+        {
+            if (!(_label_ammo.Visible || _label_weaponName.Visible))
+            {
+                _label_ammo.Show();
+                _label_weaponName.Show();
+            }
+        }
+
+        int currentAmmo = _head.CurrentWeapon.CurrentAmmo;
+        int currentMaxAmmo = _head.CurrentWeapon.CurrentMaxAmmo;
 
         _currentAmmo = currentAmmo;
         _currentMaxAmmo = currentMaxAmmo;

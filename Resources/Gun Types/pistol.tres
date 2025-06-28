@@ -4,12 +4,12 @@
 
 [resource]
 script = ExtResource("1_f47f8")
-Name = "Pistol"
-damagePerBullet = 10
-fireRate = 0.5
-maxAmmo = 7
-magazineSize = 70
+Name = "pistol"
+DamagePerBullet = 10
+FireRate = 0.5
+MaxAmmo = 255
+MagazineSize = 7
 HitboxDuration = 0.03
-reloadTime = 2.0
-auto = true
-metadata/_custom_type_script = "uid://dcmwybabtxm2k"
+ReloadTime = 1.0
+Auto = false
+Infinity = false

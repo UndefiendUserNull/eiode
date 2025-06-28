@@ -4,12 +4,12 @@
 
 [resource]
 script = ExtResource("1_fnt4j")
-Name = "SMG"
-damagePerBullet = 2
-fireRate = 0.05
-maxAmmo = 500
-magazineSize = 100
+Name = "smg"
+DamagePerBullet = 5
+FireRate = 0.15
+MaxAmmo = 500
+MagazineSize = 50
 HitboxDuration = 0.05
-reloadTime = 1.0
-auto = true
-metadata/_custom_type_script = "uid://dcmwybabtxm2k"
+ReloadTime = 1.5
+Auto = true
+Infinity = false

@@ -6,9 +6,12 @@ namespace EIODE.Components;
 public partial class HurtboxComponent : Area3D, IComponent
 {
     public HealthComponent HealthComponent { get; private set; }
+    private Node3D _parent = null;
 
     public override void _Ready()
     {
+        _parent = GetParent<Node3D>();
+
         if (ComponentsUtils.GetChildWithComponent<HealthComponent>(GetParent()) != null)
             HealthComponent = ComponentsUtils.GetChildWithComponent<HealthComponent>(GetParent());
         else
@@ -22,7 +25,11 @@ public partial class HurtboxComponent : Area3D, IComponent
 
     private void HealthComponent_OnTakeDamage()
     {
-        Game.GetGame(this).Console?.Log($"{GetParent().Name} : {HealthComponent.CurrentHealth}");
+        if (NodeUtils.GetChildrenWithNodeType<Label3D>(GetParent()) != null)
+        {
+            var label = NodeUtils.GetChildWithNodeType<Label3D>(GetParent());
+            label.Text = HealthComponent.CurrentHealth.ToString();
+        }
     }
 
     private void HealthComponent_OnDeath()

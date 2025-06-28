@@ -2135,6 +2135,7 @@ mesh_vector_data = SubResource("Resource_dfjwe")
 materials = Array[Material]([ExtResource("6_71q37")])
 
 [node name="hints" type="Node3D" parent="."]
+visible = false
 
 [node name="main" type="Label3D" parent="hints"]
 transform = Transform3D(0.878934, 0, 0.476944, 0, 1, 0, -0.476944, 0, 0.878934, -3.76076, 6.14536, -55.7156)
@@ -2164,7 +2165,5 @@ NextScene = ExtResource("9_71q37")
 
 [node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]
 
-[node name="trigger_visibility" parent="." node_paths=PackedStringArray("Target") instance=ExtResource("12_50cie")]
+[node name="trigger_visibility" parent="." instance=ExtResource("12_50cie")]
 transform = Transform3D(4.1, 0, 0, 0, 4, 0, 0, 0, 13, 0, 3, -53.6)
-Target = NodePath("../hints")
-ShowOnlyWhileInside = true

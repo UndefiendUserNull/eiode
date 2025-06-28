@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponConfig" load_steps=2 format=3 uid="uid://bit3pn1hwgty5"]
+
+[ext_resource type="Script" uid="uid://djwk13ihy41gu" path="res://Resources/Src/WeaponConfig.cs" id="1_bbqge"]
+
+[resource]
+script = ExtResource("1_bbqge")
+Name = "hands"
+DamagePerBullet = 1
+FireRate = 1.0
+MaxAmmo = 9999999
+MagazineSize = 9999999
+HitboxDuration = 0.1
+ReloadTime = 0.0
+Auto = true
+Infinity = false
+Range = 5.0

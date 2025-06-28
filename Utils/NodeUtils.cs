@@ -7,15 +7,37 @@ namespace EIODE.Utils;
 public static class NodeUtils
 {
     /// <summary>
+    /// Checks if tha parent has any children
+    /// </summary>
+    public static bool CheckForChildren(Node parent)
+    {
+        if (parent.GetChildCount() == 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    private static bool CheckIfNull(Node node)
+    {
+        if (node == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private static bool Check(Node node)
+    {
+        return CheckIfNull(node) && CheckForChildren(node);
+    }
+
+    /// <summary>
     /// Searches parent's children for the first child it founds that's of type <typeparamref name="T"/>
     /// </summary>
     public static T GetChildWithNodeType<T>(Node parent) where T : Node
     {
-        if (parent == null)
-        {
-            GD.PushError("Null " + nameof(parent));
-            return default;
-        }
+
+        if (!Check(parent)) return default;
 
         foreach (Node child in parent.GetChildren())
         {
@@ -40,13 +62,9 @@ public static class NodeUtils
     /// </summary>
     public static T[] GetChildrenWithNodeType<T>(Node parent) where T : Node
     {
-        List<T> result = [];
+        if (!Check(parent)) return default;
 
-        if (parent == null)
-        {
-            GD.PushError("Null " + nameof(parent));
-            return default;
-        }
+        List<T> result = [];
 
         foreach (Node child in parent.GetChildren())
         {
@@ -70,11 +88,7 @@ public static class NodeUtils
     /// </summary>
     public static T GetChildWithName<T>(string name, Node parent, bool caseSensitive = false) where T : Node
     {
-        if (parent == null)
-        {
-            GD.PushError("Couldn't find parent " + nameof(parent));
-            return default;
-        }
+        if (!Check(parent)) return default;
 
         if (caseSensitive)
         {
@@ -101,6 +115,8 @@ public static class NodeUtils
     /// </summary>
     public static List<T> GetAllChildren<T>(Node parent) where T : Node
     {
+        if (Check(parent)) return default;
+
         List<T> result = [];
         foreach (Node child in parent.GetChildren())
         {

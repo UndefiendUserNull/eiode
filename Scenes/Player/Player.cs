@@ -5,9 +5,9 @@ using EIODE.Utils;
 using EIODE.Scenes.Objects;
 using EIODE.Scenes.Triggers;
 using System.Collections.Generic;
+using System.Linq;
 using System;
 using Godot;
-using System.Linq;
 
 namespace EIODE.Scenes;
 public partial class Player : CharacterBody3D, ITriggerable
@@ -509,7 +509,7 @@ public partial class Player : CharacterBody3D, ITriggerable
     [ConsoleCommand("set_position_as_reset", "Sets PlayerSpawnPosition to the current position", true)]
     public void Cc_SetCurrentPositionAsReset()
     {
-        Game.PlayerSpawnPosition = Position;
+        Game.GetGame(this).SetPlayerSpawnPosition(Position);
         Velocity = Vector3.Zero;
         _console?.Log($"Reset position set to {Game.PlayerSpawnPosition}");
     }

@@ -2,17 +2,19 @@ using EIODE.Scenes;
 using EIODE.Core.Console;
 using EIODE.Scenes.Debug;
 using EIODE.Utils;
+using EIODE.Resources;
+using EIODE.Scenes.Triggers;
+using System.Collections.Generic;
 using System.IO;
 using Godot;
-using EIODE.Scenes.Triggers;
 
 namespace EIODE.Core;
 
 public partial class Game : Node
 {
     [Export] public PackedScene FirstLevelToLoad;
-    public static Vector3 PlayerSpawnPosition = new(0, 15, 0);
     [Export] public bool Disabled { get; set; }
+    public static Vector3 PlayerSpawnPosition { get; private set; } = Vector3.Zero;
     private bool _playerReady = false;
     private bool _isMouseShowed = false;
     private DebugUi _debugUi = null;
@@ -21,29 +23,13 @@ public partial class Game : Node
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
+    private const string WEAPONS_PATH = "res://Resources/Gun Types/";
+
+    private static Dictionary<string, WeaponConfig> _weaponsLookup = [];
 
     public override void _Ready()
     {
-        var args = System.Environment.GetCommandLineArgs();
-
-        if (args.Length > 0)
-        {
-            foreach (var arg in args)
-            {
-                switch (arg.ToLower())
-                {
-                    case "--cache-levels":
-                        LevelLoader.Cc_CacheAllLevels();
-                        break;
-                    case "--disable-game":
-                        Disabled = true;
-                        break;
-                    case "--1080p":
-                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
-                        break;
-                }
-            }
-        }
+        ParseArgs();
 
         if (Disabled)
         {
@@ -51,15 +37,18 @@ public partial class Game : Node
             return;
         }
 
+
         ConsoleCommandSystem.Initialize();
 
         SetConsole();
         SpawnPlayer();
         LoadFirstLevel();
         SpawnDebugUI(false);
+        _weaponsLookup = LoadAllWeapons();
         HideMouse();
 
         ConsoleCommandSystem.RegisterInstance(this);
+
 
         Console?.Log("Game _Ready finished");
     }
@@ -73,8 +62,6 @@ public partial class Game : Node
     {
         DevConsole.Instance?.Log("Loading first level.");
         LevelLoader.Instance.ChangeLevel(FirstLevelToLoad, false);
-        // idk why the fuck that works instead of setting the position directly
-        Player.SetDeferred(Node3D.PropertyName.GlobalPosition, PlayerSpawnPosition);
     }
     public Player GetPlayer()
     {
@@ -90,6 +77,11 @@ public partial class Game : Node
     public static Game GetGame(Node placeHolder)
     {
         return placeHolder.GetTree().Root.GetNode<Game>(Location);
+    }
+
+    public void SetPlayerSpawnPosition(Vector3 newPos)
+    {
+        PlayerSpawnPosition = newPos;
     }
 
     public override void _Input(InputEvent @event)
@@ -109,6 +101,46 @@ public partial class Game : Node
     public static void HideMouse()
     {
         Input.MouseMode = Input.MouseModeEnum.Captured;
+    }
+
+    public static Dictionary<string, WeaponConfig> LoadAllWeapons()
+    {
+        Dictionary<string, WeaponConfig> loadedWeapons = [];
+        foreach (var weaponPath in ResourceLoader.ListDirectory(WEAPONS_PATH))
+        {
+            var currentWeapon = ResourceLoader.Load<WeaponConfig>(Path.Combine(WEAPONS_PATH, weaponPath));
+            loadedWeapons.Add(currentWeapon.Name, currentWeapon);
+        }
+        return loadedWeapons;
+    }
+
+    public WeaponConfig FindWeapon(string name)
+    {
+        // Lazy initialize the lookup if empty
+        _weaponsLookup ??= LoadAllWeapons();
+
+        return _weaponsLookup.TryGetValue(name, out var weapon) ? weapon : null;
+    }
+
+    public WeaponConfig[] FindWeapons(params string[] names)
+    {
+        var result = new List<WeaponConfig>();
+
+        foreach (var item in _weaponsLookup)
+        {
+            Console.Log(item.ToString());
+        }
+
+        foreach (var name in names)
+        {
+            if (_weaponsLookup.TryGetValue(name.ToLower(), out var weapon))
+            {
+                result.Add(weapon);
+                Console?.Log(weapon.Name + " was Found");
+            }
+        }
+
+        return result.ToArray();
     }
 
     private void SpawnPlayer()
@@ -133,43 +165,52 @@ public partial class Game : Node
         Console?.Log("Debug UI Created.");
     }
 
-    #region CC
-
-    [ConsoleCommand("change_level", "Changes levels to given level name (string)")]
-    public void Cc_ChangeLevel(string levelName)
+    private void ParseArgs()
     {
-        var path = Path.Combine(LevelLoader.LEVELS_PATH, levelName.EndsWith(".tscn") ? levelName : levelName + ".tscn");
+        var args = System.Environment.GetCommandLineArgs();
 
-
-        if (ResourceLoader.Exists(path))
+        if (args.Length > 0)
         {
-            PackedScene level = LevelLoader.LoadLevel(path);
-            LevelLoader.Instance.ChangeLevel(level);
-        }
-        else
-        {
-            Console?.Log($"Level at {path} was not found", DevConsole.LogLevel.ERROR);
+            foreach (var arg in args)
+            {
+                switch (arg.ToLower())
+                {
+                    case "--cache-levels":
+                        LevelLoader.Cc_CacheAllLevels();
+                        break;
+                    case "--disable-game":
+                        Disabled = true;
+                        break;
+                    case "--1080p":
+                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
+                        break;
+                }
+            }
         }
     }
 
-    [ConsoleCommand("triggers_visual", "Show or hide all trigger visibility visual in current scene (show | hide)")]
-    public void Cc_HideTriggersVisual(string arg)
+    #region CC
+
+
+
+    [ConsoleCommand("triggers_visual_visible", "Show or hide all trigger visibility visual in current scene (1 | 0)")]
+    public void Cc_HideTriggersVisual(int arg)
     {
         var triggersFound = NodeUtils.GetChildrenWithNodeType<TriggerVisibility>(LevelLoader.Instance.CurrentLevel);
         if (triggersFound.Length > 0)
         {
             foreach (var trigger in triggersFound)
             {
-                switch (arg.ToLower())
+                switch (arg)
                 {
-                    case "hide":
+                    case 0:
                         trigger.HideTriggerVisual();
                         break;
-                    case "show":
+                    case 1:
                         trigger.ShowTriggerVisual();
                         break;
                     default:
-                        Console?.Log($"Excepted either \"show\" or \"hide\", received {arg}");
+                        Console?.Log($"Excepted either \"0 (hide)\" or \"1 (show)\", received {arg}");
                         break;
                 }
             }

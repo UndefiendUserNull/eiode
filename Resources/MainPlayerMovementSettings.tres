@@ -18,4 +18,4 @@ NoClipSpeed = 2.0
 JumpModifier = 11.5
 JumpBufferingTime = 0.12
 CoyoteTime = 0.15
-MaxLunchPadForce = 250.0
+MaxJumpPadPower = 350.0
