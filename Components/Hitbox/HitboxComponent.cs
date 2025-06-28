@@ -33,9 +33,9 @@ public partial class HitboxComponent : Area3D, IComponent
 
     private void HitboxComponent_AreaEntered(Area3D area)
     {
-        if (ComponentsUtils.GetChildWithComponent<HealthComponent>(area) is HealthComponent hc)
+        if (area is HurtboxComponent hurtBox)
         {
-            hc.TakeDamage(Damage);
+            hurtBox.TakeDamage(Damage);
         }
     }
     public HitboxComponent() { }

@@ -150,6 +150,7 @@ public partial class Head : Node3D
     private void Shoot()
     {
         _shooting = true;
+        _hitbox.Damage = CurrentWeapon.DamagePerBullet;
         _hitbox.Enable();
         _hitboxEnabled = true;
         _shootingTime = 0;
@@ -189,6 +190,7 @@ public partial class Head : Node3D
     {
         return (CurrentWeapon.Auto ? Input.IsActionPressed(InputHash.SHOOT) : Input.IsActionJustPressed(InputHash.SHOOT)) && CanShoot();
     }
+
     private void CameraTilting(double delta, Vector2 _inputDirection)
     {
         float desiredZRotation;
