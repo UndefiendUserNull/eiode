@@ -24,26 +24,7 @@ public partial class Game : Node
 
     public override void _Ready()
     {
-        var args = System.Environment.GetCommandLineArgs();
-
-        if (args.Length > 0)
-        {
-            foreach (var arg in args)
-            {
-                switch (arg.ToLower())
-                {
-                    case "--cache-levels":
-                        LevelLoader.Cc_CacheAllLevels();
-                        break;
-                    case "--disable-game":
-                        Disabled = true;
-                        break;
-                    case "--1080p":
-                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
-                        break;
-                }
-            }
-        }
+        ParseArgs();
 
         if (Disabled)
         {
@@ -131,6 +112,30 @@ public partial class Game : Node
 
         GetTree().Root.CallDeferred(MethodName.AddChild, _debugUi);
         Console?.Log("Debug UI Created.");
+    }
+
+    private void ParseArgs()
+    {
+        var args = System.Environment.GetCommandLineArgs();
+
+        if (args.Length > 0)
+        {
+            foreach (var arg in args)
+            {
+                switch (arg.ToLower())
+                {
+                    case "--cache-levels":
+                        LevelLoader.Cc_CacheAllLevels();
+                        break;
+                    case "--disable-game":
+                        Disabled = true;
+                        break;
+                    case "--1080p":
+                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
+                        break;
+                }
+            }
+        }
     }
 
     #region CC
