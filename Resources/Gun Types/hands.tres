@@ -12,3 +12,5 @@ MagazineSize = 9999999
 HitboxDuration = 0.1
 ReloadTime = 0.0
 Auto = true
+Infinity = false
+Range = 5.0
