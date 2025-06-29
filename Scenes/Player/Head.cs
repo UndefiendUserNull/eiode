@@ -29,7 +29,7 @@ public partial class Head : Node3D
     public float _reloadingTimer = 0f;
     private const float MIN_PITCH = -90f;
     private const float MAX_PITCH = 90f;
-    private HitboxComponent _hitbox = null;
+    private RaycastHitboxComponent _hitbox = null;
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
     private Game _game = null;
@@ -46,7 +46,7 @@ public partial class Head : Node3D
 
     public override void _Ready()
     {
-        _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
+        _hitbox = ComponentsUtils.GetChildWithComponent<RaycastHitboxComponent>(this);
 
         // There should be only one timer as a child for the "Head" node
         _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
@@ -69,6 +69,7 @@ public partial class Head : Node3D
         // call me lazy but this works
         Cc_TankUp(0);
         ChangeCurrentWeapon(0, true);
+
         if (CurrentWeapon != null)
             _hitbox.Damage = CurrentWeapon.DamagePerBullet;
         else
@@ -85,6 +86,7 @@ public partial class Head : Node3D
         if (@event is InputEventJoypadMotion joypadMotion)
             JoyPadCameraRotation(joypadMotion);
     }
+
     private void CameraRotation(InputEventMouseMotion e)
     {
         // horizontal

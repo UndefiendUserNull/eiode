@@ -18,8 +18,16 @@ public partial class WeaponConfig : Resource
     // Default value is enough for most weapons
     // for melee weapons you may change this with a shorter range value
     [Export] public float Range { get; set; } = 10000f;
+    [Export] public WeaponType WeaponType { get; set; } = WeaponType.RAYCAST;
     public int CurrentAmmo { get; set; } = 0;
     public int CurrentMaxAmmo { get; set; } = 0;
 
+
     public WeaponConfig() { }
+}
+
+public enum WeaponType
+{
+    RAYCAST,
+    PROJECTILE
 }

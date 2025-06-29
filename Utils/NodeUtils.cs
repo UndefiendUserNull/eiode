@@ -1,7 +1,8 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.Linq;
 
 namespace EIODE.Utils;
 
@@ -146,5 +147,74 @@ public static class NodeUtils
             return default;
         }
     }
+
+    public static Array<T> SortByDistance<[MustBeVariant] T>(Array<T> nodes, Vector3 globalPosition) where T : Node3D
+    {
+        T[] array = nodes.ToArray();
+
+        System.Array.Sort(array, (x, y) =>
+        {
+            float distX = x.GlobalPosition.DistanceSquaredTo(globalPosition);
+            float distY = y.GlobalPosition.DistanceSquaredTo(globalPosition);
+            return distX.CompareTo(distY);
+        });
+
+        Array<T> result = [];
+        foreach (T node in array)
+        {
+            result.Add(node);
+        }
+
+        return result;
+    }
+
+    public static Array<T> RemoveDuplicates<[MustBeVariant] T>(Array<T> array)
+    {
+        if (array.Count == 0) return array;
+
+        List<T> tList = [];
+        int tListCount = tList.Count;
+
+        for (int i = 0; i < tListCount; i++)
+        {
+            for (int j = i + 1; j < tListCount; j++)
+            {
+                if (tList[i].Equals(tList[j]))
+                {
+                    tList.RemoveAt(i);
+                    j--;
+                }
+            }
+        }
+
+        return ToGodotArray(tList);
+    }
+
+    public static Array<T> ToGodotArray<[MustBeVariant] T>(List<T> list)
+    {
+        Array<T> result = [];
+        foreach (var item in list)
+        {
+            result.Add(item);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Modifies given array instead of returning a new one, uses less memory 
+    /// </summary>
+    public static void SortByDistanceModified<[MustBeVariant] T>(ref Array<T> nodes, Vector3 globalPosition) where T : Node3D
+    {
+        T[] array = nodes.ToArray();
+        System.Array.Sort(array, (x, y) =>
+        {
+            float distX = x.GlobalPosition.DistanceSquaredTo(globalPosition);
+            float distY = y.GlobalPosition.DistanceSquaredTo(globalPosition);
+            return distX.CompareTo(distY);
+        });
+
+        nodes = [.. array];
+    }
+
 }
 

@@ -13,3 +13,5 @@ HitboxDuration = 0.03
 ReloadTime = 1.0
 Auto = false
 Infinity = false
+Range = 50.0
+WeaponType = 0
