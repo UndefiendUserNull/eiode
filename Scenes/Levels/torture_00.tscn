@@ -1,5 +1,6 @@
-[gd_scene load_steps=231 format=3 uid="uid://3qacp3vmfx4d"]
+[gd_scene load_steps=232 format=3 uid="uid://3qacp3vmfx4d"]
 
+[ext_resource type="PackedScene" uid="uid://dfad330psc4sv" path="res://Utils/spawn.tscn" id="1_oroyq"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_s8tah"]
 [ext_resource type="Script" uid="uid://bayqxo5eyv602" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="2_g04a5"]
 [ext_resource type="Script" uid="uid://bwdpt27bu7ylf" path="res://addons/cyclops_level_builder/resources/data_vector_int.gd" id="3_0v7wn"]
@@ -2245,8 +2246,8 @@ fog_density = 0.001
 
 [node name="torture_00" type="Node3D"]
 
-[node name="SPAWN" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+[node name="SPAWN" parent="." instance=ExtResource("1_oroyq")]
+transform = Transform3D(0.565, 0, 0, 0, 1.88, 0, 0, 0, 1, 0, 2.29069, 0)
 
 [node name="blocks" type="Node3D" parent="."]
 

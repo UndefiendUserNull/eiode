@@ -1,6 +1,7 @@
-[gd_scene load_steps=65 format=4 uid="uid://nlncoyinij8m"]
+[gd_scene load_steps=66 format=4 uid="uid://nlncoyinij8m"]
 
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_25gtk"]
+[ext_resource type="PackedScene" uid="uid://dfad330psc4sv" path="res://Utils/spawn.tscn" id="1_veq20"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_aun2p"]
 _surfaces = [{
@@ -662,6 +663,8 @@ tonemap_white = 1.5
 glow_enabled = true
 
 [node name="platformer_02" type="Node3D"]
+
+[node name="SPAWN" parent="." instance=ExtResource("1_veq20")]
 
 [node name="blocks" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)

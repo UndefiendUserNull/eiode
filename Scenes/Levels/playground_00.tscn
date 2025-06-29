@@ -1,5 +1,6 @@
-[gd_scene load_steps=67 format=4 uid="uid://q80pdy7tl5qt"]
+[gd_scene load_steps=68 format=4 uid="uid://q80pdy7tl5qt"]
 
+[ext_resource type="PackedScene" uid="uid://dfad330psc4sv" path="res://Utils/spawn.tscn" id="1_dbhn4"]
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_uj8tf"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="2_a3sed"]
 [ext_resource type="Script" uid="uid://bayqxo5eyv602" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="3_csla5"]
@@ -577,6 +578,8 @@ face_vertex_data = {
 }
 
 [node name="playground_00" type="Node3D"]
+
+[node name="SPAWN" parent="." instance=ExtResource("1_dbhn4")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_dbhn4")

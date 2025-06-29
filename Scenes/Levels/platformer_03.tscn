@@ -1,5 +1,6 @@
-[gd_scene load_steps=208 format=3 uid="uid://bicvs6tluxt6m"]
+[gd_scene load_steps=209 format=3 uid="uid://bicvs6tluxt6m"]
 
+[ext_resource type="PackedScene" uid="uid://dfad330psc4sv" path="res://Utils/spawn.tscn" id="1_epcrx"]
 [ext_resource type="Script" uid="uid://bjduqx2gpi740" path="res://addons/cyclops_level_builder/nodes/cyclops_block.gd" id="1_rbn3s"]
 [ext_resource type="PackedScene" uid="uid://drktgix0fsk7b" path="res://Scenes/Objects/jump_pad.tscn" id="1_tbxpd"]
 [ext_resource type="Script" uid="uid://bayqxo5eyv602" path="res://addons/cyclops_level_builder/resources/data_vector_byte.gd" id="2_tbxpd"]
@@ -1979,6 +1980,8 @@ face_vertex_data = {
 }
 
 [node name="platformer_03" type="Node3D"]
+
+[node name="SPAWN" parent="." instance=ExtResource("1_epcrx")]
 
 [node name="Blocks" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -1, 0)

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace EIODE.Utils;
 
@@ -106,7 +107,7 @@ public static class NodeUtils
         }
 
 
-        GD.PushError($"Couldn't find child with name {name} in {parent}");
+        GD.PushWarning($"Couldn't find child with name {name} in {parent}");
         return default;
     }
 
