@@ -28,7 +28,6 @@ public partial class TriggerVisibility : Trigger
         _triggerVisual = NodeUtils.GetChildWithNodeType<MeshInstance3D>(this);
 
         _triggerVisual.Hide();
-
 #if DEBUG
         _triggerVisual.Show();
 #endif
@@ -54,6 +53,8 @@ public partial class TriggerVisibility : Trigger
             base.Triggerr();
         }
     }
+
+#if DEBUG
 #if TOOLS
     public override void _Process(double delta)
     {
@@ -72,6 +73,8 @@ public partial class TriggerVisibility : Trigger
         }
     }
 #endif
+#endif
+
     public override void Trigger_BodyExited(Node3D body)
     {
         if (!ShowOnlyWhileInside) return;
