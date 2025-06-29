@@ -24,7 +24,7 @@ public partial class Game : Node
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
     private const string WEAPONS_PATH = "res://Resources/Gun Types/";
-
+    private bool _initCommands = true;
     private static Dictionary<string, WeaponConfig> _weaponsLookup = [];
 
     public override void _Ready()
@@ -37,8 +37,7 @@ public partial class Game : Node
             return;
         }
 
-
-        ConsoleCommandSystem.Initialize();
+        if (_initCommands) ConsoleCommandSystem.Initialize();
 
         SetConsole();
         SpawnPlayer();
@@ -168,15 +167,24 @@ public partial class Game : Node
     private void ParseArgs()
     {
         var args = System.Environment.GetCommandLineArgs();
-
+        string arg = "";
         if (args.Length > 0)
         {
-            foreach (var arg in args)
+            for (int i = 0; i < args.Length; i++)
             {
+                arg = args[i];
+
                 switch (arg.ToLower())
                 {
+                    case "--disable-commands":
+                        _initCommands = false;
+                        GD.Print("Commands are disabled");
+                        break;
                     case "--cache-levels":
                         LevelLoader.Cc_CacheAllLevels();
+                        break;
+                    case "--level":
+                        FirstLevelToLoad = LevelLoader.LoadLevel(LevelLoader.Levelize(args[i + 1].Trim()));
                         break;
                     case "--disable-game":
                         Disabled = true;
