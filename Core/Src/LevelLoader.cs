@@ -35,14 +35,39 @@ public partial class LevelLoader : Node
             {
                 DevConsole.Instance?.Log($"Loading level {path} ...");
                 PackedScene level = ResourceLoader.Load<PackedScene>(path);
-                _allLevels.Add(path, level);
-                return level;
+                if (level != null)
+                {
+                    _allLevels.Add(path, level);
+                    return level;
+                }
+                else
+                {
+                    DevConsole.Instance?.Log($"Couldn't load level {path}", DevConsole.LogLevel.ERROR);
+                    throw new NullReferenceException();
+                }
             }
         }
         catch (Exception e)
         {
             DevConsole.Instance?.Log($"Error while loading level {e}", DevConsole.LogLevel.ERROR);
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Combines <paramref name="levelName"/> with the LEVELS_PATH const and adds .tscn to the end if it doesn't already
+    /// </summary>
+    /// <param name="levelName"></param>
+    /// <returns>res://Scenes/Levels/<paramref name="levelName"/></returns>
+    public static string Levelize(string levelName)
+    {
+        if (levelName.EndsWith(".tscn"))
+        {
+            return Path.Combine(LEVELS_PATH, levelName);
+        }
+        else
+        {
+            return Path.Combine(LEVELS_PATH, levelName + ".tscn");
         }
     }
 
