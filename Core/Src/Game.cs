@@ -67,9 +67,9 @@ public partial class Game : Node
     private void ReadCommandsFile()
     {
         if (OS.HasFeature("editor"))
-            path = OS.GetExecutablePath().Replace("godot.exe", "") + "commands.txt";
+            path = OS.GetExecutablePath().Replace("godot.exe", "") + "commands.conf";
         else
-            path = OS.GetExecutablePath().Replace("EIODE.exe", "") + "commands.txt";
+            path = OS.GetExecutablePath().Replace("EIODE.exe", "") + "commands.conf";
         if (File.Exists(path))
         {
             _starterCommands = FilesUtils.ReadFile(path);
