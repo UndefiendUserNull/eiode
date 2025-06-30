@@ -9,3 +9,7 @@ process_priority = 99
 process_physics_priority = 99
 script = ExtResource("1_3na2w")
 FirstLevelToLoad = ExtResource("2_xt2r0")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true

@@ -7,6 +7,7 @@ using EIODE.Scenes.Triggers;
 using System.Collections.Generic;
 using System.IO;
 using Godot;
+using System;
 
 namespace EIODE.Core;
 
@@ -26,10 +27,17 @@ public partial class Game : Node
     private const string WEAPONS_PATH = "res://Resources/Gun Types/";
     private bool _initCommands = true;
     private static Dictionary<string, WeaponConfig> _weaponsLookup = [];
+    private List<string> _starterCommands = [];
 
+    // To prevent racing fucking conditions, starts at the end of _Ready 
+    private Timer _timer = null;
     public override void _Ready()
     {
+        _timer = NodeUtils.GetChildWithNodeType<Timer>(this);
+        _timer.Timeout += Timer_Timeout;
+
         ParseArgs();
+        ReadCommandsFile();
 
         if (Disabled)
         {
@@ -48,8 +56,47 @@ public partial class Game : Node
 
         ConsoleCommandSystem.RegisterInstance(this);
 
+        _timer.Start();
 
         Console?.Log("Game _Ready finished");
+    }
+
+    /// <summary>
+    /// Hard coded for Windows
+    /// </summary>
+    string path = "";
+    private void ReadCommandsFile()
+    {
+        path = OS.GetExecutablePath().Replace("EIODE.exe", "") + "commands.txt";
+        if (File.Exists(path))
+        {
+            _starterCommands = FilesUtils.ReadFile(path);
+            GD.Print($"Loaded from {_starterCommands.Count} commands from commands.txt");
+        }
+        else
+        {
+            GD.PushWarning($"Couldn't find commands.txt at {path}");
+        }
+    }
+
+    public override void _ExitTree()
+    {
+        _timer.Timeout -= Timer_Timeout;
+
+    }
+
+    private void Timer_Timeout()
+    {
+        if (_initCommands)
+        {
+            if (_starterCommands.Count > 0)
+            {
+                foreach (var command in _starterCommands)
+                {
+                    ConsoleCommandSystem.ExecuteCommand(command.Replace('+', ' '));
+                }
+            }
+        }
     }
 
     private void SetConsole()
@@ -189,16 +236,31 @@ public partial class Game : Node
                     case "--disable-game":
                         Disabled = true;
                         break;
-                    case "--1080p":
-                        DisplayServer.WindowSetSize(new Vector2I(1920, 1080));
+                    //case "--1080p":
+                    //    DisplayServer.Singleton.WindowSetSize(new Vector2I(1920, 1080));
+                    //    break;
+                    case "--command":
+                        _starterCommands.Add(args[i + 1]);
                         break;
                 }
+            }
+            GD.Print("Args : ");
+            foreach (var item in args)
+            {
+                GD.PrintRaw("" + item + " | ");
             }
         }
     }
 
     #region CC
-
+    [ConsoleCommand("show_starter_commands", "Shows the commands that was either read from a file or passed as args")]
+    public void Cc_ShowStarterCommands()
+    {
+        foreach (var command in _starterCommands)
+        {
+            Console?.Log(command);
+        }
+    }
 
 
     [ConsoleCommand("triggers_visual_visible", "Show or hide all trigger visibility visual in current scene (1 | 0)")]
