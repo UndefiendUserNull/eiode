@@ -201,8 +201,6 @@ public partial class Player : CharacterBody3D, ITriggerable
         return (IsOnFloor() && hasBufferedJump) || canCoyoteJump;
     }
 
-
-
     public void Lock()
     {
         ProcessMode = ProcessModeEnum.Disabled;

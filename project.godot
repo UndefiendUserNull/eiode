@@ -35,12 +35,12 @@ settings/addon_root_folder="res://addons/debug_draw_3d"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
 window/size/resizable=false
 window/size/borderless=true
 window/stretch/mode="viewport"
-window/vsync/vsync_mode=0
 
 [dotnet]
 

@@ -7,7 +7,6 @@ using EIODE.Scenes.Triggers;
 using System.Collections.Generic;
 using System.IO;
 using Godot;
-using System;
 
 namespace EIODE.Core;
 
@@ -67,7 +66,10 @@ public partial class Game : Node
     string path = "";
     private void ReadCommandsFile()
     {
-        path = OS.GetExecutablePath().Replace("EIODE.exe", "") + "commands.txt";
+        if (OS.HasFeature("editor"))
+            path = OS.GetExecutablePath().Replace("godot.exe", "") + "commands.txt";
+        else
+            path = OS.GetExecutablePath().Replace("EIODE.exe", "") + "commands.txt";
         if (File.Exists(path))
         {
             _starterCommands = FilesUtils.ReadFile(path);
@@ -253,6 +255,24 @@ public partial class Game : Node
     }
 
     #region CC
+
+    [ConsoleCommand("res", "Changes current window resolution (int, int)")]
+    public void Cc_Resolution(int x, int y)
+    {
+        //ProjectSettings.SetSetting("display/window/size/viewport_width", x);
+        //ProjectSettings.SetSetting("display/window/size/viewport_height", y);
+        GetTree().Root.ContentScaleSize = new Vector2I(x, y);
+        //DisplayServer.WindowSetSize(new Vector2I(x, y));
+
+        //DisplayServer.Singleton.WindowSetSize(new Vector2I(x, y));
+    }
+
+    [ConsoleCommand("fullscreem", "Changes screen mode to Windowed Fullscreen")]
+    public static void Cc_Fullscreen()
+    {
+        DisplayServer.Singleton.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+    }
+
     [ConsoleCommand("show_starter_commands", "Shows the commands that was either read from a file or passed as args")]
     public void Cc_ShowStarterCommands()
     {

@@ -12,3 +12,4 @@ addons_downloader/Scripts/
 .editorconfig
 cyclops_settings.config
 *.user
+*tmp
