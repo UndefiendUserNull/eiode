@@ -73,11 +73,11 @@ public partial class Game : Node
         if (File.Exists(path))
         {
             _starterCommands = FilesUtils.ReadFile(path);
-            GD.Print($"Loaded from {_starterCommands.Count} commands from commands.txt");
+            GD.Print($"Loaded from {_starterCommands.Count} commands from commands.conf");
         }
         else
         {
-            GD.PushWarning($"Couldn't find commands.txt at {path}");
+            GD.PushWarning($"Couldn't find commands.conf at {path}");
         }
     }
 

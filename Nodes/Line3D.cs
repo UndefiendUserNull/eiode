@@ -25,7 +25,7 @@ public partial class Line3D : MeshInstance3D
         if (MaterialOverride == null || !(MaterialOverride is StandardMaterial3D))
         {
             var mat = new StandardMaterial3D();
-            mat.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded; // Optional: no lighting
+            mat.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
             mat.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
             MaterialOverride = mat;
         }

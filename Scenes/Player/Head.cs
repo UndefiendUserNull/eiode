@@ -16,7 +16,8 @@ public partial class Head : Node3D
     [Export] public float CameraTiltSpeed { get; set; } = 10f;
 
     [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
-    [Export] public float LineDrawingOffset { get; set; } = 2f;
+    [Export] public float ShootingLineOffset { get; set; } = 3f;
+
     public WeaponConfig CurrentWeapon { get; private set; } = null;
 
     public List<WeaponConfig> WeaponsInventory { get; private set; } = [];
@@ -157,8 +158,8 @@ public partial class Head : Node3D
 
         if (GetShootingPressed())
         {
-            _aimingRayHitPoint = _hitbox.IsColliding() ? _hitbox.GetCollisionNormal() : _hitbox.TargetPosition;
-            _shootingLine.DrawLine(_shootingLine.Position, _aimingRayHitPoint + Vector3.Up * LineDrawingOffset, Colors.Red);
+            _aimingRayHitPoint = (_hitbox.IsColliding() ? _hitbox.GetCollisionNormal() : _hitbox.TargetPosition) + Vector3.Up * ShootingLineOffset;
+            _shootingLine.DrawLine(_shootingLine.Position, _aimingRayHitPoint, Colors.Red);
             Shoot();
         }
         else
