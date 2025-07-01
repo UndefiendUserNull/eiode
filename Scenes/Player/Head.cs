@@ -3,6 +3,7 @@ using EIODE.Resources;
 using EIODE.Core.Console;
 using EIODE.Utils;
 using EIODE.Core;
+using EIODE.Nodes;
 using System.Collections.Generic;
 using System;
 using Godot;
@@ -15,6 +16,7 @@ public partial class Head : Node3D
     [Export] public float CameraTiltSpeed { get; set; } = 10f;
 
     [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
+    [Export] public float LineDrawingOffset { get; set; } = 2f;
     public WeaponConfig CurrentWeapon { get; private set; } = null;
 
     public List<WeaponConfig> WeaponsInventory { get; private set; } = [];
@@ -35,7 +37,8 @@ public partial class Head : Node3D
     private Game _game = null;
     private DevConsole _console = null;
     private Player _player = null;
-    //private Vector3 _aimingRayHitPoint = Vector3.Zero;
+    private Line3D _shootingLine = null;
+    private Vector3 _aimingRayHitPoint = Vector3.Zero;
     public Camera3D Camera { get; private set; } = null;
 
 
@@ -65,6 +68,9 @@ public partial class Head : Node3D
 
         _player = _game.Player;
         _console = _game.Console;
+
+        _shootingLine = NodeUtils.GetChildWithNodeType<Line3D>(Camera);
+
 
         // call me lazy but this works
         Cc_TankUp(0);
@@ -149,14 +155,21 @@ public partial class Head : Node3D
 
         if (_reloading) Reload(delta);
 
-        if (GetShootingPressed()) Shoot();
+        if (GetShootingPressed())
+        {
+            _aimingRayHitPoint = _hitbox.IsColliding() ? _hitbox.GetCollisionNormal() : _hitbox.TargetPosition;
+            _shootingLine.DrawLine(_shootingLine.Position, _aimingRayHitPoint + Vector3.Up * LineDrawingOffset, Colors.Red);
+            Shoot();
+        }
+        else
+        {
+            _shootingLine.Clear();
 
+        }
         if (_hitboxEnabled && _hitboxTimer.TimeLeft <= 0) _hitbox.Disable();
     }
     private void Shoot()
     {
-        //_aimingRayHitPoint = _aimingRay.IsColliding() ? _aimingRay.GetCollisionNormal() : _aimingRay.TargetPosition;
-        // _hittingLineVisual.SetEndPosition(_aimingRayHitPoint);
         _hitbox.Damage = CurrentWeapon.DamagePerBullet;
         _hitbox.Enable();
         _hitboxEnabled = true;

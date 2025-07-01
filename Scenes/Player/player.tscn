@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dqk8i0f08x0q2"]
+[gd_scene load_steps=13 format=3 uid="uid://dqk8i0f08x0q2"]
 
 [ext_resource type="Script" uid="uid://bytf8ubehbpod" path="res://Scenes/Player/Player.cs" id="1_uvnfx"]
 [ext_resource type="Resource" uid="uid://dql1va6oatqi6" path="res://Resources/MainPlayerMovementSettings.tres" id="2_a3d8c"]
 [ext_resource type="Script" uid="uid://blga75bmxo2r2" path="res://Scenes/Player/Head.cs" id="3_xpcdj"]
 [ext_resource type="Script" uid="uid://djt1e621i4kd8" path="res://Scenes/Player/line_3d.gd" id="5_0u5uq"]
 [ext_resource type="PackedScene" uid="uid://cromaxto1tesr" path="res://Components/Hitbox/ray_hit_box.tscn" id="5_dd0ac"]
+[ext_resource type="Script" uid="uid://cmhthd5h6l6w5" path="res://Nodes/Line3D.cs" id="6_0u5uq"]
 [ext_resource type="PackedScene" uid="uid://c3bjl6peay5cr" path="res://Scenes/UI/HUD.tscn" id="7_0u5uq"]
 
 [sub_resource type="Curve3D" id="Curve3D_htcer"]
@@ -14,12 +15,20 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0u5uq"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_jlvik"]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tugb3"]
 radius = 0.35
 height = 2.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0u5uq"]
-size = Vector3(1, 0.5, 1)
+margin = 0.01
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 134
@@ -30,6 +39,7 @@ _res_playerMovementConfig = ExtResource("2_a3d8c")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0.074786)
 script = ExtResource("3_xpcdj")
+LineDrawingOffset = 0.0
 
 [node name="Camera" type="Camera3D" parent="Head"]
 fov = 90.0
@@ -61,6 +71,16 @@ line_res = 7.0
 [node name="aiming_path" type="Path3D" parent="Head/Camera"]
 visible = false
 curve = SubResource("Curve3D_htcer")
+
+[node name="shooting_line" type="MeshInstance3D" parent="Head/Camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -0.4)
+material_override = SubResource("StandardMaterial3D_0u5uq")
+mesh = SubResource("ArrayMesh_jlvik")
+skeleton = NodePath("../..")
+script = ExtResource("6_0u5uq")
+Thickness = 0.05
+Segments = 64
+metadata/_custom_type_script = "uid://cmhthd5h6l6w5"
 
 [node name="RayHitBox" parent="Head" instance=ExtResource("5_dd0ac")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, -0.074786)
