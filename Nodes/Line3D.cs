@@ -2,6 +2,8 @@ using Godot;
 
 namespace EIODE.Nodes;
 
+// Most of the code are from the Godot raycast line debug drawing "RayCast3D::_update_debug_shape_vertices()"
+
 [GlobalClass]
 public partial class Line3D : MeshInstance3D
 {
