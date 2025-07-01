@@ -45,10 +45,6 @@ window/stretch/mode="viewport"
 
 project/assembly_name="EIODE"
 
-[editor]
-
-run/main_run_args="--cache-levels"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/3d-mesh-utils/plugin.cfg", "res://addons/cyclops_level_builder/plugin.cfg")
@@ -205,5 +201,6 @@ runtime="coreclr"
 
 [rendering]
 
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=4
 textures/default_filters/anisotropic_filtering_level=4
 textures/default_filters/texture_mipmap_bias=-1.0

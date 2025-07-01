@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=4 uid="uid://cfswgg6lfyjd0"]
+[gd_scene load_steps=87 format=4 uid="uid://cfswgg6lfyjd0"]
 
 [ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="1_3dqw3"]
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="1_eced4"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bwdpt27bu7ylf" path="res://addons/cyclops_level_builder/resources/data_vector_int.gd" id="5_2j5np"]
 [ext_resource type="Script" uid="uid://d0emhferwnuln" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="6_we8rp"]
 [ext_resource type="Script" uid="uid://dae5bmif1d6bn" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="7_m1sif"]
+[ext_resource type="PackedScene" uid="uid://dfad330psc4sv" path="res://Utils/spawn.tscn" id="9_2j5np"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_pvlsq"]
 _surfaces = [{
@@ -816,6 +817,9 @@ face_vertex_data = {
 }
 
 [node name="platformer_01" type="Node3D"]
+
+[node name="SPAWN" parent="." instance=ExtResource("9_2j5np")]
+transform = Transform3D(0.565, 0, 0, 0, 1.88, 0, 0, 0, 1, 0, 3, 0)
 
 [node name="DirectionalLight3D" parent="." instance=ExtResource("1_3dqw3")]
 transform = Transform3D(-0.984808, -0.111618, 0.133022, 0.150383, -0.165191, 0.97473, -0.0868236, 0.979924, 0.179467, 0, 0, 0)

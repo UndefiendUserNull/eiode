@@ -14,3 +14,4 @@ ReloadTime = 0.0
 Auto = true
 Infinity = false
 Range = 5.0
+WeaponType = 0

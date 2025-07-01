@@ -54,7 +54,6 @@ public partial class DebugUi : Control
         _sb.Append($"Current Ammo : {_playerHead.CurrentWeapon.CurrentAmmo}\n");
         _sb.Append($"Reloading Timer : {_playerHead._reloadingTimer}\n");
         _sb.Append($"Current Max Ammo : {_playerHead.CurrentWeapon.CurrentMaxAmmo}\n");
-        _sb.Append($"Shooting : {_playerHead._shooting}\n");
         _sb.Append($"Hitbox Enabled : {_playerHead._hitboxEnabled}\n");
         _label.Text = _sb.ToString();
     }

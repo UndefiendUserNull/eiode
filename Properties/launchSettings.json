@@ -6,7 +6,7 @@
     "Launch": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\Godot\\4.4.1-mono\\godot.exe",
-      "commandLineArgs": "--path . --verbose",
+      "commandLineArgs": "--path . --verbose --command tank_up+1",
       "workingDirectory": ".",
       "nativeDebugging": true
     }

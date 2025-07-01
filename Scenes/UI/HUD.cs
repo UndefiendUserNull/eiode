@@ -1,4 +1,3 @@
-using EIODE.Scenes;
 using EIODE.Core;
 using EIODE.Resources;
 using EIODE.Utils;
@@ -45,6 +44,7 @@ public partial class HUD : Control
 
     public override void _ExitTree()
     {
+        // Check if the game loaded first level first before unsubscribing, this prevents unsubscribing twice
         if (!_game.FirstLevelLoaded)
             return;
 
@@ -100,7 +100,7 @@ public partial class HUD : Control
 
         _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
 
-        _label_weaponName.Text = weapon.Name;
+        _label_weaponName.Text = weapon.Name.Capitalize();
         _label_ammo.Text = _text_ammo;
     }
 

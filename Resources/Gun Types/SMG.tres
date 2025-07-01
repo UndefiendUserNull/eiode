@@ -6,10 +6,12 @@
 script = ExtResource("1_fnt4j")
 Name = "smg"
 DamagePerBullet = 5
-FireRate = 0.15
+FireRate = 0.08
 MaxAmmo = 500
 MagazineSize = 50
 HitboxDuration = 0.05
 ReloadTime = 1.5
 Auto = true
 Infinity = false
+Range = 50.0
+WeaponType = 0

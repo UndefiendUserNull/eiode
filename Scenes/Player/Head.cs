@@ -3,10 +3,10 @@ using EIODE.Resources;
 using EIODE.Core.Console;
 using EIODE.Utils;
 using EIODE.Core;
+using EIODE.Nodes;
 using System.Collections.Generic;
 using System;
 using Godot;
-using System.Linq;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
@@ -16,29 +16,31 @@ public partial class Head : Node3D
     [Export] public float CameraTiltSpeed { get; set; } = 10f;
 
     [Export] public float MaxCameraTiltRadian { get; set; } = 2f;
+    [Export] public float LineDrawingOffset { get; set; } = 2f;
     public WeaponConfig CurrentWeapon { get; private set; } = null;
 
     public List<WeaponConfig> WeaponsInventory { get; private set; } = [];
-    private int _currentWeaponIndex = 0;
-    public bool _shooting = false;
     public bool _reloading = false;
     // used in special cases
     private bool _magazineFull = false;
     public bool _magazineEmpty = false;
-    public float _shootingTime = 0.0f;
-    public float _reloadingTimer = 0f;
     public bool _hitboxEnabled = false;
     private bool _hitboxTimerEnded = false;
-    private HitboxComponent _hitbox = null;
+    private int _currentWeaponIndex = 0;
+    public float _shootingTime = 0.0f;
+    public float _reloadingTimer = 0f;
+    private const float MIN_PITCH = -90f;
+    private const float MAX_PITCH = 90f;
+    private RaycastHitboxComponent _hitbox = null;
     private Node3D _parent = null;
     private Timer _hitboxTimer = null;
     private Game _game = null;
     private DevConsole _console = null;
     private Player _player = null;
+    private Line3D _shootingLine = null;
+    private Vector3 _aimingRayHitPoint = Vector3.Zero;
     public Camera3D Camera { get; private set; } = null;
 
-    private const float MIN_PITCH = -90f;
-    private const float MAX_PITCH = 90f;
 
     [Signal] public delegate void AmmoChangedEventHandler(WeaponConfig weapon);
     [Signal] public delegate void WeaponChangedEventHandler(WeaponConfig current);
@@ -47,7 +49,7 @@ public partial class Head : Node3D
 
     public override void _Ready()
     {
-        _hitbox = ComponentsUtils.GetChildWithComponent<HitboxComponent>(this);
+        _hitbox = ComponentsUtils.GetChildWithComponent<RaycastHitboxComponent>(this);
 
         // There should be only one timer as a child for the "Head" node
         _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
@@ -67,10 +69,19 @@ public partial class Head : Node3D
         _player = _game.Player;
         _console = _game.Console;
 
+        _shootingLine = NodeUtils.GetChildWithNodeType<Line3D>(Camera);
+
+
         // call me lazy but this works
         Cc_TankUp(0);
         ChangeCurrentWeapon(0, true);
-        _hitbox.Damage = CurrentWeapon.DamagePerBullet;
+
+        if (CurrentWeapon != null)
+            _hitbox.Damage = CurrentWeapon.DamagePerBullet;
+        else
+            // I tried so hard and got so far, but in the end, it doesn't even matter
+            _hitbox.Damage = 1;
+
 
     }
 
@@ -81,6 +92,7 @@ public partial class Head : Node3D
         if (@event is InputEventJoypadMotion joypadMotion)
             JoyPadCameraRotation(joypadMotion);
     }
+
     private void CameraRotation(InputEventMouseMotion e)
     {
         // horizontal
@@ -121,7 +133,7 @@ public partial class Head : Node3D
 
     private void HandleShooting(double delta)
     {
-        if (!_shooting && _shootingTime <= CurrentWeapon.FireRate)
+        if (_shootingTime <= CurrentWeapon.FireRate)
         {
             _shootingTime += (float)delta;
         }
@@ -143,13 +155,21 @@ public partial class Head : Node3D
 
         if (_reloading) Reload(delta);
 
-        if (GetShootingPressed()) Shoot();
+        if (GetShootingPressed())
+        {
+            _aimingRayHitPoint = _hitbox.IsColliding() ? _hitbox.GetCollisionNormal() : _hitbox.TargetPosition;
+            _shootingLine.DrawLine(_shootingLine.Position, _aimingRayHitPoint + Vector3.Up * LineDrawingOffset, Colors.Red);
+            Shoot();
+        }
+        else
+        {
+            _shootingLine.Clear();
 
+        }
         if (_hitboxEnabled && _hitboxTimer.TimeLeft <= 0) _hitbox.Disable();
     }
     private void Shoot()
     {
-        _shooting = true;
         _hitbox.Damage = CurrentWeapon.DamagePerBullet;
         _hitbox.Enable();
         _hitboxEnabled = true;
@@ -157,7 +177,6 @@ public partial class Head : Node3D
         CurrentWeapon.CurrentAmmo--;
         EmitSignalAmmoChanged(CurrentWeapon);
         if (_hitboxTimer.IsStopped()) _hitboxTimer.Start();
-        _shooting = false;
     }
 
     private void Reload(double delta)

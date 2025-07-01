@@ -15,9 +15,9 @@ public static class ConsoleCommandSystem
     public static void Initialize()
     {
         var methods = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(assembly => assembly.GetTypes())
-            .SelectMany(type => type.GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-            .Where(method => method.GetCustomAttribute<ConsoleCommandAttribute>() != null);
+        .SelectMany(assembly => assembly.GetTypes())
+        .SelectMany(type => type.GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        .Where(method => method.GetCustomAttribute<ConsoleCommandAttribute>() != null);
 
         foreach (var method in methods)
         {
