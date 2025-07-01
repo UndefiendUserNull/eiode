@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://d0emhferwnuln" path="res://addons/cyclops_level_builder/resources/data_vector_float.gd" id="4_52lfj"]
 [ext_resource type="Script" uid="uid://dae5bmif1d6bn" path="res://addons/cyclops_level_builder/resources/mesh_vector_data.gd" id="5_wlb5o"]
 [ext_resource type="Material" uid="uid://bp41iptqv8g7r" path="res://Materials/tile_cyan_borders.tres" id="6_71q37"]
-[ext_resource type="PackedScene" uid="uid://dwsbrg54xu0va" path="res://Scenes/Enviroment/default_world_environment.tscn" id="7_6fmp5"]
 [ext_resource type="PackedScene" uid="uid://bko8auchj0bvs" path="res://Scenes/Enviroment/default_light.tscn" id="8_52lfj"]
 [ext_resource type="PackedScene" uid="uid://cfswgg6lfyjd0" path="res://Scenes/Levels/platformer_01.tscn" id="9_71q37"]
 [ext_resource type="PackedScene" uid="uid://ccnheqalixjti" path="res://Scenes/Triggers/Level Switch/trigger_level_switch.tscn" id="10_wlb5o"]
@@ -1979,9 +1978,14 @@ face_vertex_data = {
 &"vertex_index": SubResource("Resource_5dnjv")
 }
 
+[sub_resource type="Environment" id="Environment_50cie"]
+background_mode = 1
+background_color = Color(0.557015, 0.512242, 0.601562, 1)
+
 [node name="platformer_03" type="Node3D"]
 
 [node name="SPAWN" parent="." instance=ExtResource("1_epcrx")]
+transform = Transform3D(0.565, 0, 0, 0, 1.88, 0, 0, 0, 1, 0, 2.42719, -2.76282)
 
 [node name="Blocks" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -1, 0)
@@ -2112,30 +2116,31 @@ materials = Array[Material]([ExtResource("6_71q37")])
 
 [node name="JumpPad" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, 1)
-JumpPower = 70.0
+JumpPower = 100.0
 
 [node name="JumpPad2" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 7, 1)
-JumpPower = 70.0
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 10, 1)
+JumpPower = 100.0
 
 [node name="JumpPad3" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 14, 1)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 22, 1)
 JumpPower = 70.0
 
 [node name="JumpPad4" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 24, 1)
-JumpPower = 70.0
-
-[node name="JumpPad5" parent="Blocks/Block_13" instance=ExtResource("1_tbxpd")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 36, 1)
-JumpPower = 500.0
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 29.0851, 1)
+JumpPower = 800.0
 IgnoreMaxJumpPadPower = true
 
 [node name="Block_14" type="Node3D" parent="Blocks"]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 291, 69, -12)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 291, 122, -12)
 script = ExtResource("1_rbn3s")
 mesh_vector_data = SubResource("Resource_dfjwe")
 materials = Array[Material]([ExtResource("6_71q37")])
+
+[node name="trigger_level_switch" parent="Blocks/Block_14" instance=ExtResource("10_wlb5o")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 14, 15, 18)
+NextScene = ExtResource("9_71q37")
+TriggerOnlyAfterFullyEnter = false
 
 [node name="hints" type="Node3D" parent="."]
 visible = false
@@ -2160,13 +2165,12 @@ text = "<- Jump Pad"
 font_size = 100
 outline_size = 50
 
-[node name="trigger_level_switch" parent="." instance=ExtResource("10_wlb5o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 82, -273)
-NextScene = ExtResource("9_71q37")
-
 [node name="DirectionalLight3D" parent="." instance=ExtResource("8_52lfj")]
+transform = Transform3D(-0.984808, -0.111618, 0.133022, 0.172987, -0.563849, 0.807558, -0.0151343, 0.818301, 0.574591, 0, 13, 0)
 
-[node name="WorldEnvironment" parent="." instance=ExtResource("7_6fmp5")]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_50cie")
 
-[node name="trigger_visibility" parent="." instance=ExtResource("12_50cie")]
+[node name="trigger_visibility" parent="." node_paths=PackedStringArray("Target") instance=ExtResource("12_50cie")]
 transform = Transform3D(4.1, 0, 0, 0, 4, 0, 0, 0, 13, 0, 3, -53.6)
+Target = NodePath("../hints")
