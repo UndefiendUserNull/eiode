@@ -8,21 +8,36 @@ You use attributes in order to make a command
 
 If your method is static (public or private) it's very simple to add to the console command system
 
-Simply add the `[ConsoleCommand(command, description (optional), isCheat (optional, defaults to false))]` before your method and you're done, this also works with methods that has args
+Simply add the `[ConsoleCommand(command, description (optional), isCheat (optional))]` before your method and you're done, this also works with methods that has args
 
 ### Example :
 ```CS
-[ConsoleCommand("list_levels", "Lists all levels in the Scenes//Levels folder")]
 public static void Cc_ListLevels()
 {
-	string scenesFoundString = "\n";
-	int scenesFoundLength = 0;
-	foreach (string item in DirAccess.Open(LEVELS_PATH).GetFiles())
-	{
-		scenesFoundString += $"{item}\n";
-		scenesFoundLength++;
-	}
-	Game.GetGame(Instance).Console.Log($"{scenesFoundLength} Scenes Found : {scenesFoundString}");
+    // I heard StringBuilder is better in loops
+    var levelsFoundString = new StringBuilder("\n");
+    string[] levelsFound;
+
+    // If inside the editor, search in "res://"
+    if (Engine.IsEditorHint())
+    {
+        using var dir = DirAccess.Open(LEVELS_PATH);
+        levelsFound = dir?.GetFiles() ?? Array.Empty<string>();
+    }
+    else
+    {
+        levelsFound = ResourceLoader.ListDirectory(LEVELS_PATH);
+    }
+
+    foreach (var level in levelsFound)
+    {
+        if (level.EndsWith(".tscn"))
+        {
+            levelsFoundString.AppendLine(level);
+        }
+    }
+
+    DevConsole.Instance?.Log($"{levelsFound.Count(l => l.EndsWith(".tscn"))} Scenes Found: {levelsFoundString}");
 }
 ```
 
@@ -34,7 +49,7 @@ The same as before add the `[ConsoleCommand()]` attribute, except you have to re
 
 ### Example :
 
-Here's a command from the PlayerMovement class
+Here's a command from the Player class
 
 ```CS
 [ConsoleCommand("player_move", "Moves Player To Given Position (x, y, z)", true)]
@@ -44,26 +59,44 @@ public void MovePosition(float x, float y, float z)
 }
 ```
 
-In player's Init function you can see `ConsoleCommandSystem.RegisterInstance(this);` here
+In the Init function you can see `ConsoleCommandSystem.RegisterInstance(this);` here
 
 ```CS
 private void Init()
 {
-	Validation();
-	// Should be unlocked from outside
-	Lock();
-	_feet = NodeUtils.GetChildWithNodeType<RayCast3D>(this);
-	if (!_feet.Name.ToString().Equals("feet", System.StringComparison.CurrentCultureIgnoreCase)) GD.PushWarning("Raycast's name found in player is not \"feet\"");
-	_head = GetChild<Node3D>(0);
-	_headSrc = _head as Head;
-	_jumpHeight = Mathf.Sqrt(2 * S._gravity * S._jumpModifier);
-	Input.MouseMode = Input.MouseModeEnum.Captured;
---> ConsoleCommandSystem.RegisterInstance(this); <--
+	private void Init()
+{
+    // Should be unlocked from outside
+    Lock();
+
+    Conf = (PlayerMovementConfig)_res_playerMovementConfig.Duplicate();
+
+    _variableGravity = Conf.Gravity;
+
+    _feet = NodeUtils.GetChildWithName<Area3D>("Feet", this);
+    _feet.AreaEntered += Feet_AreaEntered;
+
+    _head = GetChild<Head>(0);
+
+    _camera = _head.Camera;
+
+    _jumpHeight = Mathf.Sqrt(2 * Conf.Gravity * Conf.JumpModifier);
+
+    Input.MouseMode = Input.MouseModeEnum.Captured;
+
+    _game = Game.GetGame(this);
+
+    Validation();
+
+    --> ConsoleCommandSystem.RegisterInstance(this); <--
+
+
+    _console = _game.Console;
+
+}
 }
 ```
 
 *this could be outdated*
 
 You must register the class instance in order for the command to work, or else you will get the error `Non-static method requires a target`
-
-### CAUTION : As for now some Singleton classes has problems with having non-static commands throwing the error `Non-static method requires a target` even when registering the Instance
