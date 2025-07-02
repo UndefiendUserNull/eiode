@@ -3,3 +3,4 @@ https://github.com/blackears/cyclopsLevelBuilder/releases/download/v1.0.4/cyclop
 https://github.com/UndefiendUserNull/3d-mesh-utils/releases/download/v1.0/3d-mesh-utils.zip
 https://github.com/UndefiendUserNull/godot-4-motion-blur/releases/download/v0.1/motion_blur.zip
 https://github.com/DmitriySalnikov/godot_debug_draw_3d/releases/download/1.5.1/debug-draw-3d_1.5.1.zip
+https://github.com/ItsKorin/PostFX/releases/download/v0.0.2/post_fx.zip
