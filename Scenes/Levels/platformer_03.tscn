@@ -1985,7 +1985,7 @@ background_color = Color(0.557015, 0.512242, 0.601562, 1)
 [node name="platformer_03" type="Node3D"]
 
 [node name="SPAWN" parent="." instance=ExtResource("1_epcrx")]
-transform = Transform3D(0.565, 0, 0, 0, 1.88, 0, 0, 0, 1, 0, 2.42719, -2.76282)
+transform = Transform3D(0.565, 0, 0, 0, 1.88, 0, 0, 0, 1, 0, 1.27202, -2.14667)
 
 [node name="Blocks" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -1, 0)
@@ -2032,19 +2032,19 @@ materials = Array[Material]([ExtResource("6_71q37")])
 
 [node name="JumpPad" parent="Blocks" instance=ExtResource("1_tbxpd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.668, 1, 0.5)
-JumpPower = 65.0
+JumpPower = 85.0
 
 [node name="JumpPad2" parent="Blocks" instance=ExtResource("1_tbxpd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.948, 3, 2.3204e-06)
-JumpPower = 65.0
+JumpPower = 75.0
 
 [node name="JumpPad3" parent="Blocks" instance=ExtResource("1_tbxpd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.948, 3, 2.84494e-06)
-JumpPower = 65.0
+JumpPower = 85.0
 
 [node name="JumpPad4" parent="Blocks" instance=ExtResource("1_tbxpd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90.948, 3, 3.58803e-06)
-JumpPower = 75.0
+JumpPower = 120.0
 
 [node name="Block_3" type="Node3D" parent="Blocks"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 136, -2, -4.99999)
@@ -2174,3 +2174,4 @@ environment = SubResource("Environment_50cie")
 [node name="trigger_visibility" parent="." node_paths=PackedStringArray("Target") instance=ExtResource("12_50cie")]
 transform = Transform3D(4.1, 0, 0, 0, 4, 0, 0, 0, 13, 0, 3, -53.6)
 Target = NodePath("../hints")
+ShowOnlyWhileInside = true

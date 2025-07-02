@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://0dqa8uw1t4s"]
 
 [ext_resource type="Script" uid="uid://5ste8btvxtmo" path="res://Core/Src/Game.cs" id="1_3na2w"]
-[ext_resource type="PackedScene" uid="uid://3qacp3vmfx4d" path="res://Scenes/Levels/torture_00.tscn" id="2_xt2r0"]
+[ext_resource type="PackedScene" uid="uid://bicvs6tluxt6m" path="res://Scenes/Levels/platformer_03.tscn" id="2_xt2r0"]
 
 [node name="Game" type="Node"]
 process_mode = 3
@@ -11,5 +11,6 @@ script = ExtResource("1_3na2w")
 FirstLevelToLoad = ExtResource("2_xt2r0")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.1
 one_shot = true
+ignore_time_scale = true
