@@ -10,11 +10,15 @@ Hi :D
 
 3. Follow [How To Download Addons](https://github.com/UndefiendUserNull/eiode/blob/master/Docs/How%20To%20Download%20Addons.md)
 
-<!-- 4. Get The Assets from links provided -->
+4. Get The Assets from links provided
 
-4. Open Godot and import the project
+5. Open Godot and import the project
 
 ---
+
+## Assets
+
+[Placeholder textures](https://screamingbrainstudios.itch.io/tiny-texture-pack-2) extract it to a folder and name it 'textures'
 
 ## Controls *v0.0.1-prototype* :
 
