@@ -48,22 +48,18 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         AmmoData.CurrentAmmo--;
         Hitbox.Damage = Data.Damage;
         Hitbox.Enable();
-        GetTree().CreateTimer(Data.HitboxDuration).Timeout += ResetAttack;
+        GetTree().CreateTimer(Data.HitboxDuration).Timeout += Hitbox.Disable;
 
         EmitSignalOnShotFired();
     }
 
-    private void ResetAttack()
-    {
-        _shootingCooldown = 0f;
-        Hitbox.Disable();
-    }
-
-    public override void ReloadPressed()
+    /// <summary>
+    /// What gets executed when the reload button is pressed
+    /// </summary>
+    public virtual void ReloadPressed()
     {
         if (!CanReload()) return;
         _isReloading = true;
-        CompleteReload();
 
         EmitSignalOnReloadStarted();
     }
@@ -80,13 +76,16 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         {
             _reloadTimer -= (float)delta;
             if (_reloadTimer <= 0)
-                CompleteReload();
+                ReloadCompleted();
         }
     }
 
-    protected virtual void CompleteReload()
+    /// <summary>
+    /// What gets executed when the reload timer reaches 0
+    /// </summary>
+    public virtual void ReloadCompleted()
     {
-        _reloadTimer = Data.ReloadTime;
+        _reloadTimer = AmmoData.ReloadTime;
         int ammoNeeded = AmmoData.MagSize - AmmoData.CurrentAmmo;
         int ammoToTake = Mathf.Min(ammoNeeded, AmmoData.CurrentMaxAmmo);
 

@@ -93,9 +93,9 @@ public partial class Head : Node3D
             EmitSignalAmmoChanged(CurrentWeapon);
         }
 
-        if (Input.IsActionJustPressed(InputHash.RELOAD))
+        if (Input.IsActionJustPressed(InputHash.RELOAD) && CurrentWeapon is IWeaponWithAmmo weaponAmmo)
         {
-            CurrentWeapon.ReloadPressed();
+            weaponAmmo.ReloadPressed();
             EmitSignalAmmoChanged(CurrentWeapon);
         }
     }

@@ -8,6 +8,8 @@ public partial class ChargeableComponent : Node, IComponent
     [Export] public float FullChargeDuration { get; set; } = 2.0f;
     [Export] public float ChargeRate { get; set; } = 1.0f;
     [Export] public float DischargeRate { get; set; } = 0.5f;
+    public bool Charging { get; set; } = false;
+
     public float CurrentCharge { get; private set; } = 0.0f;
 
     [Signal] public delegate void ChargeCompletedEventHandler();

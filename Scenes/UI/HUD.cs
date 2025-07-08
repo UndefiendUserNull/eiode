@@ -3,6 +3,7 @@ using EIODE.Resources;
 using EIODE.Utils;
 using EIODE.Core.Console;
 using Godot;
+using EIODE.Components;
 
 namespace EIODE.Scenes.UI;
 public partial class HUD : Control
@@ -18,6 +19,10 @@ public partial class HUD : Control
     private string _text_ammo = string.Empty;
     private bool _holdingMelee = false;
     private WeaponAmmoData _currentAmmoData = null;
+    private ProgressBar _progressBar_chargeable = null;
+    private ChargeableComponent _chargeable = null;
+    private bool _holdingChargeable = false;
+
     public override void _Ready()
     {
         _game = Game.GetGame(this);
@@ -31,6 +36,7 @@ public partial class HUD : Control
         _label_reloading = NodeUtils.GetChildWithName<Label>("l_reloading", _container);
         _label_ammo = NodeUtils.GetChildWithName<Label>("l_ammo", _container);
         _label_weaponName = NodeUtils.GetChildWithName<Label>("l_weaponName", _container);
+        _progressBar_chargeable = NodeUtils.GetChildWithName<ProgressBar>("prog_chargeable", _container);
 
         RefreshWeapon(_head.CurrentWeapon);
         _label_reloading.Hide();
@@ -81,13 +87,11 @@ public partial class HUD : Control
             _label_weaponName.Hide();
             return;
         }
-        else
+
+        if (!(_label_ammo.Visible || _label_weaponName.Visible))
         {
-            if (!(_label_ammo.Visible || _label_weaponName.Visible))
-            {
-                _label_ammo.Show();
-                _label_weaponName.Show();
-            }
+            _label_ammo.Show();
+            _label_weaponName.Show();
         }
 
         if (weapon is IWeaponWithAmmo weaponWithAmmo)
@@ -101,6 +105,28 @@ public partial class HUD : Control
 
             _label_ammo.Text = _text_ammo;
         }
+
+        _holdingChargeable = NodeUtils.GetChildWithNodeType(weapon, out _chargeable);
+
+        if (_holdingChargeable)
+        {
+            if (_progressBar_chargeable.MaxValue == _chargeable.FullChargeDuration) return;
+            _progressBar_chargeable.Show();
+            _progressBar_chargeable.MinValue = 0;
+            _progressBar_chargeable.MaxValue = _chargeable.FullChargeDuration;
+            _chargeable.ChargeProgressChanged += Chargeable_ChargeProgressChanged;
+        }
+        else
+        {
+            _progressBar_chargeable.Hide();
+            _chargeable.ChargeProgressChanged -= Chargeable_ChargeProgressChanged;
+        }
+    }
+
+    private void Chargeable_ChargeProgressChanged(float duration)
+    {
+        if (duration != 0)
+            _progressBar_chargeable.Value = Mathf.Lerp(_progressBar_chargeable.Value, _chargeable.CurrentCharge, 0.5f);
     }
 
     #region CC

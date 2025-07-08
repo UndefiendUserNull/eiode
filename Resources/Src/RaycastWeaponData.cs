@@ -15,10 +15,4 @@ public partial class RaycastWeaponData : WeaponData
     /// In seconds
     /// </summary>
     [Export] public float HitboxDuration { get; set; } = 0.03f;
-
-    /// <summary>
-    /// In seconds
-    /// </summary>
-    [Export] public float ReloadTime { get; set; } = 0.75f;
-
 }

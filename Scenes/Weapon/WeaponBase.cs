@@ -11,7 +11,6 @@ namespace EIODE.Scenes;
 public abstract partial class WeaponBase : Node3D
 {
     public abstract void Attack();
-    public abstract void ReloadPressed();
     public abstract string GetWeaponName();
     public abstract WeaponType GetWeaponType();
     public abstract WeaponData GetWeaponData();
