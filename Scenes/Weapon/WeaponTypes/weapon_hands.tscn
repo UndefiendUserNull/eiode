@@ -13,21 +13,21 @@ WeaponType = 2
 metadata/_custom_type_script = "uid://dco6l00perx5"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mgvi6"]
-size = Vector3(1.84399, 2, 0.277344)
+size = Vector3(1.39673, 2, 1.24194)
 
 [node name="weapon_hands" type="Node3D"]
 script = ExtResource("1_ux1ad")
 Data = SubResource("Resource_7lnoe")
 
 [node name="HitboxComponent" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -1)
 collision_layer = 16
 collision_mask = 12
 script = ExtResource("3_mgvi6")
 metadata/_custom_type_script = "uid://c0b5gn4g6m0fk"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.970367, -0.127813)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.970367, -0.610113)
 shape = SubResource("BoxShape3D_mgvi6")
 
 [node name="Timer" type="Timer" parent="."]

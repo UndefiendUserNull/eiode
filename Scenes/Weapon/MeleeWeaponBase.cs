@@ -10,13 +10,15 @@ namespace EIODE.Scenes.Weapon
         [Export] public MeleeWeaponData Data { get; set; }
         public HitboxComponent Hitbox { get; set; }
         private Timer _hitboxTimer;
-        private bool _canHit = false;
+        private bool _canHit = true;
 
         public override void _Ready()
         {
             base._Ready();
             Hitbox = NodeUtils.GetChildWithNodeType<HitboxComponent>(this);
+            Hitbox.Damage = Data.Damage;
             Hitbox.Disable();
+
             _hitboxTimer = NodeUtils.GetChildWithNodeType<Timer>(this);
             _hitboxTimer.WaitTime = Data.HitRate;
             _hitboxTimer.Timeout += HitboxTimer_Timeout;
@@ -25,6 +27,7 @@ namespace EIODE.Scenes.Weapon
         private void HitboxTimer_Timeout()
         {
             Hitbox.Disable();
+            Hitbox.ResetHits();
             _canHit = true;
         }
 

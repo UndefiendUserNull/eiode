@@ -7,8 +7,8 @@
 
 [sub_resource type="Resource" id="Resource_rsur3"]
 script = ExtResource("2_aur43")
-Range = 150.0
-HitboxDuration = 0.03
+Range = 750.0
+HitboxDuration = 0.1
 Name = "pistol"
 Damage = 5
 HitRate = 1.0
@@ -30,5 +30,4 @@ AmmoData = SubResource("Resource_d0c4f")
 [node name="RaycastHitboxComponent" type="RayCast3D" parent="."]
 collision_mask = 4
 script = ExtResource("4_4ajr3")
-Damage = 5
 metadata/_custom_type_script = "uid://b2sme7ibm0qfu"
