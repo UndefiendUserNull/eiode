@@ -42,25 +42,29 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -103.0
-offset_right = 114.0
+offset_top = -62.0
+offset_right = 167.0
 grow_vertical = 0
 
 [node name="l_reloading" type="Label" parent="V"]
+visible = false
 layout_mode = 2
 text = "reloading ..."
 label_settings = SubResource("LabelSettings_mcebo")
 
-[node name="l_ammo" type="Label" parent="V"]
+[node name="prog_chargeable" type="ProgressBar" parent="V"]
 layout_mode = 2
-text = "0 / 10"
-label_settings = SubResource("LabelSettings_mcebo")
+max_value = 1.0
 
-[node name="l_weaponName" type="Label" parent="V"]
+[node name="H" type="HBoxContainer" parent="V"]
+layout_mode = 2
+
+[node name="l_weaponName" type="Label" parent="V/H"]
 layout_mode = 2
 text = "Gun name"
 label_settings = SubResource("LabelSettings_ikpc8")
 
-[node name="prog_chargeable" type="ProgressBar" parent="V"]
+[node name="l_ammo" type="Label" parent="V/H"]
 layout_mode = 2
-max_value = 1.0
+text = "0 / 10"
+label_settings = SubResource("LabelSettings_mcebo")

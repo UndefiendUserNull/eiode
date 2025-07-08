@@ -14,4 +14,11 @@ public partial class WeaponAmmoData : Resource
     /// In seconds
     /// </summary>
     [Export] public float ReloadTime { get; set; } = 0.75f;
+
+    public override bool Equals(object obj)
+    {
+        var weaponAmmoData = obj as WeaponAmmoData;
+
+        return CurrentMaxAmmo == weaponAmmoData.CurrentMaxAmmo && CurrentAmmo == weaponAmmoData.CurrentAmmo;
+    }
 }

@@ -2,6 +2,7 @@ using Godot;
 
 namespace EIODE.Components;
 
+[GlobalClass]
 public partial class RaycastHitboxComponent : RayCast3D, IComponent
 {
     [Export] public int Damage { get; set; } = 10;

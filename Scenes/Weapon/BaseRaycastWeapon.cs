@@ -1,6 +1,7 @@
 using Godot;
 using EIODE.Resources;
 using EIODE.Components;
+using EIODE.Utils;
 
 namespace EIODE.Scenes;
 
@@ -9,7 +10,7 @@ namespace EIODE.Scenes;
 /// </summary>
 public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
 {
-    [Export] public RaycastHitboxComponent Hitbox { get; set; }
+    public RaycastHitboxComponent Hitbox { get; set; }
     [Export] public RaycastWeaponData Data { get; set; }
     [Export] public WeaponAmmoData AmmoData { get; set; }
     [Export] public Node3D MuzzlePosition { get; set; }
@@ -18,13 +19,12 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
     protected bool _isReloading = false;
     protected float _reloadTimer = 0f;
 
-    [Signal] public delegate void OnShotFiredEventHandler();
-    [Signal] public delegate void OnReloadStartedEventHandler();
-    [Signal] public delegate void OnReloadCompleteEventHandler();
+    public bool FinishedReloading { get; private set; } = false;
 
     public override void _Ready()
     {
         base._Ready();
+        Hitbox = NodeUtils.GetChildWithNodeType<RaycastHitboxComponent>(this);
         Hitbox.Disable();
         Hitbox.SetRange(Data.Range);
         AmmoData.CurrentAmmo = AmmoData.MagSize;
@@ -34,7 +34,7 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
     /// <summary>
     /// Additional shooting functionality goes here, this first gets executed before the main logic
     /// </summary>
-    public abstract void Shoot();
+    public virtual void Shoot() { }
 
     /// <summary>
     /// Main shooting logic, shouldn't be overridden unless you really NEED to
@@ -49,8 +49,6 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         Hitbox.Damage = Data.Damage;
         Hitbox.Enable();
         GetTree().CreateTimer(Data.HitboxDuration).Timeout += Hitbox.Disable;
-
-        EmitSignalOnShotFired();
     }
 
     /// <summary>
@@ -60,8 +58,6 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
     {
         if (!CanReload()) return;
         _isReloading = true;
-
-        EmitSignalOnReloadStarted();
     }
 
 
@@ -92,8 +88,7 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         AmmoData.CurrentAmmo += ammoToTake;
         AmmoData.CurrentMaxAmmo -= ammoToTake;
         _isReloading = false;
-
-        EmitSignalOnReloadComplete();
+        FinishedReloading = true;
     }
 
     protected virtual bool CanAttack()
@@ -130,4 +125,8 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         return AmmoData;
     }
 
+    public bool IsReloading()
+    {
+        return _isReloading;
+    }
 }

@@ -15,14 +15,12 @@ public partial class HUD : Control
     private Label _label_reloading = null;
     private int _currentAmmo = 0;
     private int _currentMaxAmmo = 0;
-    private Game _game = null;
     private string _text_ammo = string.Empty;
-    private bool _holdingMelee = false;
-    private WeaponAmmoData _currentAmmoData = null;
+    private Game _game = null;
     private ProgressBar _progressBar_chargeable = null;
-    private ChargeableComponent _chargeable = null;
+    private bool _holdingMelee = false;
     private bool _holdingChargeable = false;
-
+    private ChargeableComponent _chargeable = null;
     public override void _Ready()
     {
         _game = Game.GetGame(this);
@@ -53,24 +51,37 @@ public partial class HUD : Control
         _head.AmmoChanged -= Head_AmmoChanged;
         _head.WeaponChanged -= Head_WeaponChanged;
     }
+    private void ApplyAmmo(WeaponAmmoData weaponWithAmmo)
+    {
+        _currentAmmo = weaponWithAmmo.CurrentAmmo;
+        _currentMaxAmmo = weaponWithAmmo.CurrentMaxAmmo;
+        _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
+        _label_ammo.Text = _text_ammo;
+    }
     private void Head_WeaponChanged(WeaponBase current)
     {
-        RefreshWeapon(current);
-    }
-
-    private void Head_EndedReloading()
-    {
-        _label_reloading.Hide();
-    }
-
-    private void Head_StartedReloading()
-    {
-        _label_reloading.Show();
+        if (NodeUtils.GetChildWithNodeType<ChargeableComponent>(current) == null)
+        {
+            _chargeable = null;
+            _progressBar_chargeable.Hide();
+        }
     }
 
     private void Head_AmmoChanged(WeaponBase weapon)
     {
-        RefreshWeapon(weapon);
+        //RefreshWeapon(weapon);
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_holdingMelee) return;
+
+        if (_head.CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
+        {
+            _label_reloading.Visible = weaponWithAmmo.IsReloading();
+            RefreshWeapon(_head.CurrentWeapon);
+            ApplyAmmo(_head.CurrentWeapon.GetWeaponAmmoData());
+        }
     }
 
     private void RefreshWeapon(WeaponBase weapon)
@@ -88,45 +99,34 @@ public partial class HUD : Control
             return;
         }
 
-        if (!(_label_ammo.Visible || _label_weaponName.Visible))
+        // Makes sure weapon name is visible
+        if (!_label_weaponName.Visible)
         {
-            _label_ammo.Show();
             _label_weaponName.Show();
         }
 
+        // Holding weapon that has ammo
         if (weapon is IWeaponWithAmmo weaponWithAmmo)
         {
-            _currentAmmoData = weaponWithAmmo.AmmoData;
-
-            _currentAmmo = _currentAmmoData.CurrentAmmo;
-            _currentMaxAmmo = _currentAmmoData.CurrentMaxAmmo;
-
-            _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
-
-            _label_ammo.Text = _text_ammo;
+            _label_ammo.Show();
         }
 
-        _holdingChargeable = NodeUtils.GetChildWithNodeType(weapon, out _chargeable);
+        // Holding chargeable weapon
+        if (_chargeable == null)
+            _holdingChargeable = NodeUtils.GetChildWithNodeType<ChargeableComponent>(weapon, out _chargeable);
 
-        if (_holdingChargeable)
+        if (_chargeable != null)
         {
-            if (_progressBar_chargeable.MaxValue == _chargeable.FullChargeDuration) return;
+            //if (_progressBar_chargeable.MaxValue == _chargeable.FullChargeDuration) return;
             _progressBar_chargeable.Show();
             _progressBar_chargeable.MinValue = 0;
             _progressBar_chargeable.MaxValue = _chargeable.FullChargeDuration;
-            _chargeable.ChargeProgressChanged += Chargeable_ChargeProgressChanged;
+            _progressBar_chargeable.Value = Mathf.Lerp(_progressBar_chargeable.Value, _chargeable.CurrentCharge, 0.5f);
         }
         else
         {
             _progressBar_chargeable.Hide();
-            _chargeable.ChargeProgressChanged -= Chargeable_ChargeProgressChanged;
         }
-    }
-
-    private void Chargeable_ChargeProgressChanged(float duration)
-    {
-        if (duration != 0)
-            _progressBar_chargeable.Value = Mathf.Lerp(_progressBar_chargeable.Value, _chargeable.CurrentCharge, 0.5f);
     }
 
     #region CC

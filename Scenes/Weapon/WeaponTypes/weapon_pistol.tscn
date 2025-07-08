@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://c4d5vyqkwvllf"]
+
+[ext_resource type="Script" uid="uid://cis3s2q12f2d8" path="res://Scenes/Weapon/WeaponTypes/Defentions/WeaponPistol.cs" id="1_fu3sq"]
+[ext_resource type="Script" uid="uid://cmxt7cr0gyrrf" path="res://Resources/Src/RaycastWeaponData.cs" id="2_aur43"]
+[ext_resource type="Script" uid="uid://dk3sh2km4q7kf" path="res://Resources/Src/WeaponAmmoData.cs" id="3_wtiot"]
+[ext_resource type="Script" uid="uid://b2sme7ibm0qfu" path="res://Components/Hitbox/RaycastHitboxComponent.cs" id="4_4ajr3"]
+
+[sub_resource type="Resource" id="Resource_rsur3"]
+script = ExtResource("2_aur43")
+Range = 150.0
+HitboxDuration = 0.03
+Name = "pistol"
+Damage = 5
+HitRate = 1.0
+WeaponType = 0
+metadata/_custom_type_script = "uid://cmxt7cr0gyrrf"
+
+[sub_resource type="Resource" id="Resource_d0c4f"]
+script = ExtResource("3_wtiot")
+MagSize = 17
+MaxAmmo = 52
+ReloadTime = 1.0
+metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
+
+[node name="weapon_pistol" type="Node3D"]
+script = ExtResource("1_fu3sq")
+Data = SubResource("Resource_rsur3")
+AmmoData = SubResource("Resource_d0c4f")
+
+[node name="RaycastHitboxComponent" type="RayCast3D" parent="."]
+script = ExtResource("4_4ajr3")
+Damage = 5
+metadata/_custom_type_script = "uid://b2sme7ibm0qfu"

@@ -20,13 +20,12 @@ metadata/_custom_type_script = "uid://cmxt7cr0gyrrf"
 script = ExtResource("3_kl64s")
 MagSize = 2
 MaxAmmo = 12
-ReloadTime = 0.75
+ReloadTime = 0.0
 metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
 
-[node name="LaserGun" type="Node3D" node_paths=PackedStringArray("ChargeableComponent", "Hitbox")]
+[node name="LaserGun" type="Node3D" node_paths=PackedStringArray("ChargeableComponent")]
 script = ExtResource("1_yc6b7")
 ChargeableComponent = NodePath("ChargeableComponent")
-Hitbox = NodePath("RayHitBox")
 Data = SubResource("Resource_tgw26")
 AmmoData = SubResource("Resource_ehrr1")
 

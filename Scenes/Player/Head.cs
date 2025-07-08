@@ -4,6 +4,7 @@ using EIODE.Core;
 using System.Collections.Generic;
 using System;
 using Godot;
+using EIODE.Resources;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
@@ -19,14 +20,14 @@ public partial class Head : Node3D
     private DevConsole _console = null;
     private Player _player = null;
     private int _currentWeaponIndex = 0;
+    private WeaponAmmoData _currentWeaponAmmoData = null;
 
     public Camera3D Camera { get; private set; } = null;
     public WeaponBase CurrentWeapon { get; private set; } = null;
     public List<WeaponBase> WeaponsInventory { get; private set; } = new();
 
     [Signal] public delegate void WeaponChangedEventHandler(WeaponBase current);
-    [Signal] public delegate void AmmoChangedEventHandler(WeaponBase weapon);
-
+    [Signal] public delegate void AmmoChangedEventHandler(WeaponBase weaponAmmoData);
     public override void _Ready()
     {
         _parent = GetParent<Node3D>();
@@ -87,16 +88,23 @@ public partial class Head : Node3D
         }
 
         // actions
-        if (Input.IsActionPressed(InputHash.SHOOT))
+        bool isAmmoWeapon = CurrentWeapon is IWeaponWithAmmo;
+
+        if (Input.IsActionJustPressed(InputHash.RELOAD) && isAmmoWeapon)
         {
-            CurrentWeapon.Attack();
+            ((IWeaponWithAmmo)CurrentWeapon).ReloadPressed();
+
             EmitSignalAmmoChanged(CurrentWeapon);
         }
 
-        if (Input.IsActionJustPressed(InputHash.RELOAD) && CurrentWeapon is IWeaponWithAmmo weaponAmmo)
+        if (Input.IsActionPressed(InputHash.SHOOT))
         {
-            weaponAmmo.ReloadPressed();
-            EmitSignalAmmoChanged(CurrentWeapon);
+            CurrentWeapon.Attack();
+
+            if (isAmmoWeapon)
+            {
+                EmitSignalAmmoChanged(CurrentWeapon);
+            }
         }
     }
 
@@ -160,11 +168,23 @@ public partial class Head : Node3D
         // Show new weapon
         CurrentWeapon.Show();
 
-        EmitSignalAmmoChanged(CurrentWeapon);
-        EmitSignalAmmoChanged(CurrentWeapon);
+        EmitSignalWeaponChanged(CurrentWeapon);
+
+        if (CurrentWeapon is IWeaponWithAmmo)
+            EmitSignalAmmoChanged(CurrentWeapon);
     }
 
-    #region Console Commands
+    private void WatchAmmoData()
+    {
+        if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
+        {
+            _currentWeaponAmmoData = weaponWithAmmo.AmmoData;
+
+
+        }
+    }
+
+    #region CC
     [ConsoleCommand("tank_up", "Gives all weapons of given set (0 | 1 | 2 | 3)", true)]
     public void Cc_TankUp(int set)
     {
