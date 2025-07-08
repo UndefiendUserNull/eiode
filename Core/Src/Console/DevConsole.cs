@@ -198,15 +198,30 @@ public partial class DevConsole : Control
             _ => msg
         };
 
-        AddLogLine(line);
+        AddLogLine(line, logLevel);
     }
 
-    private void AddLogLine(string line)
+    private void AddLogLine(string line, LogLevel logLevel)
     {
         if (_log != null)
             _log.AppendText(line + "\n");
         else
-            GD.Print(ExtractMessage(line));
+        {
+            switch (logLevel)
+            {
+                case LogLevel.WARNING:
+                    GD.PushWarning(ExtractMessage(line));
+                    break;
+                case LogLevel.ERROR:
+                    GD.PushError(ExtractMessage(line));
+                    break;
+                case LogLevel.INFO:
+                case LogLevel.BLANK:
+                default:
+                    GD.Print(ExtractMessage(line));
+                    break;
+            }
+        }
     }
 
 

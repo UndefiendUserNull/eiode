@@ -23,9 +23,9 @@ public partial class Game : Node
     public Player Player { get; private set; }
     public DevConsole Console { get; private set; }
     public static readonly string Location = "/root/Game";
-    private const string WEAPONS_PATH = "res://Resources/Gun Types/";
+    private const string WEAPONS_PATH = "res://Scenes/Weapon/WeaponTypes/";
     private bool _initCommands = true;
-    private static Dictionary<string, WeaponConfig> _weaponsLookup = [];
+    private static Dictionary<string, PackedScene> _weaponsLookup = [];
     private List<string> _starterCommands = [];
 
     // To prevent racing fucking conditions, starts at the end of _Ready 
@@ -73,11 +73,11 @@ public partial class Game : Node
         if (File.Exists(path))
         {
             _starterCommands = FilesUtils.ReadFile(path);
-            GD.Print($"Loaded from {_starterCommands.Count} commands from commands.txt");
+            GD.Print($"Loaded from {_starterCommands.Count} commands from commands.conf");
         }
         else
         {
-            GD.PushWarning($"Couldn't find commands.txt at {path}");
+            GD.PushWarning($"Couldn't find commands.conf at {path}");
         }
     }
 
@@ -151,18 +151,26 @@ public partial class Game : Node
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
-    public static Dictionary<string, WeaponConfig> LoadAllWeapons()
+    public Dictionary<string, PackedScene> LoadAllWeapons()
     {
-        Dictionary<string, WeaponConfig> loadedWeapons = [];
+        Dictionary<string, PackedScene> loadedWeapons = [];
         foreach (var weaponPath in ResourceLoader.ListDirectory(WEAPONS_PATH))
         {
-            var currentWeapon = ResourceLoader.Load<WeaponConfig>(Path.Combine(WEAPONS_PATH, weaponPath));
-            loadedWeapons.Add(currentWeapon.Name, currentWeapon);
+            if (weaponPath.EndsWith(".tscn") && weaponPath.StartsWith("weapon_"))
+            {
+                var currentWeapon = ResourceLoader.Load<PackedScene>(Path.Combine(WEAPONS_PATH, weaponPath));
+                // TODO: Make that it also removes the ".tscn" and remove it from the WeaponsSetes
+                loadedWeapons.Add(LevelLoader.CleanPath(currentWeapon.ResourcePath, WEAPONS_PATH), currentWeapon);
+            }
+            else
+            {
+                Console?.Log($"Ignored {weaponPath} while loading weapons since it doesn't ends with .tscn or doesn't start with 'weapon_'", DevConsole.LogLevel.WARNING);
+            }
         }
         return loadedWeapons;
     }
 
-    public WeaponConfig FindWeapon(string name)
+    public PackedScene FindWeapon(string name)
     {
         // Lazy initialize the lookup if empty
         _weaponsLookup ??= LoadAllWeapons();
@@ -170,9 +178,9 @@ public partial class Game : Node
         return _weaponsLookup.TryGetValue(name, out var weapon) ? weapon : null;
     }
 
-    public WeaponConfig[] FindWeapons(params string[] names)
+    public PackedScene[] FindWeapons(params string[] names)
     {
-        var result = new List<WeaponConfig>();
+        var result = new List<PackedScene>();
 
         foreach (var item in _weaponsLookup)
         {
@@ -184,7 +192,7 @@ public partial class Game : Node
             if (_weaponsLookup.TryGetValue(name.ToLower(), out var weapon))
             {
                 result.Add(weapon);
-                Console?.Log(weapon.Name + " was Found");
+                Console?.Log(LevelLoader.CleanPath(weapon.ResourcePath, WEAPONS_PATH) + " was Found");
             }
         }
 

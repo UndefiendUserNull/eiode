@@ -54,6 +54,29 @@ public partial class LevelLoader : Node
         }
     }
 
+    public static string GetLevelName(PackedScene packedScene)
+    {
+        return CleanPath(packedScene.ResourcePath, LEVELS_PATH);
+    }
+
+    public static string GetLevelName(string levelName)
+    {
+        return CleanPath(levelName, LEVELS_PATH);
+    }
+
+    public static string CleanPath(string inputPath, string toRemove)
+    {
+        if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(toRemove))
+            return inputPath;
+
+        string cleaned = inputPath.Replace(toRemove, "");
+
+        // trim leading/trailing slashes or backslashes if needed
+        cleaned = cleaned.TrimStart('\\', '/');
+
+        return cleaned;
+    }
+
     /// <summary>
     /// Combines <paramref name="levelName"/> with the LEVELS_PATH const and adds .tscn to the end if it doesn't already
     /// </summary>
@@ -73,17 +96,15 @@ public partial class LevelLoader : Node
 
     public void ChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        _console?.Log($"Changing Level to {newLevel} ...");
+        _console?.Log($"Changing Level to {GetLevelName(newLevel.ResourcePath)} ...");
         CallDeferred(MethodName.DeferredChangeLevel, newLevel, freeCurrentLevel, movePlayer);
-        _console?.Log($"Changed current level to {newLevel}");
+        _console?.Log($"Changed current level to {GetLevelName(newLevel.ResourcePath)}");
 
     }
 
     public void ChangeLevel(string newLevelPath, bool freeCurrentLevel = true, bool movePlayer = true)
     {
-        _console?.Log($"Changing Level to {newLevelPath} ...");
-        CallDeferred(MethodName.DeferredChangeLevel, LoadLevel(newLevelPath), freeCurrentLevel, movePlayer);
-        _console?.Log($"Changed current level to {newLevelPath}");
+        ChangeLevel(LoadLevel(newLevelPath), freeCurrentLevel, movePlayer);
     }
 
     private void DeferredChangeLevel(PackedScene newLevel, bool freeCurrentLevel = true, bool movePlayer = true)
@@ -104,7 +125,7 @@ public partial class LevelLoader : Node
 
         if (movePlayer)
         {
-            _console?.Log($"Moving player to {newLevel} ...");
+            _console?.Log($"Moving player to {GetLevelName(newLevel.ResourcePath)} ...");
             var player = Game.GetGame(this).GetPlayer();
 
             if (NodeUtils.GetChildWithName<Node3D>("SPAWN", CurrentLevel) != null)
@@ -214,6 +235,7 @@ public partial class LevelLoader : Node
     public static void Cc_CacheClear()
     {
         _allLevels.Clear();
+        GC.GetGCMemoryInfo();
 
         DevConsole.Instance?.Log("Level cache cleared");
     }

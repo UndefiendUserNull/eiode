@@ -1,0 +1,12 @@
+using Godot;
+
+namespace EIODE.Resources;
+
+[GlobalClass]
+public partial class WeaponAmmoData : Resource
+{
+    [Export] public int MagSize { get; set; }
+    [Export] public int MaxAmmo { get; set; }
+    public int CurrentAmmo { get; set; }
+    public int CurrentMaxAmmo { get; set; }
+}

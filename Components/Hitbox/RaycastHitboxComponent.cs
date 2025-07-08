@@ -9,9 +9,6 @@ public partial class RaycastHitboxComponent : RayCast3D, IComponent
     private int _hits = 0;
     private float _range = 1000f;
 
-    /// <summary>
-    /// Used only if the shape is a SeparationRayShape3D
-    /// </summary>
     public void SetRange(float newRange)
     {
         TargetPosition = Vector3.Forward * newRange;

@@ -13,3 +13,4 @@ addons_downloader/Scripts/
 cyclops_settings.config
 *.user
 *tmp
+/textures

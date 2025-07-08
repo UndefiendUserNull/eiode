@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://dn5prquwvnwc3"]
 
-[ext_resource type="Texture2D" uid="uid://b3dho6lj7tkcv" path="res://Assets/Textures/tile_grey.jpg" id="1_dx0lg"]
+[ext_resource type="Texture2D" uid="uid://b3dho6lj7tkcv" path="res://textures/tile_grey.jpg" id="1_dx0lg"]
 [ext_resource type="Texture2D" uid="uid://7apmjsov8uoj" path="res://Materials/Noise Textures/default.tres" id="2_4k564"]
 
 [resource]

@@ -234,10 +234,6 @@ public partial class Player : CharacterBody3D, ITriggerable
     }
     public void AddJumpPadForce(JumpPad jumpPad)
     {
-        float jumpPower = jumpPad.JumpPower;
-
-        if (jumpPower == 0) return;
-
         if (!PrevJumpPads.Any(x => x == jumpPad))
         {
             PrevJumpPads.Add(jumpPad);
@@ -252,19 +248,21 @@ public partial class Player : CharacterBody3D, ITriggerable
                 _timeInAir = 0f;
 
                 if (!jumpPad.IgnoreMaxJumpPadPower)
-                    JumpPadForce = Mathf.Min(Conf.MaxJumpPadPower, JumpPadForce + jumpPower);
+                    JumpPadForce = Mathf.Min(Conf.MaxJumpPadPower, JumpPadForce + jumpPad.JumpPower);
                 else
-                    JumpPadForce += jumpPower;
+                    JumpPadForce += jumpPad.JumpPower;
 
                 Velocity += new Vector3(0, JumpPadForce, 0);
             }
         }
         else
         {
-            PrevJumpPads.Clear();
-            JumpPadForce = jumpPower;
+            JumpPadForce = jumpPad.JumpPower;
+            Velocity += new Vector3(0, JumpPadForce, 0);
+
+            _variableGravity = 0f;
+            _timeInAir = 0f;
         }
-        _wantToJump = false;
     }
 
     /// <summary>

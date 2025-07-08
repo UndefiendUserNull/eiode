@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3 uid="uid://cqxvqk1l7epeu"]
+
+[ext_resource type="Script" uid="uid://bxbetkv87xj6s" path="res://Scenes/Weapon/WeaponTypes/Defentions/LaserGun.cs" id="1_yc6b7"]
+[ext_resource type="Script" uid="uid://cmxt7cr0gyrrf" path="res://Resources/Src/RaycastWeaponData.cs" id="2_5d2gj"]
+[ext_resource type="Script" uid="uid://j1wi7wkqb7e0" path="res://Components/Weapons/ChargeableComponent.cs" id="2_eyrwj"]
+[ext_resource type="PackedScene" uid="uid://cromaxto1tesr" path="res://Components/Hitbox/ray_hit_box.tscn" id="3_eyrwj"]
+[ext_resource type="Script" uid="uid://dk3sh2km4q7kf" path="res://Resources/Src/WeaponAmmoData.cs" id="3_kl64s"]
+
+[sub_resource type="Resource" id="Resource_tgw26"]
+script = ExtResource("2_5d2gj")
+Range = 150.0
+HitboxDuration = 0.03
+ReloadTime = 0.75
+Name = "laser_gun"
+Damage = 15
+HitRate = 1.0
+WeaponType = 0
+metadata/_custom_type_script = "uid://cmxt7cr0gyrrf"
+
+[sub_resource type="Resource" id="Resource_ehrr1"]
+script = ExtResource("3_kl64s")
+MagSize = 2
+MaxAmmo = 12
+metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
+
+[node name="LaserGun" type="Node3D" node_paths=PackedStringArray("ChargeableComponent", "Hitbox")]
+script = ExtResource("1_yc6b7")
+FullChargeDuration = 1.0
+ChargeableComponent = NodePath("ChargeableComponent")
+Hitbox = NodePath("RayHitBox")
+Data = SubResource("Resource_tgw26")
+AmmoData = SubResource("Resource_ehrr1")
+
+[node name="ChargeableComponent" type="Node" parent="."]
+script = ExtResource("2_eyrwj")
+metadata/_custom_type_script = "uid://j1wi7wkqb7e0"
+
+[node name="RayHitBox" parent="." instance=ExtResource("3_eyrwj")]
