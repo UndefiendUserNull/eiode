@@ -2,6 +2,7 @@ using EIODE.Core;
 using Godot;
 
 namespace EIODE.Components;
+[GlobalClass]
 public partial class HealthComponent : Node, IComponent
 {
     [Export] public int MaxHealth { get; private set; } = 100;

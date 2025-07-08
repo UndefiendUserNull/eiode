@@ -4,6 +4,7 @@ using EIODE.Core;
 using System.Collections.Generic;
 using System;
 using Godot;
+using EIODE.Resources;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
@@ -19,14 +20,14 @@ public partial class Head : Node3D
     private DevConsole _console = null;
     private Player _player = null;
     private int _currentWeaponIndex = 0;
+    private WeaponAmmoData _currentWeaponAmmoData = null;
 
     public Camera3D Camera { get; private set; } = null;
     public WeaponBase CurrentWeapon { get; private set; } = null;
     public List<WeaponBase> WeaponsInventory { get; private set; } = new();
 
     [Signal] public delegate void WeaponChangedEventHandler(WeaponBase current);
-    [Signal] public delegate void AmmoChangedEventHandler(WeaponBase weapon);
-
+    [Signal] public delegate void AmmoChangedEventHandler(WeaponBase weaponAmmoData);
     public override void _Ready()
     {
         _parent = GetParent<Node3D>();
@@ -87,16 +88,23 @@ public partial class Head : Node3D
         }
 
         // actions
-        if (Input.IsActionPressed(InputHash.SHOOT))
+        bool isAmmoWeapon = CurrentWeapon is IWeaponWithAmmo;
+
+        if (Input.IsActionJustPressed(InputHash.RELOAD) && isAmmoWeapon)
         {
-            CurrentWeapon.Attack();
+            ((IWeaponWithAmmo)CurrentWeapon).ReloadPressed();
+
             EmitSignalAmmoChanged(CurrentWeapon);
         }
 
-        if (Input.IsActionJustPressed(InputHash.RELOAD))
+        if (Input.IsActionPressed(InputHash.SHOOT))
         {
-            CurrentWeapon.ReloadPressed();
-            EmitSignalAmmoChanged(CurrentWeapon);
+            CurrentWeapon.Attack();
+
+            if (isAmmoWeapon)
+            {
+                EmitSignalAmmoChanged(CurrentWeapon);
+            }
         }
     }
 
@@ -142,29 +150,62 @@ public partial class Head : Node3D
 
     public void ChangeCurrentWeapon(int index, bool forceSet = false)
     {
-        if (WeaponsInventory.Count == 0) return;
+        if (WeaponsInventory == null || WeaponsInventory.Count == 0)
+            return;
 
         if (!forceSet)
         {
-            if (_currentWeaponIndex == index) return;
-            if (index >= WeaponsInventory.Count) index = 0;
-            if (index < 0) index = WeaponsInventory.Count - 1;
+            if (_currentWeaponIndex == index)
+                return;
+
+            // Handle index wrapping
+            index = (index < 0) ? WeaponsInventory.Count - 1 :
+                   (index >= WeaponsInventory.Count) ? 0 : index;
+        }
+        else
+        {
+            // Validate index when forced
+            if (index < 0 || index >= WeaponsInventory.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        // Hide current weapon
-        CurrentWeapon?.Hide();
+        var newWeapon = WeaponsInventory[index];
 
-        _currentWeaponIndex = index;
-        CurrentWeapon = WeaponsInventory[_currentWeaponIndex];
+        if (newWeapon == null) return;  // Skip if null weapon
 
-        // Show new weapon
-        CurrentWeapon.Show();
+        // Only change if different weapon or forced
+        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon))
+        {
+            CurrentWeapon?.Hide();
 
-        EmitSignalAmmoChanged(CurrentWeapon);
-        EmitSignalAmmoChanged(CurrentWeapon);
+            _currentWeaponIndex = index;
+            CurrentWeapon = newWeapon;
+
+            try
+            {
+                CurrentWeapon.Show();
+                EmitSignalWeaponChanged(CurrentWeapon);
+
+                //if (CurrentWeapon is IWeaponWithAmmo)
+                //    EmitSignalAmmoChanged(CurrentWeapon);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+    private void WatchAmmoData()
+    {
+        if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
+        {
+            _currentWeaponAmmoData = weaponWithAmmo.AmmoData;
+
+
+        }
     }
 
-    #region Console Commands
+    #region CC
     [ConsoleCommand("tank_up", "Gives all weapons of given set (0 | 1 | 2 | 3)", true)]
     public void Cc_TankUp(int set)
     {

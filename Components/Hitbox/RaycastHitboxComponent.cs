@@ -2,6 +2,7 @@ using Godot;
 
 namespace EIODE.Components;
 
+[GlobalClass]
 public partial class RaycastHitboxComponent : RayCast3D, IComponent
 {
     [Export] public int Damage { get; set; } = 10;
@@ -9,6 +10,10 @@ public partial class RaycastHitboxComponent : RayCast3D, IComponent
     private int _hits = 0;
     private float _range = 1000f;
 
+    public override void _Ready()
+    {
+        CollideWithBodies = true;
+    }
     public void SetRange(float newRange)
     {
         TargetPosition = Vector3.Forward * newRange;

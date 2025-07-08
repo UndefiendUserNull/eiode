@@ -1,15 +1,16 @@
 using Godot;
 using EIODE.Resources;
 using EIODE.Components;
+using EIODE.Utils;
 
 namespace EIODE.Scenes;
 
 /// <summary>
 /// Base raycast, any weapon that uses raycast "Pistol, <see cref="LaserGun"/>, etc" should inherent from this class 
 /// </summary>
-public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
+public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
 {
-    [Export] public RaycastHitboxComponent Hitbox { get; set; }
+    public RaycastHitboxComponent Hitbox { get; set; }
     [Export] public RaycastWeaponData Data { get; set; }
     [Export] public WeaponAmmoData AmmoData { get; set; }
     [Export] public Node3D MuzzlePosition { get; set; }
@@ -18,13 +19,12 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
     protected bool _isReloading = false;
     protected float _reloadTimer = 0f;
 
-    [Signal] public delegate void OnShotFiredEventHandler();
-    [Signal] public delegate void OnReloadStartedEventHandler();
-    [Signal] public delegate void OnReloadCompleteEventHandler();
+    public bool FinishedReloading { get; private set; } = false;
 
     public override void _Ready()
     {
         base._Ready();
+        Hitbox = NodeUtils.GetChildWithNodeType<RaycastHitboxComponent>(this);
         Hitbox.Disable();
         Hitbox.SetRange(Data.Range);
         AmmoData.CurrentAmmo = AmmoData.MagSize;
@@ -34,7 +34,7 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
     /// <summary>
     /// Additional shooting functionality goes here, this first gets executed before the main logic
     /// </summary>
-    public abstract void Shoot();
+    public virtual void Shoot() { }
 
     /// <summary>
     /// Main shooting logic, shouldn't be overridden unless you really NEED to
@@ -48,24 +48,16 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         AmmoData.CurrentAmmo--;
         Hitbox.Damage = Data.Damage;
         Hitbox.Enable();
-        GetTree().CreateTimer(Data.HitboxDuration).Timeout += ResetAttack;
-
-        EmitSignalOnShotFired();
+        GetTree().CreateTimer(Data.HitboxDuration).Timeout += Hitbox.Disable;
     }
 
-    private void ResetAttack()
-    {
-        _shootingCooldown = 0f;
-        Hitbox.Disable();
-    }
-
-    public override void ReloadPressed()
+    /// <summary>
+    /// What gets executed when the reload button is pressed
+    /// </summary>
+    public virtual void ReloadPressed()
     {
         if (!CanReload()) return;
         _isReloading = true;
-        CompleteReload();
-
-        EmitSignalOnReloadStarted();
     }
 
 
@@ -80,21 +72,23 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         {
             _reloadTimer -= (float)delta;
             if (_reloadTimer <= 0)
-                CompleteReload();
+                ReloadCompleted();
         }
     }
 
-    protected virtual void CompleteReload()
+    /// <summary>
+    /// What gets executed when the reload timer reaches 0
+    /// </summary>
+    public virtual void ReloadCompleted()
     {
-        _reloadTimer = Data.ReloadTime;
+        _reloadTimer = AmmoData.ReloadTime;
         int ammoNeeded = AmmoData.MagSize - AmmoData.CurrentAmmo;
         int ammoToTake = Mathf.Min(ammoNeeded, AmmoData.CurrentMaxAmmo);
 
         AmmoData.CurrentAmmo += ammoToTake;
         AmmoData.CurrentMaxAmmo -= ammoToTake;
         _isReloading = false;
-
-        EmitSignalOnReloadComplete();
+        FinishedReloading = true;
     }
 
     protected virtual bool CanAttack()
@@ -131,4 +125,8 @@ public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
         return AmmoData;
     }
 
+    public bool IsReloading()
+    {
+        return _isReloading;
+    }
 }

@@ -19,6 +19,12 @@ public partial class WeaponData : Resource
 
     [Export] public WeaponType WeaponType { get; set; } = WeaponType.RAYCAST;
 
+    public override bool Equals(object obj)
+    {
+        var weaponData = obj as WeaponData;
+        return this.Name == weaponData.Name && this.Damage == weaponData.Damage && this.HitRate == weaponData.HitRate && this.WeaponType == weaponData.WeaponType;
+    }
+
     public WeaponData() { }
 }
 
