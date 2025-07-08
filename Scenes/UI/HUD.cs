@@ -76,7 +76,11 @@ public partial class HUD : Control
 
     public override void _Process(double delta)
     {
-        if (_holdingMelee) return;
+        if (_head.CurrentWeapon.GetWeaponType() == WeaponType.MELEE)
+        {
+            RefreshWeapon(_head.CurrentWeapon);
+            return;
+        }
 
         if (_head.CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
         {
@@ -90,14 +94,16 @@ public partial class HUD : Control
     {
         if (weapon == null) return;
 
-        _holdingMelee = weapon.GetWeaponType() == WeaponType.MELEE;
         _label_weaponName.Text = weapon.GetWeaponName().Capitalize();
 
-        if (_holdingMelee)
+        if (_head.CurrentWeapon.GetWeaponType() == WeaponType.MELEE)
         {
             _label_reloading.Hide();
+            _label_ammo.Text = string.Empty;
+            _label_weaponName.Text = string.Empty;
             _label_ammo.Hide();
             _label_weaponName.Hide();
+            _progressBar_chargeable.Hide();
             return;
         }
 

@@ -46,6 +46,7 @@ public partial class DebugUi : Control
         _sb.Append($"Time In Air : {_player._timeInAir}\n");
         _sb.Append($"PrevJumpPads.Count : {_player.PrevJumpPads.Count}\n");
         _sb.Append($"Time Since Last Jump : {_player._timeSinceLastJumpInput}\n");
+        _sb.Append($"Is Holding Melee : {_playerHead.CurrentWeapon.GetWeaponType() == Resources.WeaponType.MELEE}");
         //_sb.Append($"Shooting Time : {_playerHead._shootingTime}\n");
         //_sb.Append($"Current Fire Rate : {_playerHead.CurrentWeapon.FireRate}\n");
         //_sb.Append($"Current Ammo : {_playerHead._reloading}\n");

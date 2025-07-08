@@ -1,6 +1,6 @@
 namespace EIODE.Scenes;
 
-public partial class WeaponPistol : BaseRaycastWeapon
+public partial class WeaponPistol : RaycastWeaponBase
 {
 
 }

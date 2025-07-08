@@ -28,6 +28,7 @@ Data = SubResource("Resource_rsur3")
 AmmoData = SubResource("Resource_d0c4f")
 
 [node name="RaycastHitboxComponent" type="RayCast3D" parent="."]
+collision_mask = 4
 script = ExtResource("4_4ajr3")
 Damage = 5
 metadata/_custom_type_script = "uid://b2sme7ibm0qfu"

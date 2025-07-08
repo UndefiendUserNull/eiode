@@ -8,7 +8,7 @@ namespace EIODE.Scenes;
 /// <summary>
 /// Base raycast, any weapon that uses raycast "Pistol, <see cref="LaserGun"/>, etc" should inherent from this class 
 /// </summary>
-public abstract partial class BaseRaycastWeapon : WeaponBase, IWeaponWithAmmo
+public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
 {
     public RaycastHitboxComponent Hitbox { get; set; }
     [Export] public RaycastWeaponData Data { get; set; }

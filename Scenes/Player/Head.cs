@@ -150,30 +150,51 @@ public partial class Head : Node3D
 
     public void ChangeCurrentWeapon(int index, bool forceSet = false)
     {
-        if (WeaponsInventory.Count == 0) return;
+        if (WeaponsInventory == null || WeaponsInventory.Count == 0)
+            return;
 
         if (!forceSet)
         {
-            if (_currentWeaponIndex == index) return;
-            if (index >= WeaponsInventory.Count) index = 0;
-            if (index < 0) index = WeaponsInventory.Count - 1;
+            if (_currentWeaponIndex == index)
+                return;
+
+            // Handle index wrapping
+            index = (index < 0) ? WeaponsInventory.Count - 1 :
+                   (index >= WeaponsInventory.Count) ? 0 : index;
+        }
+        else
+        {
+            // Validate index when forced
+            if (index < 0 || index >= WeaponsInventory.Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        // Hide current weapon
-        CurrentWeapon?.Hide();
+        var newWeapon = WeaponsInventory[index];
 
-        _currentWeaponIndex = index;
-        CurrentWeapon = WeaponsInventory[_currentWeaponIndex];
+        if (newWeapon == null) return;  // Skip if null weapon
 
-        // Show new weapon
-        CurrentWeapon.Show();
+        // Only change if different weapon or forced
+        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon))
+        {
+            CurrentWeapon?.Hide();
 
-        EmitSignalWeaponChanged(CurrentWeapon);
+            _currentWeaponIndex = index;
+            CurrentWeapon = newWeapon;
 
-        if (CurrentWeapon is IWeaponWithAmmo)
-            EmitSignalAmmoChanged(CurrentWeapon);
+            try
+            {
+                CurrentWeapon.Show();
+                EmitSignalWeaponChanged(CurrentWeapon);
+
+                //if (CurrentWeapon is IWeaponWithAmmo)
+                //    EmitSignalAmmoChanged(CurrentWeapon);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
-
     private void WatchAmmoData()
     {
         if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)

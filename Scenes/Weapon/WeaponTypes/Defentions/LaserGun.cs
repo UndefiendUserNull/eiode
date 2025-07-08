@@ -4,7 +4,7 @@ using Godot;
 
 namespace EIODE.Scenes;
 
-public partial class LaserGun : BaseRaycastWeapon
+public partial class LaserGun : RaycastWeaponBase
 {
     [Export] public ChargeableComponent ChargeableComponent { get; set; }
 
