@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://bfricg7u82i5w"]
+
+[ext_resource type="Texture2D" uid="uid://dvyoijbgwxb6k" path="res://textures/tile_floor_grey.jpg" id="1_5peg4"]
+[ext_resource type="Texture2D" uid="uid://7apmjsov8uoj" path="res://Materials/Noise Textures/default.tres" id="2_ebkgh"]
+
+[resource]
+albedo_texture = ExtResource("1_5peg4")
+metallic_specular = 0.0
+normal_scale = 3.0
+normal_texture = ExtResource("2_ebkgh")
+anisotropy = -1.0
+uv1_triplanar = true
+uv1_triplanar_sharpness = 142.025
+grow_amount = -1.0
+distance_fade_min_distance = 50.0
+distance_fade_max_distance = 0.0

@@ -16,20 +16,16 @@ public partial class HUD : Control
     private int _currentMaxAmmo = 0;
     private Game _game = null;
     private string _text_ammo = string.Empty;
-    private WeaponConfig _hands = null;
-    private bool _holdingHands = false;
-
+    private bool _holdingMelee = false;
+    private WeaponAmmoData _currentAmmoData = null;
     public override void _Ready()
     {
         _game = Game.GetGame(this);
-        _hands = _game.FindWeapon("hands");
 
         _head = _game.GetPlayer().GetHead();
         _container = NodeUtils.GetChildWithName<VBoxContainer>("V", this);
 
         _head.AmmoChanged += Head_AmmoChanged;
-        _head.StartedReloading += Head_StartedReloading;
-        _head.EndedReloading += Head_EndedReloading;
         _head.WeaponChanged += Head_WeaponChanged;
 
         _label_reloading = NodeUtils.GetChildWithName<Label>("l_reloading", _container);
@@ -49,11 +45,9 @@ public partial class HUD : Control
             return;
 
         _head.AmmoChanged -= Head_AmmoChanged;
-        _head.StartedReloading -= Head_StartedReloading;
-        _head.EndedReloading -= Head_EndedReloading;
         _head.WeaponChanged -= Head_WeaponChanged;
     }
-    private void Head_WeaponChanged(WeaponConfig current)
+    private void Head_WeaponChanged(WeaponBase current)
     {
         RefreshWeapon(current);
     }
@@ -68,20 +62,24 @@ public partial class HUD : Control
         _label_reloading.Show();
     }
 
-    private void Head_AmmoChanged(WeaponConfig weapon)
+    private void Head_AmmoChanged(WeaponBase weapon)
     {
         RefreshWeapon(weapon);
     }
 
-    private void RefreshWeapon(WeaponConfig weapon)
+    private void RefreshWeapon(WeaponBase weapon)
     {
-        _holdingHands = weapon == _hands;
+        if (weapon == null) return;
 
-        if (_holdingHands)
+        _holdingMelee = weapon.GetWeaponType() == WeaponType.MELEE;
+        _label_weaponName.Text = weapon.GetWeaponName().Capitalize();
+
+        if (_holdingMelee)
         {
             _label_reloading.Hide();
             _label_ammo.Hide();
             _label_weaponName.Hide();
+            return;
         }
         else
         {
@@ -92,16 +90,17 @@ public partial class HUD : Control
             }
         }
 
-        int currentAmmo = _head.CurrentWeapon.CurrentAmmo;
-        int currentMaxAmmo = _head.CurrentWeapon.CurrentMaxAmmo;
+        if (weapon is IWeaponWithAmmo weaponWithAmmo)
+        {
+            _currentAmmoData = weaponWithAmmo.AmmoData;
 
-        _currentAmmo = currentAmmo;
-        _currentMaxAmmo = currentMaxAmmo;
+            _currentAmmo = _currentAmmoData.CurrentAmmo;
+            _currentMaxAmmo = _currentAmmoData.CurrentMaxAmmo;
 
-        _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
+            _text_ammo = $"{_currentAmmo} / {_currentMaxAmmo}";
 
-        _label_weaponName.Text = weapon.Name.Capitalize();
-        _label_ammo.Text = _text_ammo;
+            _label_ammo.Text = _text_ammo;
+        }
     }
 
     #region CC

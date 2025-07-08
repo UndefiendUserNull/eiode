@@ -25,7 +25,6 @@ _res_playerMovementConfig = ExtResource("2_a3d8c")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0.074786)
 script = ExtResource("3_xpcdj")
-ShootingLineOffset = 2.0
 
 [node name="Camera" type="Camera3D" parent="Head"]
 fov = 90.0
@@ -37,6 +36,7 @@ debug_shape_thickness = 1
 
 [node name="shooting_line" type="MeshInstance3D" parent="Head/Camera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+gi_mode = 0
 mesh = SubResource("ArrayMesh_jlvik")
 skeleton = NodePath("../..")
 script = ExtResource("6_0u5uq")
@@ -63,3 +63,6 @@ collision_mask = 32
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Feet"]
 shape = SubResource("BoxShape3D_0u5uq")
 debug_fill = false
+
+[node name="AudioListener3D" type="AudioListener3D" parent="."]
+current = true
