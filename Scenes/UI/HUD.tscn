@@ -42,7 +42,7 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -62.0
+offset_top = -31.0
 offset_right = 167.0
 grow_vertical = 0
 
@@ -53,8 +53,10 @@ text = "reloading ..."
 label_settings = SubResource("LabelSettings_mcebo")
 
 [node name="prog_chargeable" type="ProgressBar" parent="V"]
+modulate = Color(0.580392, 1, 1, 1)
 layout_mode = 2
 max_value = 1.0
+value = 0.32
 
 [node name="H" type="HBoxContainer" parent="V"]
 layout_mode = 2

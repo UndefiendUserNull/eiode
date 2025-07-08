@@ -9,7 +9,8 @@ namespace EIODE.Scenes.UI;
 public partial class HUD : Control
 {
     private Head _head = null;
-    private VBoxContainer _container = null;
+    private VBoxContainer _Vcontainer = null;
+    private HBoxContainer _Hcontainer = null;
     private Label _label_ammo = null;
     private Label _label_weaponName = null;
     private Label _label_reloading = null;
@@ -26,15 +27,16 @@ public partial class HUD : Control
         _game = Game.GetGame(this);
 
         _head = _game.GetPlayer().GetHead();
-        _container = NodeUtils.GetChildWithName<VBoxContainer>("V", this);
+        _Vcontainer = NodeUtils.GetChildWithName<VBoxContainer>("V", this);
+        _Hcontainer = NodeUtils.GetChildWithName<HBoxContainer>("H", _Vcontainer);
 
         _head.AmmoChanged += Head_AmmoChanged;
         _head.WeaponChanged += Head_WeaponChanged;
 
-        _label_reloading = NodeUtils.GetChildWithName<Label>("l_reloading", _container);
-        _label_ammo = NodeUtils.GetChildWithName<Label>("l_ammo", _container);
-        _label_weaponName = NodeUtils.GetChildWithName<Label>("l_weaponName", _container);
-        _progressBar_chargeable = NodeUtils.GetChildWithName<ProgressBar>("prog_chargeable", _container);
+        _label_reloading = NodeUtils.GetChildWithName<Label>("l_reloading", _Vcontainer);
+        _progressBar_chargeable = NodeUtils.GetChildWithName<ProgressBar>("prog_chargeable", _Vcontainer);
+        _label_ammo = NodeUtils.GetChildWithName<Label>("l_ammo", _Hcontainer);
+        _label_weaponName = NodeUtils.GetChildWithName<Label>("l_weaponName", _Hcontainer);
 
         RefreshWeapon(_head.CurrentWeapon);
         _label_reloading.Hide();
