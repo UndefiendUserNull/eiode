@@ -36,7 +36,7 @@ public static class NodeUtils
     /// <summary>
     /// Searches parent's children for the first child it founds that's of type <typeparamref name="T"/>
     /// </summary>
-    public static T GetChildWithNodeType<T>(Node parent) where T : Node
+    public static T GetChildWithNodeType<T>(Node parent, bool recursive = false) where T : Node
     {
 
         if (!Check(parent)) return default;
@@ -48,16 +48,32 @@ public static class NodeUtils
                 return foundChild;
             }
 
-            var recursiveResult = GetChildWithNodeType<T>(child);
-
-            if (recursiveResult != null)
+            if (recursive)
             {
-                return recursiveResult;
+                var recursiveResult = GetChildWithNodeType<T>(child);
+
+                if (recursiveResult != null)
+                {
+                    return recursiveResult;
+                }
             }
         }
 
         return default;
     }
+
+    public static bool GetChildWithNodeType<T>(Node parent, out T found, bool recursive = false) where T : Node
+    {
+        if (GetChildWithNodeType<T>(parent) != null)
+        {
+            found = GetChildWithNodeType<T>(parent, recursive);
+            return true;
+        }
+
+        found = null;
+        return false;
+    }
+
 
     /// <summary>
     /// Searches parent's children for all children that's of type <typeparamref name="T"/>
