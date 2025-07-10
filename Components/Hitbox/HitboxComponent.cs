@@ -1,5 +1,6 @@
-using EIODE.Utils;
+using EIODE.Core;
 using Godot;
+using System.Collections.Generic;
 
 namespace EIODE.Components;
 
@@ -14,20 +15,22 @@ public partial class HitboxComponent : Area3D, IComponent
     private bool _canHit = true;
     private int _hits = 0;
     private CollisionShape3D _collisionShape = null;
-
+    private List<HurtboxComponent> _hurtBoxesDetected = [];
     public override void _Ready()
     {
         _collisionShape = GetChild<CollisionShape3D>(0);
-    }
 
-    public override void _EnterTree()
-    {
         AreaEntered += HitboxComponent_AreaEntered;
+        AreaExited += HitboxComponent_AreaExited;
     }
 
     public override void _ExitTree()
     {
-        AreaEntered -= HitboxComponent_AreaEntered;
+        if (Game.GetGame(this).FirstLevelLoaded)
+        {
+            AreaEntered -= HitboxComponent_AreaEntered;
+            AreaExited += HitboxComponent_AreaExited;
+        }
     }
 
     /// <summary>
@@ -61,10 +64,21 @@ public partial class HitboxComponent : Area3D, IComponent
         {
             if (!_canHit) return;
 
+            _hurtBoxesDetected.Add(hurtBox);
+        }
+
+        foreach (var hurtBoxDetected in _hurtBoxesDetected)
+        {
             _hits++;
-            hurtBox.TakeDamage(Damage);
+            hurtBoxDetected.TakeDamage(Damage);
             if (_hits >= HitsLimit) _canHit = false;
         }
+    }
+
+    private void HitboxComponent_AreaExited(Area3D area)
+    {
+        if (area is HurtboxComponent hurtBox && _hurtBoxesDetected.Contains(hurtBox))
+            _hurtBoxesDetected.Remove(hurtBox);
     }
 
     public HitboxComponent() { }
