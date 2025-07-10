@@ -26,7 +26,6 @@ public partial class Head : Node3D
     public Camera3D Camera { get; private set; } = null;
     public WeaponBase CurrentWeapon { get; private set; } = null;
     public List<WeaponBase> WeaponsInventory { get; private set; } = new();
-    public RayCast3D RayCast { get; private set; }
 
     [Signal] public delegate void WeaponChangedEventHandler(WeaponBase current);
     [Signal] public delegate void AmmoChangedEventHandler(WeaponBase weaponAmmoData);
@@ -34,7 +33,6 @@ public partial class Head : Node3D
     {
         _parent = GetParent<Node3D>();
         _weaponsPosition = NodeUtils.GetChildWithName<Node3D>("weapons_position", this);
-        RayCast = NodeUtils.GetChildWithName<RayCast3D>("RAY", this);
         Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
         ConsoleCommandSystem.RegisterInstance(this);
 
@@ -105,10 +103,6 @@ public partial class Head : Node3D
         {
             CurrentWeapon.Attack();
 
-            if (CurrentWeapon is RaycastWeaponBase raycastWeapon && RayCast.IsColliding())
-                raycastWeapon.Hitbox.TargetPosition = RayCast.GetCollisionPoint();
-            else if (CurrentWeapon is RaycastWeaponBase raycastWeaponn && !RayCast.IsColliding())
-                raycastWeaponn.Hitbox.SetRange(raycastWeaponn.Data.Range);
 
             if (isAmmoWeapon)
             {
@@ -210,6 +204,9 @@ public partial class Head : Node3D
             {
                 throw;
             }
+
+            if (CurrentWeapon is RaycastWeaponBase raycastWeapon)
+                raycastWeapon.Hitbox.GlobalPosition = Camera.GlobalPosition;
         }
     }
 

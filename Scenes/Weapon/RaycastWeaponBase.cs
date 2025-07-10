@@ -26,6 +26,7 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
     {
         base._Ready();
         Hitbox = NodeUtils.GetChildWithNodeType<RaycastHitboxComponent>(this);
+        Hitbox.Damage = Data.Damage;
         Hitbox.Disable();
         Hitbox.SetRange(Data.Range);
         AmmoData.CurrentAmmo = AmmoData.MagSize;
@@ -45,6 +46,7 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
         if (!CanAttack()) return;
         Shoot();
 
+        Hitbox.SetRange(Data.Range);
         _shootingCooldown = Data.HitRate;
         AmmoData.CurrentAmmo--;
         Hitbox.Damage = Data.Damage;

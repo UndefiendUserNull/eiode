@@ -17,13 +17,20 @@ public partial class RaycastHitboxComponent : RayCast3D, IComponent
 
     public override void _Ready()
     {
-        CollideWithBodies = true;
+        CollideWithBodies = false;
+        CollideWithAreas = true;
 
+        SetCollisionMaskValue(CollisionLayers.WORLD, false);
         SetCollisionMaskValue(CollisionLayers.HITTABLE, true);
     }
     public void SetRange(float newRange)
     {
         TargetPosition = Vector3.Forward * newRange;
+    }
+
+    public void SetRange(Vector3 newRange)
+    {
+        TargetPosition = newRange;
     }
 
     public void Disable()

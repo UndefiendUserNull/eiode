@@ -46,12 +46,6 @@ metadata/_custom_type_script = "uid://cmhthd5h6l6w5"
 [node name="Hitbox Timer" type="Timer" parent="Head"]
 wait_time = 0.08
 
-[node name="RAY" type="RayCast3D" parent="Head"]
-target_position = Vector3(0, 0, -5)
-collision_mask = 5
-hit_back_faces = false
-collide_with_areas = true
-
 [node name="weapons_position" type="Node3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.757075, -0.713892, -0.917686)
 
