@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bsnu2g6pu10g"]
+[gd_scene load_steps=8 format=3 uid="uid://bsnu2g6pu10g"]
 
-[ext_resource type="PackedScene" uid="uid://bss5q2p1si1p4" path="res://Components/Hurtbox/hurtbox.tscn" id="1_48dwr"]
 [ext_resource type="Script" uid="uid://irgwc1y14iib" path="res://Scenes/Entities/Enemies/EnemyTest.cs" id="1_u4avs"]
 [ext_resource type="PackedScene" uid="uid://dyhy3u35n0t33" path="res://Components/Health/health_component.tscn" id="2_8dq10"]
+[ext_resource type="Script" uid="uid://14v6lab5t4p4" path="res://Components/Hurtbox/HurtboxComponent.cs" id="2_u4avs"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8dq10"]
 radius = 0.628563
@@ -16,13 +16,25 @@ material = SubResource("StandardMaterial3D_8dq10")
 radius = 0.565
 height = 2.59
 
-[node name="enemy_test" type="Node3D"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u4avs"]
+radius = 0.577337
+height = 2.61503
+
+[node name="enemy_test" type="RigidBody3D"]
+collision_layer = 264
+collision_mask = 59
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
 script = ExtResource("1_u4avs")
 
-[node name="hurtbox" parent="." instance=ExtResource("1_48dwr")]
+[node name="hurtbox" type="Area3D" parent="."]
+script = ExtResource("2_u4avs")
+metadata/_custom_type_script = "uid://14v6lab5t4p4"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
 shape = SubResource("CapsuleShape3D_8dq10")
+debug_color = Color(0.97618, 0, 0.413815, 0.42)
 
 [node name="HealthComponent" parent="hurtbox" instance=ExtResource("2_8dq10")]
 
@@ -35,3 +47,6 @@ billboard = 1
 text = "100"
 font_size = 64
 outline_size = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_u4avs")

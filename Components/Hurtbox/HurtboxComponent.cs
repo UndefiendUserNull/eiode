@@ -1,8 +1,8 @@
 using Godot;
 using EIODE.Utils;
-using EIODE.Core;
 namespace EIODE.Components;
 
+[GlobalClass]
 public partial class HurtboxComponent : Area3D, IComponent
 {
     public HealthComponent HealthComponent { get; private set; }
@@ -19,6 +19,10 @@ public partial class HurtboxComponent : Area3D, IComponent
             GD.PushError($"No health component found {Name}");
             SetProcess(false);
         }
+
+        CollisionLayer = (uint)CollisionLayers.HITTABLE;
+        CollisionMask = (uint)CollisionLayers.HITBOX;
+
         HealthComponent.OnDeath += HealthComponent_OnDeath;
         HealthComponent.OnTakeDamage += HealthComponent_OnTakeDamage;
     }

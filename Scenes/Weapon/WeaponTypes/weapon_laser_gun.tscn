@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://bxbetkv87xj6s" path="res://Scenes/Weapon/WeaponTypes/Defentions/LaserGun.cs" id="1_yc6b7"]
 [ext_resource type="Script" uid="uid://cmxt7cr0gyrrf" path="res://Resources/Src/RaycastWeaponData.cs" id="2_5d2gj"]
 [ext_resource type="Script" uid="uid://j1wi7wkqb7e0" path="res://Components/Weapons/ChargeableComponent.cs" id="2_eyrwj"]
-[ext_resource type="PackedScene" uid="uid://cromaxto1tesr" path="res://Components/Hitbox/ray_hit_box.tscn" id="3_eyrwj"]
 [ext_resource type="Script" uid="uid://dk3sh2km4q7kf" path="res://Resources/Src/WeaponAmmoData.cs" id="3_kl64s"]
+[ext_resource type="Script" uid="uid://b2sme7ibm0qfu" path="res://Components/Hitbox/RaycastHitboxComponent.cs" id="5_5d2gj"]
 
 [sub_resource type="Resource" id="Resource_tgw26"]
 script = ExtResource("2_5d2gj")
@@ -34,5 +34,7 @@ script = ExtResource("2_eyrwj")
 ChargeRate = 3.0
 metadata/_custom_type_script = "uid://j1wi7wkqb7e0"
 
-[node name="RayHitBox" parent="." instance=ExtResource("3_eyrwj")]
+[node name="RayHitBox" type="RayCast3D" parent="."]
 target_position = Vector3(0, 0, 1000)
+script = ExtResource("5_5d2gj")
+metadata/_custom_type_script = "uid://b2sme7ibm0qfu"

@@ -194,6 +194,7 @@ screenshot={
 3d_physics/layer_6="Jump Pad"
 3d_physics/layer_7="Trigger"
 3d_physics/layer_8="I Can Trigger"
+3d_physics/layer_9="Projectile"
 
 [mono]
 
@@ -202,6 +203,7 @@ runtime="coreclr"
 [physics]
 
 3d/physics_engine="Jolt Physics"
+jolt_physics_3d/simulation/areas_detect_static_bodies=true
 
 [rendering]
 

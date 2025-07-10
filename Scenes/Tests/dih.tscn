@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8y0ivirk2vgm"]
+
+[ext_resource type="Script" uid="uid://d1yf17k1h26k" path="res://Scenes/Tests/dih.gd" id="1_v80bi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v80bi"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_5spru"]
+sky_material = SubResource("ProceduralSkyMaterial_v80bi")
+
+[sub_resource type="Environment" id="Environment_cffon"]
+background_mode = 1
+sky = SubResource("Sky_5spru")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gh5m4"]
+
+[node name="dih" type="Node3D"]
+editor_description = "Enable Debug -> Visible Collisions Shape something like that idk"
+script = ExtResource("1_v80bi")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cffon")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.327923, 0, 0)
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_gh5m4")
+debug_color = Color(0.970866, 0, 0.451841, 0.42)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 3
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="StaticBody3D"]
+polygon = PackedVector2Array(1, 1, 0, 1, 0, 2)
+debug_color = Color(0.531315, 0.412273, 1, 0.42)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-2.98023e-08, 5.96046e-08, -1, -1.83795e-15, 1, 5.96046e-08, 1, 2.84512e-15, -2.98023e-08, -3, 1, 0)
+fov = 110.0
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
