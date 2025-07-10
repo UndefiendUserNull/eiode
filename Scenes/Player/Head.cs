@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Godot;
 using EIODE.Resources;
+using EIODE.Scenes.Weapon;
 
 namespace EIODE.Scenes;
 public partial class Head : Node3D
@@ -184,9 +185,10 @@ public partial class Head : Node3D
 
         // don't change weapons if the player is reloading a gun
         if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo && weaponWithAmmo.IsReloading()) weaponWithAmmo.CancelReloading();
+        if (CurrentWeapon is MeleeWeaponBase meleeWeapon) meleeWeapon.CancelAttacking();
 
         // Only change if different weapon and is not attacking or forced
-        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon) && !CurrentWeapon.IsAttacking())
+        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon))
         {
             CurrentWeapon?.Hide();
 

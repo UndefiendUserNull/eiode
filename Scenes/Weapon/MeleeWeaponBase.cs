@@ -28,7 +28,6 @@ namespace EIODE.Scenes.Weapon
         private void HitboxTimer_Timeout()
         {
             Hitbox.Disable();
-            Hitbox.Reset();
             _canHit = true;
             _isAttacking = false;
         }
@@ -64,9 +63,11 @@ namespace EIODE.Scenes.Weapon
             return Data.WeaponType;
         }
 
-        public override bool IsAttacking()
+        public void CancelAttacking()
         {
-            return _isAttacking;
+            Hitbox.Disable();
+            _canHit = true;
+            _isAttacking = false;
         }
     }
 }

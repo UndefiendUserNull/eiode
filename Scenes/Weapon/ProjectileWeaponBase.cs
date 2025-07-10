@@ -142,11 +142,6 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
         return _isReloading;
     }
 
-    public override bool IsAttacking()
-    {
-        return false;
-    }
-
     public void CancelReloading()
     {
         _isReloading = false;

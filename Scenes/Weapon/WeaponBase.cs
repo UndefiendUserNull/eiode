@@ -1,5 +1,6 @@
 using EIODE.Resources;
 using Godot;
+using System;
 
 namespace EIODE.Scenes;
 
@@ -20,7 +21,5 @@ public abstract partial class WeaponBase : Node3D
     /// Optional, used only with non-melee weapons
     /// </summary>
     public abstract WeaponAmmoData GetWeaponAmmoData();
-
-    public abstract bool IsAttacking();
 
 }

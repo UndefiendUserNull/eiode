@@ -126,11 +126,6 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
         return AmmoData;
     }
 
-    public override bool IsAttacking()
-    {
-        return Hitbox.Enabled;
-    }
-
     public bool IsReloading()
     {
         return _isReloading;
