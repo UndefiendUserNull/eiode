@@ -68,7 +68,7 @@ public partial class ProjectileBase : RigidBody3D
 
     public virtual void ApplyShootingForce()
     {
-        ApplyImpulse(-GlobalTransform.Basis.Z * Data.Force);
+        ApplyImpulse(GlobalTransform.Basis.X * Data.Force);
         _enableHitboxTimer.Start();
     }
 

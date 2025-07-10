@@ -18,7 +18,7 @@ metadata/_custom_type_script = "uid://cv7ty7bhtt3kp"
 [sub_resource type="SphereMesh" id="SphereMesh_50hck"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3xhum"]
-radius = 2.0
+radius = 7.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7f5cn"]
 radius = 0.54
@@ -30,11 +30,11 @@ script = ExtResource("1_3xhum")
 Data = SubResource("Resource_7f5cn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.0490347, 0)
+transform = Transform3D(0.72, 0, 0, 0, 0.72, 0, 0, 0, 0.72, 0, 0, 0)
 shape = SubResource("SphereShape3D_mtcxs")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.049, 0)
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 mesh = SubResource("SphereMesh_50hck")
 
 [node name="HitboxComponent" type="Area3D" parent="."]
@@ -54,10 +54,11 @@ one_shot = true
 one_shot = true
 
 [node name="detection_area" type="Area3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 collision_layer = 16
 collision_mask = 253
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="detection_area"]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.0490347, 0)
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("SphereShape3D_7f5cn")
 debug_color = Color(0.840662, 0.382921, 0, 0.42)

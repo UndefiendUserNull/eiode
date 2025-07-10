@@ -6,9 +6,6 @@ using Godot;
 
 namespace EIODE.Scenes;
 
-/// <summary>
-/// Note : WeaponAmmoData.MagSize is ignored and instead relies on ProjectileWeaponData.MaxProjectilePerShot
-/// </summary>
 public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
 {
     [Export] public ProjectileWeaponData Data { get; set; }
@@ -24,10 +21,11 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
     {
         base._Ready();
 
-        Data.MaxProjectilesPerShot = Data.ShootingPositions.Length;
+        Data.ProjectilesLength = Data.ShootingPositions.Length;
 
-        AmmoData.CurrentAmmo = Data.MaxProjectilesPerShot;
+        AmmoData.CurrentAmmo = AmmoData.MagSize;
         AmmoData.CurrentMaxAmmo = AmmoData.MaxAmmo;
+        _reloadTimer = AmmoData.ReloadTime;
     }
 
     /// <summary>
@@ -45,7 +43,7 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
 
         _shootingCooldown = Data.HitRate;
 
-        for (int i = 0; i < Data.MaxProjectilesPerShot; i++)
+        for (int i = 0; i < Data.ProjectilesLength; i++)
         {
             var spawnedProjectile = Data.Projectile.Instantiate<ProjectileBase>();
             Node3D spawnNode = GetNode<Node3D>($"{Data.ShootingPositions[i]}");
@@ -60,9 +58,9 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
             spawnedProjectile.GlobalBasis = spawnNode.GlobalBasis;
 
             spawnedProjectile.ApplyShootingForce();
+            AmmoData.CurrentAmmo -= Data.ProjectilePerShot;
         }
 
-        AmmoData.CurrentAmmo -= Data.MaxProjectilesPerShot;
     }
 
     /// <summary>
