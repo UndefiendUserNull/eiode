@@ -182,7 +182,7 @@ public partial class Head : Node3D
         if (newWeapon == null) return;  // Skip if null weapon
 
         // Only change if different weapon or forced
-        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon))
+        if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon) && !CurrentWeapon.IsAttacking())
         {
             CurrentWeapon?.Hide();
 

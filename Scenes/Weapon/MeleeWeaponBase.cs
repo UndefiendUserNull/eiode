@@ -9,6 +9,7 @@ namespace EIODE.Scenes.Weapon
     {
         [Export] public MeleeWeaponData Data { get; set; }
         public HitboxComponent Hitbox { get; set; }
+        private bool _isAttacking = false;
         private Timer _hitboxTimer;
         private bool _canHit = true;
 
@@ -29,12 +30,14 @@ namespace EIODE.Scenes.Weapon
             Hitbox.Disable();
             Hitbox.Reset();
             _canHit = true;
+            _isAttacking = false;
         }
 
         public override void Attack()
         {
             if (_canHit)
             {
+                _isAttacking = true;
                 _canHit = false;
                 Hitbox.Enable();
                 _hitboxTimer.Start();
@@ -59,6 +62,11 @@ namespace EIODE.Scenes.Weapon
         public override WeaponType GetWeaponType()
         {
             return Data.WeaponType;
+        }
+
+        public override bool IsAttacking()
+        {
+            return _isAttacking;
         }
     }
 }

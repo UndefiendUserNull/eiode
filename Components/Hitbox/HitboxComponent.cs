@@ -8,9 +8,9 @@ namespace EIODE.Components;
 [GlobalClass]
 public partial class HitboxComponent : Area3D, IComponent
 {
-    public int Damage { get; set; }
     [Export] public int HitsLimit { get; set; } = 1;
 
+    public int Damage { get; set; }
     private float _range = 1000f;
     public bool Enabled { get; private set; } = false;
     private bool _canHit = true;
@@ -46,14 +46,16 @@ public partial class HitboxComponent : Area3D, IComponent
         if (CollisionShape.Shape is SeparationRayShape3D sp) sp.Length = _range;
     }
 
-    public void Disable()
+    public void Disable(bool reset = true)
     {
         CollisionShape.Disabled = true;
-        Reset();
+        Enabled = false;
+        if (reset) Reset();
     }
 
     public void Enable()
     {
+        Enabled = true;
         CollisionShape.Disabled = false;
     }
 

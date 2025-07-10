@@ -21,4 +21,6 @@ public abstract partial class WeaponBase : Node3D
     /// </summary>
     public abstract WeaponAmmoData GetWeaponAmmoData();
 
+    public abstract bool IsAttacking();
+
 }

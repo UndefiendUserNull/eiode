@@ -13,7 +13,7 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
     protected float _shootingCooldown = 0f;
     protected bool _isReloading = false;
     protected float _reloadTimer = 0f;
-
+    private bool _isAttacking = false;
     public bool FinishedReloading { get; private set; } = false;
 
     public override void _Ready()
@@ -140,6 +140,11 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
     public bool IsReloading()
     {
         return _isReloading;
+    }
+
+    public override bool IsAttacking()
+    {
+        return false;
     }
 }
 

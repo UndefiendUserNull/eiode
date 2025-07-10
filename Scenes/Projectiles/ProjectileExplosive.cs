@@ -74,7 +74,7 @@ public partial class ProjectileExplosive : ProjectileBase
         _detectionArea.BodyEntered -= DetectionArea_BodyEntered;
         _detectionArea.AreaEntered -= DetectionArea_AreaEntered;
         _detectionArea.QueueFree();
-        GetTree().CreateTimer(Data.TimerDisableHitboxWaitTime).Timeout += Hitbox.Disable;
+        GetTree().CreateTimer(Data.TimerDisableHitboxWaitTime).Timeout += () => { Hitbox.Disable(); };
 
     }
 }
