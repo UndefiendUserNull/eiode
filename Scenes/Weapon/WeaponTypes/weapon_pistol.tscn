@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4d5vyqkwvllf"]
+[gd_scene load_steps=10 format=3 uid="uid://c4d5vyqkwvllf"]
 
 [ext_resource type="Script" uid="uid://cis3s2q12f2d8" path="res://Scenes/Weapon/WeaponTypes/Defentions/WeaponPistol.cs" id="1_fu3sq"]
 [ext_resource type="Script" uid="uid://cmxt7cr0gyrrf" path="res://Resources/Src/RaycastWeaponData.cs" id="2_aur43"]
@@ -22,6 +22,15 @@ MaxAmmo = 52
 ReloadTime = 1.0
 metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fu3sq"]
+albedo_color = Color(0.58, 0.58, 0.58, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ajr3"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gfely"]
+albedo_color = Color(0, 0, 0, 1)
+
 [node name="weapon_pistol" type="Node3D"]
 script = ExtResource("1_fu3sq")
 Data = SubResource("Resource_rsur3")
@@ -31,3 +40,22 @@ AmmoData = SubResource("Resource_d0c4f")
 collision_mask = 4
 script = ExtResource("4_4ajr3")
 metadata/_custom_type_script = "uid://b2sme7ibm0qfu"
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.15751, -1.38727)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.101013, 1.18756)
+size = Vector3(1, 0.797974, 3.37512)
+material = SubResource("StandardMaterial3D_fu3sq")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 0.976118, 0.21724, 0, -0.21724, 0.976118, 0, -1.43674, 2.7237)
+size = Vector3(0.9, 1.87311, 0.900513)
+material = SubResource("StandardMaterial3D_4ajr3")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.110725, -0.288727)
+operation = 2
+size = Vector3(0.5, 0.5, 0.422546)
+material = SubResource("StandardMaterial3D_gfely")

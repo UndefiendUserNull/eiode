@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqxvqk1l7epeu"]
+[gd_scene load_steps=13 format=3 uid="uid://cqxvqk1l7epeu"]
 
 [ext_resource type="Script" uid="uid://bxbetkv87xj6s" path="res://Scenes/Weapon/WeaponTypes/Defentions/LaserGun.cs" id="1_yc6b7"]
 [ext_resource type="Script" uid="uid://cmxt7cr0gyrrf" path="res://Resources/Src/RaycastWeaponData.cs" id="2_5d2gj"]
@@ -23,6 +23,21 @@ MaxAmmo = 12
 ReloadTime = 0.0
 metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5d2gj"]
+albedo_color = Color(0, 0.8, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ehrr1"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kl64s"]
+albedo_color = Color(0.502596, 0.617663, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tgw26"]
+albedo_color = Color(0.502596, 0.617663, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_caeoi"]
+albedo_color = Color(0, 0.9, 1, 1)
+
 [node name="LaserGun" type="Node3D" node_paths=PackedStringArray("ChargeableComponent")]
 script = ExtResource("1_yc6b7")
 ChargeableComponent = NodePath("ChargeableComponent")
@@ -35,6 +50,36 @@ ChargeRate = 3.0
 metadata/_custom_type_script = "uid://j1wi7wkqb7e0"
 
 [node name="RayHitBox" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.312548, -1.38727)
 target_position = Vector3(0, 0, -1000)
 script = ExtResource("5_5d2gj")
 metadata/_custom_type_script = "uid://b2sme7ibm0qfu"
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, -0.15751, -1.38727)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.101013, 1.18756)
+size = Vector3(1, 0.797974, 3.37512)
+material = SubResource("StandardMaterial3D_5d2gj")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, -0.782928, 3.34484)
+size = Vector3(1, 0.797974, 2.15985)
+material = SubResource("StandardMaterial3D_ehrr1")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.10906, 0.0550537, 2.42331)
+size = Vector3(1.27783, 0.549072, 0.900513)
+material = SubResource("StandardMaterial3D_kl64s")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.09307, 0.0550537, 2.42331)
+size = Vector3(1.27783, 0.549072, 0.900513)
+material = SubResource("StandardMaterial3D_tgw26")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.110725, -0.139099)
+operation = 2
+size = Vector3(1, 0.626144, 0.721802)
+material = SubResource("StandardMaterial3D_caeoi")
