@@ -181,7 +181,11 @@ public partial class Head : Node3D
 
         if (newWeapon == null) return;  // Skip if null weapon
 
-        // Only change if different weapon or forced
+
+        // don't change weapons if the player is reloading a gun
+        if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo && weaponWithAmmo.IsReloading()) weaponWithAmmo.CancelReloading();
+
+        // Only change if different weapon and is not attacking or forced
         if (forceSet || !ReferenceEquals(CurrentWeapon, newWeapon) && !CurrentWeapon.IsAttacking())
         {
             CurrentWeapon?.Hide();

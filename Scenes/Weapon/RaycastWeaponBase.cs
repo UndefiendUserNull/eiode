@@ -135,4 +135,10 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
     {
         return _isReloading;
     }
+
+    public void CancelReloading()
+    {
+        _isReloading = false;
+        _reloadTimer = AmmoData.ReloadTime;
+    }
 }

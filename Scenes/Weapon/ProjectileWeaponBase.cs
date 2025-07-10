@@ -146,5 +146,11 @@ public partial class ProjectileWeaponBase : WeaponBase, IWeaponWithAmmo
     {
         return false;
     }
+
+    public void CancelReloading()
+    {
+        _isReloading = false;
+        _reloadTimer = AmmoData.ReloadTime;
+    }
 }
 
