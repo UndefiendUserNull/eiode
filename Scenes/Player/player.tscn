@@ -49,6 +49,9 @@ wait_time = 0.08
 
 [node name="RayHitBox" parent="Head" instance=ExtResource("5_dd0ac")]
 
+[node name="weapons_position" type="Node3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.757075, -0.713892, -0.917686)
+
 [node name="Collider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tugb3")
 debug_color = Color(0.256, 0.64, 0, 1)

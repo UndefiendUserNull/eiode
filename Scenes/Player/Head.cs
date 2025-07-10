@@ -21,7 +21,7 @@ public partial class Head : Node3D
     private Player _player = null;
     private int _currentWeaponIndex = 0;
     private WeaponAmmoData _currentWeaponAmmoData = null;
-
+    private Node3D _weaponsPosition = null;
     public Camera3D Camera { get; private set; } = null;
     public WeaponBase CurrentWeapon { get; private set; } = null;
     public List<WeaponBase> WeaponsInventory { get; private set; } = new();
@@ -31,6 +31,7 @@ public partial class Head : Node3D
     public override void _Ready()
     {
         _parent = GetParent<Node3D>();
+        _weaponsPosition = NodeUtils.GetChildWithName<Node3D>("weapons_position", this);
         Camera = NodeUtils.GetChildWithNodeType<Camera3D>(this);
         ConsoleCommandSystem.RegisterInstance(this);
 
@@ -184,6 +185,7 @@ public partial class Head : Node3D
             try
             {
                 CurrentWeapon.Show();
+                CurrentWeapon.Position = _weaponsPosition.Position;
                 EmitSignalWeaponChanged(CurrentWeapon);
 
                 //if (CurrentWeapon is IWeaponWithAmmo)
@@ -193,15 +195,6 @@ public partial class Head : Node3D
             {
                 throw;
             }
-        }
-    }
-    private void WatchAmmoData()
-    {
-        if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
-        {
-            _currentWeaponAmmoData = weaponWithAmmo.AmmoData;
-
-
         }
     }
 

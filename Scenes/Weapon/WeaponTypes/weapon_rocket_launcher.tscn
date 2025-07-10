@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://kade7t1ovr16"]
+
+[ext_resource type="Script" uid="uid://dc2wtfylgagts" path="res://Scenes/Weapon/ProjectileWeaponBase.cs" id="1_bcqp5"]
+[ext_resource type="PackedScene" uid="uid://dt65p4bm6qkhi" path="res://Scenes/Projectiles/projectile_bomb.tscn" id="2_fqm3v"]
+[ext_resource type="Script" uid="uid://ch210q8m5ola0" path="res://Resources/Src/ProjectileWeaponData.cs" id="2_uwcpx"]
+[ext_resource type="Script" uid="uid://dk3sh2km4q7kf" path="res://Resources/Src/WeaponAmmoData.cs" id="3_d46je"]
+
+[sub_resource type="Resource" id="Resource_d46je"]
+script = ExtResource("2_uwcpx")
+Projectile = ExtResource("2_fqm3v")
+ShootingPositions = [NodePath("model/CSGBox3D2"), NodePath("model/CSGBox3D3")]
+Name = "rocket_launcher"
+Damage = 15
+HitRate = 0.2
+WeaponType = 1
+metadata/_custom_type_script = "uid://ch210q8m5ola0"
+
+[sub_resource type="Resource" id="Resource_fqm3v"]
+script = ExtResource("3_d46je")
+MagSize = 2
+MaxAmmo = 24
+ReloadTime = 0.75
+metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
+
+[node name="weapon_rocket_launcher" type="Node3D"]
+script = ExtResource("1_bcqp5")
+Data = SubResource("Resource_d46je")
+AmmoData = SubResource("Resource_fqm3v")
+
+[node name="model" type="CSGBox3D" parent="."]
+cast_shadow = 0
+size = Vector3(0.25, 0.7, 0.2)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104, -0.291032, 0)
+cast_shadow = 0
+operation = 2
+size = Vector3(0.06, 0.06, 0.06)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104, 0.279007, 0)
+cast_shadow = 0
+operation = 2
+size = Vector3(0.06, 0.06, 0.06)
