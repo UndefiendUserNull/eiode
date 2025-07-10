@@ -199,7 +199,7 @@ public partial class Head : Node3D
     }
 
     #region CC
-    [ConsoleCommand("tank_up", "Gives all weapons of given set (0 | 1 | 2 | 3)", true)]
+    [ConsoleCommand("tankup", "Gives all weapons of given set (0 | 1 | 2 | 3)", true)]
     public void Cc_TankUp(int set)
     {
         switch (set)
@@ -221,19 +221,44 @@ public partial class Head : Node3D
         _console?.Log($"Size: {WeaponsInventory.Count}");
     }
 
-    //[ConsoleCommand("current_weapon_set", "Change a setting of the current gun settings (damage int)")]
-    //public void Cc_CurrentWeaponSet(string type, int amount)
-    //{
-    //    if (CurrentWeapon == null) return;
+    [ConsoleCommand("weapon_givecurrentammo", "Gives big amount of ammo to the current weapon if it has WeaponAmmoData", true)]
+    public void Cc_GiveCurrentAmmo()
+    {
+        int givenAmmo = 9999;
+        if (CurrentWeapon is IWeaponWithAmmo weaponWithAmmo)
+        {
+            weaponWithAmmo.AmmoData.CurrentAmmo = givenAmmo;
+            weaponWithAmmo.AmmoData.CurrentMaxAmmo = givenAmmo;
+        }
+        else
+        {
+            _console?.Log("Current weapon is not IWeaponWithAmmo", DevConsole.LogLevel.ERROR);
 
-    //    switch (type)
-    //    {
-    //        case "damage":
-    //            CurrentWeapon.WeaponData.Damage = amount;
-    //            _console?.Log($"Changed current damage to be {amount}");
-    //            break;
-    //    }
-    //}
+        }
+        _console?.Log("Set current ammo to 9999");
+    }
+
+    [ConsoleCommand("weapon_ignorehitrate", "Ignores hit rate for the current weapon", true)]
+    public void Cc_IgnoreHitRate()
+    {
+        if (CurrentWeapon != null)
+        {
+            if (CurrentWeapon.GetWeaponData() != null)
+                CurrentWeapon.GetWeaponData().HitRate = 0;
+            _console?.Log("Hit rate set to 0");
+        }
+    }
+
+    [ConsoleCommand("weapon_sethitrate", "Sets current weapon hit rate", true)]
+    public void Cc_SetHitRate(float value)
+    {
+        if (CurrentWeapon != null)
+        {
+            if (CurrentWeapon.GetWeaponData() != null)
+                CurrentWeapon.GetWeaponData().HitRate = value;
+            _console?.Log($"Hit rate set to {value}");
+        }
+    }
 
     [ConsoleCommand("desired_fov", "Sets default FOV (float)")]
     public void Cc_SetFov(float v)
