@@ -1,3 +1,4 @@
+using EIODE.Utils;
 using Godot;
 
 namespace EIODE.Components;
@@ -5,14 +6,16 @@ namespace EIODE.Components;
 [GlobalClass]
 public partial class RaycastHitboxComponent : RayCast3D, IComponent
 {
-    [Export] public int Damage { get; set; } = 10;
     [Export] public int MaxHits { get; set; } = 1;
+    public int Damage { get; set; } = 10;
     private int _hits = 0;
     private float _range = 1000f;
 
     public override void _Ready()
     {
         CollideWithBodies = true;
+
+        CollisionMask = (uint)CollisionLayers.HITTABLE;
     }
     public void SetRange(float newRange)
     {
