@@ -10,4 +10,6 @@ public partial class ProjectileData : Resource
     [Export] public float GravityScale = 3.5f;
     [Export] public float TimerEnableHitboxWaitTime = 0.7f;
     [Export] public float TimerDisableHitboxWaitTime = 0.7f;
+    [Export] public float Radius = 5f;
+
 }

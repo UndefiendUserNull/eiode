@@ -11,6 +11,7 @@ Force = 50.0
 GravityScale = 3.5
 TimerEnableHitboxWaitTime = 0.7
 TimerDisableHitboxWaitTime = 0.7
+Radius = 10.0
 metadata/_custom_type_script = "uid://cv7ty7bhtt3kp"
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_mtcxs"]

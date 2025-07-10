@@ -9,6 +9,7 @@ namespace EIODE.Scenes.Projectiles;
 public partial class ProjectileBase : RigidBody3D
 {
     [Export] public ProjectileData Data { get; set; }
+
     /// <summary>
     /// Disable the <c>_enableHitboxTimer</c> and <c>_disableHitboxTimer</c>
     /// </summary>
@@ -24,6 +25,14 @@ public partial class ProjectileBase : RigidBody3D
         Hitbox.Damage = Data.Damage;
         Hitbox.Disable();
         Hitbox.BodyEntered += Hitbox_BodyEntered;
+        if (Hitbox.CollisionShape.Shape is SphereShape3D sphereColl)
+        {
+            sphereColl.Radius = Data.Radius;
+        }
+        else
+        {
+            Game.GetGame(this).Console?.Log($"{Name}'s Hitbox collision shape is not SphereShape3D, no radius applied");
+        }
 
         _enableHitboxTimer = NodeUtils.GetChildWithName<Timer>("timer_enable_hitbox", this);
         _disableHitboxTimer = NodeUtils.GetChildWithName<Timer>("timer_disable_hitbox", this);

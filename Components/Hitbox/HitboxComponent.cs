@@ -15,12 +15,12 @@ public partial class HitboxComponent : Area3D, IComponent
     public bool Enabled { get; private set; } = false;
     private bool _canHit = true;
     private int _hits = 0;
-    private CollisionShape3D _collisionShape = null;
+    public CollisionShape3D CollisionShape { get; set; } = null;
     private readonly List<HurtboxComponent> _hurtBoxesDetected = [];
 
     public override void _Ready()
     {
-        _collisionShape = GetChild<CollisionShape3D>(0);
+        CollisionShape = GetChild<CollisionShape3D>(0);
         AreaEntered += HitboxComponent_AreaEntered;
         AreaExited += HitboxComponent_AreaExited;
 
@@ -43,17 +43,17 @@ public partial class HitboxComponent : Area3D, IComponent
     public void SetRange(float newRange)
     {
         _range = newRange;
-        if (_collisionShape.Shape is SeparationRayShape3D sp) sp.Length = _range;
+        if (CollisionShape.Shape is SeparationRayShape3D sp) sp.Length = _range;
     }
 
     public void Disable()
     {
-        _collisionShape.Disabled = true;
+        CollisionShape.Disabled = true;
     }
 
     public void Enable()
     {
-        _collisionShape.Disabled = false;
+        CollisionShape.Disabled = false;
     }
 
     public void ResetHits()

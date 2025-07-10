@@ -9,6 +9,8 @@ namespace EIODE.Scenes.Projectiles;
 /// </summary>
 public partial class ProjectileExplosive : ProjectileBase
 {
+    [Export] public bool FreeAfterAnyImpact = true;
+
     private Area3D _detectionArea;
     private CollisionShape3D _detectionAreaCollision = null;
     public override void _Ready()
@@ -28,6 +30,14 @@ public partial class ProjectileExplosive : ProjectileBase
 
     private void DetectionArea_BodyEntered(Node3D body)
     {
+        if (body != null && FreeAfterAnyImpact)
+        {
+            GetTree().CreateTimer(0.03f).Timeout += () =>
+            {
+                Hitbox.Disable();
+                QueueFree();
+            };
+        }
         if (body is PhysicsBody3D && body is not Player)
         {
             Explode();
@@ -45,5 +55,6 @@ public partial class ProjectileExplosive : ProjectileBase
         _detectionArea.BodyEntered -= DetectionArea_BodyEntered;
         _detectionArea.QueueFree();
         GetTree().CreateTimer(Data.TimerDisableHitboxWaitTime).Timeout += Hitbox.Disable;
+
     }
 }
