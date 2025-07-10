@@ -27,7 +27,7 @@ namespace EIODE.Scenes.Weapon
         private void HitboxTimer_Timeout()
         {
             Hitbox.Disable();
-            Hitbox.ResetHits();
+            Hitbox.Reset();
             _canHit = true;
         }
 

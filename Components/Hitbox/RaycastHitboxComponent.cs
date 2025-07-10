@@ -15,7 +15,7 @@ public partial class RaycastHitboxComponent : RayCast3D, IComponent
     {
         CollideWithBodies = true;
 
-        CollisionMask = (uint)CollisionLayers.HITTABLE;
+        SetCollisionMaskValue(CollisionLayers.HITTABLE, true);
     }
     public void SetRange(float newRange)
     {

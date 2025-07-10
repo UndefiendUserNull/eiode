@@ -2,6 +2,7 @@ using Godot;
 using EIODE.Resources;
 using EIODE.Components;
 using EIODE.Utils;
+using EIODE.Core;
 
 namespace EIODE.Scenes;
 

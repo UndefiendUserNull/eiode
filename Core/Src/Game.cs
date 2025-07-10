@@ -27,6 +27,7 @@ public partial class Game : Node
     private bool _initCommands = true;
     private static Dictionary<string, PackedScene> _weaponsLookup = [];
     private List<string> _starterCommands = [];
+    private Camera3D _camera;
 
     // To prevent racing fucking conditions, starts at the end of _Ready 
     private Timer _timer = null;
@@ -58,6 +59,18 @@ public partial class Game : Node
         _timer.Start();
 
         Console?.Log("Game _Ready finished");
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Input.IsKeyPressed(Key.Pause))
+        {
+            Engine.TimeScale = 0;
+        }
+        else if (Input.IsKeyPressed(Key.Insert))
+        {
+            Engine.TimeScale = 1;
+        }
     }
 
     /// <summary>
@@ -99,6 +112,9 @@ public partial class Game : Node
                 }
             }
         }
+
+        _camera = Player.GetHead().Camera;
+
     }
 
     private void SetConsole()
@@ -208,7 +224,7 @@ public partial class Game : Node
         Player.Name = "Player";
         Console?.Log("Player ready");
     }
-
+    public Camera3D GetCamera() { return _camera; }
     private void SpawnDebugUI(bool enableOnSpawn)
     {
         _debugUi = ResourceLoader.Load<PackedScene>(ScenesHash.DEBUG_UI_SCENE).Instantiate<DebugUi>();

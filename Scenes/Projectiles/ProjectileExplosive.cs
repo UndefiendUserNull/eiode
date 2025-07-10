@@ -1,6 +1,7 @@
 using EIODE.Core;
 using EIODE.Utils;
 using Godot;
+using System.Collections.Generic;
 
 namespace EIODE.Scenes.Projectiles;
 
@@ -19,29 +20,47 @@ public partial class ProjectileExplosive : ProjectileBase
         _detectionArea = NodeUtils.GetChildWithName<Area3D>("detection_area", this);
         _detectionAreaCollision = NodeUtils.GetChildWithNodeType<CollisionShape3D>(_detectionArea);
         _detectionArea.BodyEntered += DetectionArea_BodyEntered;
+        _detectionArea.AreaEntered += DetectionArea_AreaEntered;
+
+        _detectionArea.SetCollisionLayerValue(CollisionLayers.PROJECTILE, true);
+
+        _detectionArea.SetCollisionMaskValue(CollisionLayers.HITTABLE, true);
+        _detectionArea.SetCollisionMaskValue(CollisionLayers.ENEMY, true);
+        _detectionArea.SetCollisionMaskValue(CollisionLayers.WORLD, true);
+        _detectionArea.SetCollisionMaskValue(CollisionLayers.HITBOX, true);
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
         if (Game.GetGame(this).FirstLevelLoaded)
+        {
             _detectionArea.BodyEntered -= DetectionArea_BodyEntered;
+            _detectionArea.AreaEntered -= DetectionArea_AreaEntered;
+        }
     }
 
     private void DetectionArea_BodyEntered(Node3D body)
     {
+        if (body is CollisionObject3D && body is not Player)
+        {
+            if (body == GetParent()) return;
+            Explode();
+        }
+
         if (body != null && FreeAfterAnyImpact)
         {
-            GetTree().CreateTimer(0.03f).Timeout += () =>
+            GetTree().CreateTimer(0.05f).Timeout += () =>
             {
                 Hitbox.Disable();
                 QueueFree();
             };
         }
-        if (body is PhysicsBody3D && body is not Player)
-        {
-            Explode();
-        }
+    }
+
+    private void DetectionArea_AreaEntered(Area3D area)
+    {
+        DetectionArea_BodyEntered(area);
     }
 
     protected override void EnableHitboxTimer_Timeout()
@@ -53,6 +72,7 @@ public partial class ProjectileExplosive : ProjectileBase
     {
         Hitbox.Enable();
         _detectionArea.BodyEntered -= DetectionArea_BodyEntered;
+        _detectionArea.AreaEntered -= DetectionArea_AreaEntered;
         _detectionArea.QueueFree();
         GetTree().CreateTimer(Data.TimerDisableHitboxWaitTime).Timeout += Hitbox.Disable;
 

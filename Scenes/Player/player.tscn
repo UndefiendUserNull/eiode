@@ -1,9 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dqk8i0f08x0q2"]
+[gd_scene load_steps=9 format=3 uid="uid://dqk8i0f08x0q2"]
 
 [ext_resource type="Script" uid="uid://bytf8ubehbpod" path="res://Scenes/Player/Player.cs" id="1_uvnfx"]
 [ext_resource type="Resource" uid="uid://dql1va6oatqi6" path="res://Resources/MainPlayerMovementSettings.tres" id="2_a3d8c"]
 [ext_resource type="Script" uid="uid://blga75bmxo2r2" path="res://Scenes/Player/Head.cs" id="3_xpcdj"]
-[ext_resource type="Script" uid="uid://b2sme7ibm0qfu" path="res://Components/Hitbox/RaycastHitboxComponent.cs" id="5_dd0ac"]
 [ext_resource type="Script" uid="uid://cmhthd5h6l6w5" path="res://Nodes/Line3D.cs" id="6_0u5uq"]
 [ext_resource type="PackedScene" uid="uid://c3bjl6peay5cr" path="res://Scenes/UI/HUD.tscn" id="7_0u5uq"]
 
@@ -47,9 +46,11 @@ metadata/_custom_type_script = "uid://cmhthd5h6l6w5"
 [node name="Hitbox Timer" type="Timer" parent="Head"]
 wait_time = 0.08
 
-[node name="RayHitBox" type="RayCast3D" parent="Head"]
-script = ExtResource("5_dd0ac")
-metadata/_custom_type_script = "uid://b2sme7ibm0qfu"
+[node name="RAY" type="RayCast3D" parent="Head"]
+target_position = Vector3(0, 0, -5)
+collision_mask = 5
+hit_back_faces = false
+collide_with_areas = true
 
 [node name="weapons_position" type="Node3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.757075, -0.713892, -0.917686)

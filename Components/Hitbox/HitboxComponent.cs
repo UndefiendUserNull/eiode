@@ -24,8 +24,8 @@ public partial class HitboxComponent : Area3D, IComponent
         AreaEntered += HitboxComponent_AreaEntered;
         AreaExited += HitboxComponent_AreaExited;
 
-        CollisionLayer = (uint)CollisionLayers.HITBOX;
-        CollisionMask = (uint)CollisionLayers.HITTABLE;
+        SetCollisionLayerValue(CollisionLayers.HITBOX, true);
+        SetCollisionMaskValue(CollisionLayers.HITTABLE, true);
     }
 
     public override void _ExitTree()
@@ -49,6 +49,7 @@ public partial class HitboxComponent : Area3D, IComponent
     public void Disable()
     {
         CollisionShape.Disabled = true;
+        Reset();
     }
 
     public void Enable()
@@ -56,10 +57,11 @@ public partial class HitboxComponent : Area3D, IComponent
         CollisionShape.Disabled = false;
     }
 
-    public void ResetHits()
+    public void Reset()
     {
         _hits = 0;
         _canHit = true;
+        _hurtBoxesDetected.Clear();
     }
 
     public void HitboxComponent_AreaEntered(Area3D area)

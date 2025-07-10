@@ -1,7 +1,6 @@
 using EIODE.Core;
 using EIODE.Resources;
 using EIODE.Scenes.Projectiles;
-using EIODE.Utils;
 using Godot;
 
 namespace EIODE.Scenes;
