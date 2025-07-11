@@ -18,8 +18,8 @@ metadata/_custom_type_script = "uid://ch210q8m5ola0"
 
 [sub_resource type="Resource" id="Resource_fqm3v"]
 script = ExtResource("3_d46je")
-MagSize = 2
-MaxAmmo = 24
+MagSize = 1
+MaxAmmo = 5
 ReloadTime = 1.0
 metadata/_custom_type_script = "uid://dk3sh2km4q7kf"
 

@@ -1,5 +1,6 @@
 using EIODE.Resources;
 using Godot;
+using System;
 
 namespace EIODE.Scenes;
 

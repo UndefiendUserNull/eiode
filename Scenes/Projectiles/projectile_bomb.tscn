@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dt65p4bm6qkhi"]
+[gd_scene load_steps=10 format=3 uid="uid://dt65p4bm6qkhi"]
 
 [ext_resource type="Script" uid="uid://dbgpd2swl0ln" path="res://Scenes/Projectiles/ProjectileExplosive.cs" id="1_3xhum"]
 [ext_resource type="Script" uid="uid://cv7ty7bhtt3kp" path="res://Resources/Src/ProjectileData.cs" id="2_3xhum"]
@@ -11,31 +11,40 @@ Force = 50.0
 GravityScale = 3.5
 TimerEnableHitboxWaitTime = 0.7
 TimerDisableHitboxWaitTime = 0.7
+Radius = 10.0
 metadata/_custom_type_script = "uid://cv7ty7bhtt3kp"
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_mtcxs"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3xhum"]
+albedo_color = Color(1, 0, 0, 1)
 
-[sub_resource type="SphereMesh" id="SphereMesh_50hck"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3xhum"]
+material = SubResource("StandardMaterial3D_3xhum")
+radius = 0.8
+radial_segments = 4
+rings = 0
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3xhum"]
+points = PackedVector3Array(-0.8, -0.200078, 0, 0, -1, 0, 0, -0.200078, 0.8, -0.8, 0.199883, 0, 0, -0.200078, -0.8, 0.8, -0.200078, 0, 0, 0.199883, 0.8, 0, 0.199883, -0.8, 0, 1, 0, 0.8, 0.199883, 0)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3xhum"]
 radius = 7.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7f5cn"]
-radius = 0.54
+radius = 0.970624
 
 [node name="projectile_bomb" type="RigidBody3D"]
 collision_layer = 256
-collision_mask = 255
+continuous_cd = true
 script = ExtResource("1_3xhum")
 Data = SubResource("Resource_7f5cn")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.72, 0, 0, 0, 0.72, 0, 0, 0, 0.72, 0, 0, 0)
-shape = SubResource("SphereShape3D_mtcxs")
+[node name="meshi" type="MeshInstance3D" parent="."]
+transform = Transform3D(-3.49691e-08, -0.8, 0, 0.8, -3.49691e-08, 0, 0, 0, 0.8, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_3xhum")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
-mesh = SubResource("SphereMesh_50hck")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-3.49691e-08, -0.8, 0, 0.8, -3.49691e-08, 0, 0, 0, 0.8, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_3xhum")
 
 [node name="HitboxComponent" type="Area3D" parent="."]
 collision_layer = 16
@@ -56,7 +65,7 @@ one_shot = true
 [node name="detection_area" type="Area3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 collision_layer = 16
-collision_mask = 253
+collision_mask = 29
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="detection_area"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)

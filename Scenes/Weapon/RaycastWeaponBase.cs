@@ -2,6 +2,7 @@ using Godot;
 using EIODE.Resources;
 using EIODE.Components;
 using EIODE.Utils;
+using EIODE.Core;
 
 namespace EIODE.Scenes;
 
@@ -25,6 +26,7 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
     {
         base._Ready();
         Hitbox = NodeUtils.GetChildWithNodeType<RaycastHitboxComponent>(this);
+        Hitbox.Damage = Data.Damage;
         Hitbox.Disable();
         Hitbox.SetRange(Data.Range);
         AmmoData.CurrentAmmo = AmmoData.MagSize;
@@ -44,6 +46,7 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
         if (!CanAttack()) return;
         Shoot();
 
+        Hitbox.SetRange(Data.Range);
         _shootingCooldown = Data.HitRate;
         AmmoData.CurrentAmmo--;
         Hitbox.Damage = Data.Damage;
@@ -128,5 +131,11 @@ public abstract partial class RaycastWeaponBase : WeaponBase, IWeaponWithAmmo
     public bool IsReloading()
     {
         return _isReloading;
+    }
+
+    public void CancelReloading()
+    {
+        _isReloading = false;
+        _reloadTimer = AmmoData.ReloadTime;
     }
 }

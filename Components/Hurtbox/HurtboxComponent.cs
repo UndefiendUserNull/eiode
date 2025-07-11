@@ -20,8 +20,8 @@ public partial class HurtboxComponent : Area3D, IComponent
             SetProcess(false);
         }
 
-        CollisionLayer = (uint)CollisionLayers.HITTABLE;
-        CollisionMask = (uint)CollisionLayers.HITBOX;
+        SetCollisionLayerValue(CollisionLayers.HITTABLE, true);
+        SetCollisionMaskValue(CollisionLayers.HITBOX, true);
 
         HealthComponent.OnDeath += HealthComponent_OnDeath;
         HealthComponent.OnTakeDamage += HealthComponent_OnTakeDamage;

@@ -1,15 +1,17 @@
+using System;
+
 namespace EIODE.Utils;
 
-public enum CollisionLayers
+public static class CollisionLayers
 {
-    WORLD,
-    PLAYER,
-    HITTABLE,
-    ENEMY,
-    HITBOX,
-    JUMP_PAD,
-    TRIGGER,
-    I_CAN_TRIGGER,
-    PROJECTILE
+    public const int WORLD = 1;
+    public const int PLAYER = 2;
+    public const int HITTABLE = 3;
+    public const int ENEMY = 4;
+    public const int HITBOX = 5;
+    public const int JUMP_PAD = 6;
+    public const int TRIGGER = 7;
+    public const int I_CAN_TRIGGER = 8;
+    public const int PROJECTILE = 9;
 }
 

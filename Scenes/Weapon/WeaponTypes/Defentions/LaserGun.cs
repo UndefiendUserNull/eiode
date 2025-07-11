@@ -38,7 +38,6 @@ public partial class LaserGun : RaycastWeaponBase
 
     public override void Shoot()
     {
-        Hitbox.SetRange(Data.Range);
         _canShoot = false;
         _fullyCharged = false;
         ChargeableComponent.InstantDeCharge();
