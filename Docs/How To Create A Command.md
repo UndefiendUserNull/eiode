@@ -64,8 +64,6 @@ In the Init function you can see `ConsoleCommandSystem.RegisterInstance(this);` 
 ```CS
 private void Init()
 {
-	private void Init()
-{
     // Should be unlocked from outside
     Lock();
 
@@ -93,7 +91,6 @@ private void Init()
 
     _console = _game.Console;
 
-}
 }
 ```
 
